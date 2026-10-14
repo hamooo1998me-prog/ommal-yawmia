@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عمال يوميه</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;color:#fff;font-family:Arial,sans-serif;padding:18px}
+header{text-align:center;color:#d9b65d;font-size:27px;font-weight:bold;padding:20px}
+.card{background:#202020;border:1px solid #b99742;border-radius:12px;padding:16px;margin:14px 0}
+h3{color:#e5c36a}
+input,button,textarea{width:100%;padding:13px;margin:7px 0;border-radius:8px;font-size:16px}
+input,textarea{background:#111;color:white;border:1px solid #666}
+button{background:#d4af50;color:#111;font-weight:bold;border:0}
+.row{display:flex;gap:8px}
+.row>*{min-width:0;flex:1}
+.worker{border-bottom:1px solid #555;padding:12px 0}
+.small{color:#e5c36a}
+</style>
+</head>
+<body>
+<header>عمال يوميه<br><small>إدارة العمال والمستحقات</small></header>
+
+<div class="card">
+<h3>تسجيل عامل جديد</h3>
+<input id="name" placeholder="اسم العامل">
+<input id="place" placeholder="مكان الشغل">
+<input id="date" type="date">
+<div class="row">
+<input id="hours" type="number" placeholder="عدد الساعات">
+<input id="rate" type="number" placeholder="أجر الساعة">
+</div>
+<input id="paid" type="number" placeholder="المبلغ المدفوع">
+<textarea id="notes" placeholder="ملاحظات"></textarea>
+<button onclick="addWorker()">حفظ بيانات العامل</button>
+</div>
+
+<div class="card">
+<h3>البحث عن عامل</h3>
+<input id="search" placeholder="ابحث بالاسم أو الرقم المسلسل" oninput="render()">
+</div>
+
+<div class="card">
+<h3>سجل العمال</h3>
+<div id="workers"></div>
+<h3 id="total">إجمالي المستحقات: 0 ريال</h3>
+<button onclick="exportData()">تصدير نسخة احتياطية</button>
+<input type="file" accept=".json" onchange="importData(event)">
+</div>
+
+<script>
+let data=JSON.parse(localStorage.getItem('workers')||'[]');
+
+function addWorker(){
+ const name=document.getElementById('name').value.trim();
+ if(!name){alert('اكتب اسم العامل');return}
+ const hours=Number(document.getElementById('hours').value)||0;
+ const rate=Number(document.getElementById('rate').value)||0;
+ const paid=Number(document.getElementById('paid').value)||0;
+ data.push({
+ id:data.length?Math.max(...data.map(x=>x.id))+1:1,
+ name,place:document.getElementById('place').value,
+ date:document.getElementById('date').value,
+ hours,rate,paid,
+ notes:document.getElementById('notes').value
+ });
+ save();
+ ['name','place','date','hours','rate','paid','notes'].forEach(id=>document.getElementById(id).value='');
+}
+
+function save(){
+ localStorage.setItem('workers',JSON.stringify(data));
+ render();
+}
+
+function render(){
+ const q=document.getElementById('search').value.trim().toLowerCase();
+ const list=data.filter(w=>w.name.toLowerCase().includes(q)||String(w.id).includes(q));
+ document.getElementById('workers').innerHTML=list.map(w=>`
+ <div class="worker">
+ <b class="small">رقم العامل: ${w.id}</b><br>
+ الاسم: ${escapeHtml(w.name)}<br>
+ مكان العمل: ${escapeHtml(w.place||'-')}<br>
+ التاريخ: ${w.date||'-'}<br>
+ الساعات: ${w.hours} × ${w.rate} ريال<br>
+ الإجمالي: ${w.hours*w.rate} ريال<br>
+ المدفوع: ${w.paid} ريال<br>
+ <b>المتبقي: ${w.hours*w.rate-w.paid} ريال</b><br>
+ ملاحظات: ${escapeHtml(w.notes||'-')}
+ <button onclick="editWorker(${w.id})">تعديل</button>
+ <button onclick="deleteWorker(${w.id})">حذف</button>
+ </div>`).join('')||'لا توجد نتائج';
+ document.getElementById('total').textContent='إجمالي المستحقات المتبقية: '+
+ data.reduce((s,w)=>s+w
