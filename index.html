@@ -1,1842 +1,1540 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#111111">
-<meta name="description" content="عمال يوميه لإدارة العمال وأيام العمل والأجور والإضافي والمدفوعات">
-<link rel="manifest" href="./manifest.json">
-<title>عمال يوميه</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="تطبيق عمال يوميه لإدارة العمال والأيام وساعات العمل والأجور والمدفوعات والمبالغ المتبقية">
+  <link rel="manifest" href="./manifest.json">
+  <title>عمال يوميه</title>
 
-<style>
-:root {
-  --gold: #d9b45b;
-  --bg: #111111;
-  --panel: #1e1e1e;
-  --text: #ffffff;
-  --muted: #bbbbbb;
-  --red: #7b2525;
-  --green: #17482f;
-  --border: #514222;
-}
+  <style>
+    :root {
+      --bg: #101010;
+      --panel: #191919;
+      --panel2: #222222;
+      --gold: #d4af37;
+      --gold2: #f3d879;
+      --text: #ffffff;
+      --muted: #bdbdbd;
+      --green: #24c78a;
+      --red: #ff6262;
+      --border: #363636;
+      --radius: 14px;
+    }
 
-* {
-  box-sizing: border-box;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  padding: 12px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Tahoma, Arial, sans-serif;
+      line-height: 1.7;
+    }
 
-header {
-  text-align: center;
-  padding: 20px 10px;
-  border-bottom: 2px solid var(--gold);
-  margin-bottom: 15px;
-}
+    button, input, textarea {
+      font: inherit;
+    }
 
-h1, h2, h3 {
-  color: var(--gold);
-}
+    button {
+      cursor: pointer;
+    }
 
-h1 {
-  margin: 0 0 8px;
-}
+    .container {
+      width: min(1100px, 100%);
+      margin: auto;
+      padding: 16px;
+    }
 
-header p,
-.note {
-  color: var(--muted);
-}
+    header {
+      text-align: center;
+      padding: 22px 10px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #202020, #111111);
+    }
 
-.container {
-  max-width: 850px;
-  margin: auto;
-}
+    .logo {
+      width: 62px;
+      height: 62px;
+      margin: 0 auto 8px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 27px;
+      font-weight: bold;
+    }
 
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
 
-h2 {
-  font-size: 21px;
-  margin-top: 0;
-}
+    h1 {
+      margin-bottom: 4px;
+      color: var(--gold);
+      font-size: 27px;
+    }
 
-label {
-  display: block;
-  margin: 12px 0 5px;
-}
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 0;
+      font-size: 14px;
+    }
 
-input,
-textarea {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #555;
-  background: #101010;
-  color: white;
-  font-size: 16px;
-  outline: none;
-}
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 17px;
+      margin-bottom: 17px;
+    }
 
-input:focus,
-textarea:focus {
-  border-color: var(--gold);
-}
+    .panel h2 {
+      color: var(--gold);
+      font-size: 19px;
+      margin-bottom: 14px;
+    }
 
-input::placeholder,
-textarea::placeholder {
-  color: #888;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
 
-textarea {
-  min-height: 75px;
-  resize: vertical;
-}
+    .field {
+      min-width: 0;
+    }
 
-button {
-  border: 0;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  background: var(--gold);
-  color: #111;
-  margin-top: 10px;
-}
+    .field.full {
+      grid-column: 1 / -1;
+    }
 
-button:disabled {
-  opacity: .5;
-  cursor: wait;
-}
+    label {
+      display: block;
+      color: #eeeeee;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
 
-.primary {
-  width: 100%;
-  font-size: 17px;
-}
+    input, textarea {
+      width: 100%;
+      min-width: 0;
+      color: white;
+      background: #101010;
+      border: 1px solid #414141;
+      border-radius: 9px;
+      padding: 11px 12px;
+      outline: none;
+    }
 
-.secondary {
-  background: #333;
-  color: white;
-  border: 1px solid var(--gold);
-}
+    input:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px #d4af3722;
+    }
 
-.danger {
-  background: var(--red);
-  color: white;
-}
+    input::placeholder, textarea::placeholder {
+      color: #858585;
+    }
 
-.grid,
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+    textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
 
-.stat {
-  background: #101010;
-  border: 1px solid #4c3d20;
-  border-radius: 10px;
-  padding: 12px;
-  text-align: center;
-  min-width: 0;
-}
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
 
-.stat span {
-  display: block;
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 8px;
-}
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 15px;
+    }
 
-.stat strong {
-  color: var(--gold);
-  font-size: 20px;
-  overflow-wrap: anywhere;
-}
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-weight: bold;
+      transition: .15s;
+    }
 
-.worker {
-  border: 1px solid #4c4c4c;
-  padding: 13px;
-  border-radius: 10px;
-  margin-top: 12px;
-  background: #151515;
-}
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
 
-.worker h3 {
-  margin: 0 0 10px;
-  overflow-wrap: anywhere;
-}
+    .btn-primary {
+      background: var(--gold);
+      color: #111;
+    }
 
-.worker p {
-  margin: 7px 0;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
-}
+    .btn-primary:hover {
+      background: var(--gold2);
+    }
 
-.worker-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
+    .btn-secondary {
+      background: #353535;
+      color: white;
+      border: 1px solid #4a4a4a;
+    }
 
-.worker-actions button {
-  width: 100%;
-}
+    .btn-danger {
+      background: #4a2020;
+      color: #ffbaba;
+      border: 1px solid #733535;
+    }
 
-.message {
-  display: none;
-  padding: 12px;
-  margin-top: 12px;
-  border-radius: 8px;
-  overflow-wrap: anywhere;
-  line-height: 1.7;
-}
+    .btn-success {
+      background: #164331;
+      color: #b7ffe0;
+      border: 1px solid #286b4e;
+    }
 
-.message.ok {
-  display: block;
-  background: var(--green);
-}
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 17px;
+    }
 
-.message.error {
-  display: block;
-  background: var(--red);
-}
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px;
+      text-align: center;
+      min-width: 0;
+    }
 
-.empty {
-  text-align: center;
-  color: var(--muted);
-  padding: 20px 5px;
-  line-height: 1.8;
-}
+    .stat-title {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
 
-.hidden {
-  display: none !important;
-}
+    .stat-value {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
 
-.note {
-  font-size: 13px;
-  line-height: 1.8;
-}
+    .stat-value.green {
+      color: var(--green);
+    }
 
-.section-title {
-  border-right: 3px solid var(--gold);
-  padding-right: 9px;
-  margin: 20px 0 10px;
-}
+    .stat-value.red {
+      color: var(--red);
+    }
 
-.calculation {
-  margin-top: 15px;
-}
+    .toolbar {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 14px;
+    }
 
-footer {
-  text-align: center;
-  color: var(--muted);
-  padding: 20px 5px;
-  font-size: 12px;
-  line-height: 1.8;
-}
+    .toolbar input {
+      flex: 1;
+      min-width: 180px;
+    }
 
-@media(max-width: 420px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+    .worker-card {
+      background: #202020;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
 
-  .stats {
-    grid-template-columns: 1fr 1fr;
-  }
+    .worker-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
 
-  .stat strong {
-    font-size: 17px;
-  }
-}
-</style>
+    .worker-name {
+      color: var(--gold);
+      font-size: 18px;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .worker-number {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .worker-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .detail {
+      background: #151515;
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .detail-value {
+      display: block;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .detail-value.gold {
+      color: var(--gold);
+    }
+
+    .detail-value.green {
+      color: var(--green);
+    }
+
+    .detail-value.red {
+      color: var(--red);
+    }
+
+    .worker-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .worker-actions .btn {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 10px;
+      border: 1px dashed #454545;
+      border-radius: 10px;
+    }
+
+    .message {
+      display: none;
+      padding: 12px;
+      border-radius: 9px;
+      margin-bottom: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: #ffd4d4;
+      background: #401d1d;
+      border: 1px solid #773737;
+    }
+
+    .message.success {
+      color: #c5ffe5;
+      background: #173d2c;
+      border: 1px solid #2c6c4c;
+    }
+
+    .message.info {
+      color: #fff0bd;
+      background: #3a3016;
+      border: 1px solid #6b5924;
+    }
+
+    .auth-box {
+      max-width: 480px;
+      margin: 20px auto;
+    }
+
+    .auth-switch {
+      color: var(--gold);
+      text-decoration: underline;
+      background: none;
+      border: 0;
+      padding: 0;
+      font-weight: bold;
+    }
+
+    .user-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      text-align: center;
+      color: #858585;
+      font-size: 12px;
+      padding: 18px 8px 25px;
+    }
+
+    @media (min-width: 700px) {
+      .container {
+        padding: 25px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .worker-details {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <main class="container">
 
-<header>
-  <h1>عمال يوميه</h1>
-  <p>إدارة العمال وأيام العمل والأجور والمستحقات</p>
-</header>
+    <header>
+      <div class="logo">ع</div>
+      <h1>عمال يوميه</h1>
+      <p class="subtitle">إدارة العمال والأيام والأجور والمدفوعات</p>
+    </header>
 
-<main class="container">
+    <div id="message" class="message" role="status" aria-live="polite"></div>
 
-<!-- تسجيل الدخول وإنشاء الحساب -->
-<section class="card" id="loginCard">
+    <!-- تسجيل الدخول -->
+    <section id="authSection" class="panel auth-box">
+      <h2 id="authTitle">تسجيل الدخول</h2>
 
-  <h2 id="authTitle">تسجيل الدخول</h2>
+      <form id="authForm">
+        <div class="field">
+          <label for="authEmail">البريد الإلكتروني</label>
+          <input
+            id="authEmail"
+            type="email"
+            autocomplete="email"
+            placeholder="أدخل البريد الإلكتروني"
+            required
+          >
+        </div>
 
-  <p class="note" id="authDescription">
-    سجّل الدخول إلى حسابك لمتابعة العمال والمستحقات الخاصة بك.
-  </p>
+        <div class="field" style="margin-top:12px">
+          <label for="authPassword">كلمة المرور</label>
+          <input
+            id="authPassword"
+            type="password"
+            autocomplete="current-password"
+            minlength="6"
+            placeholder="أدخل كلمة المرور"
+            required
+          >
+        </div>
 
-  <form id="authForm">
+        <div class="buttons">
+          <button id="authSubmit" class="btn btn-primary" type="submit">
+            دخول
+          </button>
+          <button id="authSwitch" class="btn btn-secondary" type="button">
+            إنشاء حساب جديد
+          </button>
+        </div>
 
-    <label for="email">البريد الإلكتروني</label>
-    <input
-      id="email"
-      type="email"
-      placeholder="اكتب بريدك الإلكتروني"
-      autocomplete="email"
-      required
-    >
+        <p class="hint" style="margin-top:12px">
+          كل حساب يعرض بيانات العمال الخاصة به فقط.
+        </p>
+      </form>
+    </section>
 
-    <label for="password">كلمة المرور</label>
-    <input
-      id="password"
-      type="password"
-      placeholder="اكتب كلمة المرور"
-      autocomplete="current-password"
-      minlength="6"
-      required
-    >
+    <!-- التطبيق -->
+    <section id="appSection" class="hidden">
 
-    <button
-      id="authButton"
-      class="primary"
-      type="submit"
-    >
-      دخول
-    </button>
-
-    <button
-      id="switchAuthButton"
-      class="primary secondary"
-      type="button"
-    >
-      إنشاء حساب جديد
-    </button>
-
-    <div
-      id="authMessage"
-      class="message"
-      role="status"
-      aria-live="polite"
-    ></div>
-
-  </form>
-</section>
-
-<!-- التطبيق -->
-<section id="appArea" class="hidden">
-
-  <section class="card">
-
-    <div class="grid">
-
-      <div>
-        <h2 style="margin-bottom:5px">الحساب</h2>
-        <div id="userInfo" class="note"></div>
-      </div>
-
-      <div>
-        <button
-          id="refreshButton"
-          class="secondary"
-          style="width:100%"
-          type="button"
-        >
-          تحديث البيانات
-        </button>
-
-        <button
-          id="logoutButton"
-          class="danger"
-          style="width:100%"
-          type="button"
-        >
+      <div class="user-bar">
+        <span id="userEmail"></span>
+        <button id="logoutBtn" class="btn btn-secondary" type="button">
           تسجيل الخروج
         </button>
       </div>
 
-    </div>
-
-    <div
-      id="appMessage"
-      class="message"
-      role="status"
-      aria-live="polite"
-    ></div>
-
-  </section>
-
-  <!-- الملخص -->
-  <section class="card">
-
-    <h2>ملخص الحسابات</h2>
-
-    <div class="stats">
-
-      <div class="stat">
-        <span>عدد العمال</span>
-        <strong id="workerCount">0</strong>
-      </div>
-
-      <div class="stat">
-        <span>إجمالي المستحقات</span>
-        <strong id="totalDue">0.00</strong>
-      </div>
-
-      <div class="stat">
-        <span>إجمالي المدفوع</span>
-        <strong id="totalPaid">0.00</strong>
-      </div>
-
-      <div class="stat">
-        <span>إجمالي المتبقي</span>
-        <strong id="totalRemaining">0.00</strong>
-      </div>
-
-    </div>
-
-    <p class="note">
-      جميع المبالغ بالريال السعودي.
-    </p>
-
-  </section>
-
-  <!-- إضافة وتعديل عامل -->
-  <section class="card" id="workerFormCard">
-
-    <h2 id="formTitle">تسجيل عامل جديد</h2>
-
-    <form id="workerForm">
-
-      <label for="workerName">اسم العامل *</label>
-      <input
-        id="workerName"
-        type="text"
-        maxlength="100"
-        placeholder="اكتب اسم العامل"
-        required
-      >
-
-      <div class="grid">
-
-        <div>
-          <label for="workDate">تاريخ العمل</label>
-          <input id="workDate" type="date">
-        </div>
-
-        <div>
-          <label for="workPlace">مكان العمل أو الفرع</label>
-          <input
-            id="workPlace"
-            type="text"
-            maxlength="150"
-            placeholder="اسم الفرع"
-          >
-        </div>
-
-      </div>
-
-      <h3 class="section-title">بيانات العمل الأساسية</h3>
-
-      <div class="grid">
-
-        <div>
-          <label for="workDays">عدد أيام العمل *</label>
-          <input
-            id="workDays"
-            type="number"
-            min="0"
-            max="10000"
-            step="0.25"
-            placeholder="اكتب عدد الأيام"
-            required
-          >
-        </div>
-
-        <div>
-          <label for="dailyRate">أجر اليومية بالريال *</label>
-          <input
-            id="dailyRate"
-            type="number"
-            min="0"
-            max="1000000"
-            step="0.01"
-            placeholder="اكتب أجر اليومية"
-            required
-          >
-        </div>
-
-      </div>
-
-      <label for="regularHours">
-        عدد ساعات العمل الأساسية في اليوم *
-      </label>
-
-      <input
-        id="regularHours"
-        type="number"
-        min="0"
-        max="24"
-        step="0.25"
-        placeholder="اكتب عدد الساعات الأساسية"
-        required
-      >
-
-      <h3 class="section-title">بيانات الساعات الإضافية</h3>
-
-      <div class="grid">
-
-        <div>
-          <label for="overtimeHours">
-            إجمالي ساعات العمل الإضافية *
-          </label>
-
-          <input
-            id="overtimeHours"
-            type="number"
-            min="0"
-            max="100000"
-            step="0.25"
-            placeholder="اكتب الساعات الإضافية"
-            required
-          >
-        </div>
-
-        <div>
-          <label for="overtimeRate">
-            سعر الساعة الإضافية بالريال *
-          </label>
-
-          <input
-            id="overtimeRate"
-            type="number"
-            min="0"
-            max="1000000"
-            step="0.01"
-            placeholder="اكتب سعر الساعة الإضافية"
-            required
-          >
-        </div>
-
-      </div>
-
-      <h3 class="section-title">المدفوعات والمستحقات</h3>
-
-      <label for="workerPaid">المبلغ المدفوع بالريال *</label>
-
-      <input
-        id="workerPaid"
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="اكتب المبلغ المدفوع أو صفر"
-        required
-      >
-
-      <div class="stats calculation">
-
+      <div class="stats">
         <div class="stat">
-          <span>إجمالي ساعات العمل الأساسية</span>
-          <strong id="previewRegularHours">0</strong>
+          <div class="stat-title">عدد سجلات العمال</div>
+          <div id="statWorkers" class="stat-value">0</div>
         </div>
 
         <div class="stat">
-          <span>مستحق الأيام</span>
-          <strong id="previewDailyPay">0.00 ريال</strong>
+          <div class="stat-title">إجمالي المستحق</div>
+          <div id="statDue" class="stat-value">0.00</div>
         </div>
 
         <div class="stat">
-          <span>مستحق الإضافي</span>
-          <strong id="previewOvertimePay">0.00 ريال</strong>
+          <div class="stat-title">إجمالي المدفوع</div>
+          <div id="statPaid" class="stat-value green">0.00</div>
         </div>
 
         <div class="stat">
-          <span>إجمالي المستحق</span>
-          <strong id="previewDue">0.00 ريال</strong>
+          <div class="stat-title">إجمالي المتبقي</div>
+          <div id="statRemaining" class="stat-value red">0.00</div>
         </div>
-
-        <div class="stat">
-          <span>المتبقي</span>
-          <strong id="previewRemaining">0.00 ريال</strong>
-        </div>
-
       </div>
 
-      <p class="note">
-        مستحق الأيام = عدد الأيام × أجر اليومية.
-        <br>
-        ساعات العمل الأساسية = عدد الأيام × ساعات العمل الأساسية في اليوم.
-        <br>
-        مستحق الإضافي = ساعات الإضافي × سعر الساعة الإضافية.
-        <br>
-        إجمالي المستحق = مستحق الأيام + مستحق الإضافي.
-        <br>
-        المتبقي = إجمالي المستحق − المبلغ المدفوع.
-        <br>
-        اكتب صفرًا في أي خانة رقمية لا تحتاجها، ولا يُسمح بأن يتجاوز المدفوع إجمالي المستحق.
-      </p>
+      <section class="panel" id="workerFormPanel">
+        <h2 id="formTitle">إضافة عامل جديد</h2>
 
-      <label for="workerNotes">ملاحظات</label>
+        <form id="workerForm">
+          <input id="workerId" type="hidden">
 
-      <textarea
-        id="workerNotes"
-        maxlength="2000"
-        placeholder="أي ملاحظات خاصة بالعامل"
-      ></textarea>
+          <div class="grid">
+            <div class="field">
+              <label for="workerName">اسم العامل *</label>
+              <input
+                id="workerName"
+                type="text"
+                maxlength="150"
+                placeholder="اكتب اسم العامل"
+                required
+              >
+            </div>
 
-      <button
-        id="saveButton"
-        class="primary"
-        type="submit"
-      >
-        حفظ بيانات العامل
-      </button>
+            <div class="field">
+              <label for="workDate">تاريخ العمل *</label>
+              <input id="workDate" type="date" required>
+            </div>
 
-      <button
-        id="cancelEdit"
-        class="primary secondary hidden"
-        type="button"
-      >
-        إلغاء التعديل
-      </button>
+            <div class="field">
+              <label for="workLocation">مكان العمل</label>
+              <input
+                id="workLocation"
+                type="text"
+                maxlength="200"
+                placeholder="اسم الموقع أو الفرع"
+              >
+            </div>
 
-      <div
-        id="formMessage"
-        class="message"
-        role="status"
-        aria-live="polite"
-      ></div>
+            <div class="field">
+              <label for="workDays">عدد الأيام</label>
+              <input
+                id="workDays"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="اكتب عدد الأيام"
+              >
+            </div>
 
-    </form>
+            <div class="field">
+              <label for="dailyRate">سعر اليومية (ريال)</label>
+              <input
+                id="dailyRate"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="اكتب سعر اليومية"
+              >
+            </div>
 
-  </section>
+            <div class="field">
+              <label for="regularHours">ساعات العمل الأساسية يوميًا</label>
+              <input
+                id="regularHours"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="اكتب عدد الساعات"
+              >
+            </div>
 
-  <!-- البحث -->
-  <section class="card">
+            <div class="field">
+              <label for="overtimeHours">عدد ساعات الإضافي</label>
+              <input
+                id="overtimeHours"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="اكتب ساعات الإضافي"
+              >
+            </div>
 
-    <h2>البحث في سجل العمال</h2>
+            <div class="field">
+              <label for="overtimeRate">سعر ساعة الإضافي (ريال)</label>
+              <input
+                id="overtimeRate"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="اكتب سعر ساعة الإضافي"
+              >
+            </div>
 
-    <label for="searchInput">
-      البحث بالاسم أو الرقم المسلسل أو مكان العمل
-    </label>
+            <div class="field">
+              <label for="amountPaid">المبلغ المدفوع (ريال)</label>
+              <input
+                id="amountPaid"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="اكتب المبلغ المدفوع"
+              >
+            </div>
 
-    <input
-      id="searchInput"
-      type="search"
-      placeholder="اكتب كلمة البحث"
-    >
+            <div class="field full">
+              <label for="workerNotes">ملاحظات</label>
+              <textarea
+                id="workerNotes"
+                maxlength="2000"
+                placeholder="أي ملاحظات تخص العامل أو العمل"
+              ></textarea>
+            </div>
+          </div>
 
-  </section>
+          <div class="panel" style="margin-top:14px;margin-bottom:0;background:#111">
+            <h3 style="color:var(--gold);font-size:16px;margin-bottom:8px">
+              ملخص الحساب قبل الحفظ
+            </h3>
+            <div>إجمالي اليومية: <strong id="previewDaily">0.00 ريال</strong></div>
+            <div>إجمالي الإضافي: <strong id="previewOvertime">0.00 ريال</strong></div>
+            <div>إجمالي المستحق: <strong id="previewDue">0.00 ريال</strong></div>
+            <div>المتبقي: <strong id="previewRemaining">0.00 ريال</strong></div>
+            <p class="hint" style="margin:8px 0 0">
+              الخانات المالية والساعات اختيارية؛ أدخل القيم التي تريدها بنفسك.
+              ترك الخانة فارغة يجعل قيمتها صفرًا عند الحساب.
+            </p>
+          </div>
 
-  <!-- سجل العمال -->
-  <section class="card">
+          <div class="buttons">
+            <button id="saveBtn" class="btn btn-primary" type="submit">
+              حفظ العامل
+            </button>
 
-    <h2>سجل العمال</h2>
+            <button id="cancelEditBtn" class="btn btn-secondary hidden" type="button">
+              إلغاء التعديل
+            </button>
 
-    <div id="workerList">
-      <div class="empty">جارٍ تحميل البيانات...</div>
-    </div>
+            <button id="resetFormBtn" class="btn btn-secondary" type="button">
+              تفريغ الخانات
+            </button>
+          </div>
+        </form>
+      </section>
 
-  </section>
+      <section class="panel">
+        <h2>سجلات العمال</h2>
 
-</section>
+        <div class="toolbar">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="ابحث بالاسم أو الموقع أو الملاحظات..."
+            aria-label="البحث عن عامل"
+          >
+          <button id="refreshBtn" class="btn btn-secondary" type="button">
+            تحديث البيانات
+          </button>
+        </div>
 
-</main>
+        <div id="workersList">
+          <div class="empty">جاري تحميل البيانات...</div>
+        </div>
+      </section>
 
-<footer>
-  عمال يوميه — إدارة العمال والمستحقات
-  <br>
-  جميع الحقوق محفوظة للبرمجة والتصميم والنشر: محمد كرم
-</footer>
+    </section>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <footer>
+      تطبيق عمال يوميه — تصميم وبرمجة محمد كرم
+    </footer>
+  </main>
 
-<script>
-(function () {
-'use strict';
+  <!-- مكتبة Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-/* إعدادات الاتصال بقاعدة البيانات الحالية */
+  <script>
+    (() => {
+      'use strict';
 
-const SUPABASE_URL =
-  'https://qawnvmuwbcsfldcjikhb.supabase.co';
+      /*
+       * إعدادات مشروع Supabase الحالي.
+       * استخدم مفتاح publishable فقط، ولا تضع مفتاح service_role هنا.
+       */
+      const SUPABASE_URL = 'https://qawnvmuwbcsfldcjikhb.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7';
 
-const SUPABASE_KEY =
-  'sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7';
+      const db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+      const $ = id => document.getElementById(id);
 
-const $ = id => document.getElementById(id);
+      // تحويل النصوص إلى نص آمن عند عرضها داخل HTML.
+      function escapeHTML(value) {
+        return String(value == null ? '' : value).replace(
+          /[&<>"']/g,
+          function (c) {
+            return {
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;'
+            }[c];
+          }
+        );
+      }
 
-let workers = [];
-let editingId = null;
-let currentUser = null;
-let busy = false;
-let authMode = 'login';
-let sessionReady = false;
-let sessionGeneration = 0;
+      const state = {
+        user: null,
+        workers: [],
+        authMode: 'login',
+        loadingWorkers: false,
+        savingWorker: false,
+        sessionGeneration: 0
+      };
 
-/* الرسائل */
+      function showMessage(message, type = 'info') {
+        const box = $('message');
+        box.textContent = message;
+        box.className = 'message show ' + type;
 
-function showMessage(id, message, success) {
-  const el = $(id);
+        clearTimeout(showMessage.timer);
+        showMessage.timer = setTimeout(() => {
+          box.className = 'message';
+          box.textContent = '';
+        }, 6000);
+      }
 
-  el.textContent = message;
+      function friendlyError(error) {
+        const message = String(error?.message || error || '');
 
-  el.className =
-    'message ' + (success ? 'ok' : 'error');
-}
+        if (/Invalid login credentials/i.test(message)) {
+          return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+        }
 
-function hideMessage(id) {
-  const el = $(id);
+        if (/Email not confirmed/i.test(message)) {
+          return 'يجب تأكيد البريد الإلكتروني من رسالة التأكيد أولًا.';
+        }
 
-  el.textContent = '';
-  el.className = 'message';
-}
+        if (/User already registered/i.test(message)) {
+          return 'هذا البريد مسجل بالفعل. جرّب تسجيل الدخول.';
+        }
 
-/* تنسيق الأرقام */
+        if (/duplicate key/i.test(message)) {
+          return 'البيانات موجودة بالفعل.';
+        }
 
-function roundMoney(value) {
-  return Math.round(
-    (value + Number.EPSILON) * 100
-  ) / 100;
-}
+        if (/row-level security|permission denied|not allowed/i.test(message)) {
+          return 'صلاحيات قاعدة البيانات تمنع العملية. راجع سياسات RLS الخاصة بجدول workers.';
+        }
 
-function money(value) {
-  return roundMoney(Number(value) || 0)
-    .toLocaleString('ar-SA', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-}
+        if (/Failed to fetch|NetworkError|fetch failed/i.test(message)) {
+          return 'تعذر الاتصال بالخادم. تحقق من الإنترنت وحاول مرة أخرى.';
+        }
 
-function numberOrZero(value) {
-  if (value === null || value === undefined || value === '') {
-    return 0;
-  }
+        return message || 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+      }
 
-  const result = Number(value);
+      function setButtonLoading(button, loading, loadingText, normalText) {
+        button.disabled = loading;
+        button.textContent = loading ? loadingText : normalText;
+      }
 
-  return Number.isFinite(result) ? result : 0;
-}
+      function numberFromInput(id) {
+        const raw = $(id).value.trim();
 
-function hasValue(value) {
-  return value !== null &&
-    value !== undefined &&
-    value !== '';
-}
+        if (raw === '') {
+          return 0;
+        }
 
-/* حسابات العامل */
+        const value = Number(raw);
+        return Number.isFinite(value) ? value : 0;
+      }
 
-function workerDue(worker) {
-  /*
-    السجلات الجديدة تعتمد على أيام العمل والأجر اليومي والإضافي.
-    السجلات القديمة تحتفظ بإجماليها المسجل سابقًا.
-  */
+      function numberValue(value) {
+        if (value === null || value === undefined || value === '') {
+          return 0;
+        }
 
-  if (
-    hasValue(worker.work_days) &&
-    hasValue(worker.daily_rate)
-  ) {
-    const dailyPay =
-      numberOrZero(worker.work_days) *
-      numberOrZero(worker.daily_rate);
+        const result = Number(value);
+        return Number.isFinite(result) ? result : 0;
+      }
 
-    const overtimePay =
-      numberOrZero(worker.overtime_hours) *
-      numberOrZero(worker.overtime_hourly_rate);
-
-    return roundMoney(dailyPay + overtimePay);
-  }
-
-  if (hasValue(worker.total_due)) {
-    return roundMoney(numberOrZero(worker.total_due));
-  }
-
-  return roundMoney(
-    numberOrZero(worker.hours) *
-    numberOrZero(worker.hourly_wage)
-  );
-}
-
-function workerPaid(worker) {
-  return roundMoney(
-    numberOrZero(worker.amount_paid)
-  );
-}
-
-function workerRemaining(worker) {
-  return roundMoney(
-    workerDue(worker) - workerPaid(worker)
-  );
-}
-
-/* تحويل السجل القادم من قاعدة البيانات */
-
-function fromDb(row) {
-  return {
-    id: row.id,
-    name: row.name || '',
-    work_date: row.work_date || '',
-    work_location: row.work_location || '',
-
-    work_days: row.work_days,
-    daily_rate: row.daily_rate,
-    regular_hours_per_day: row.regular_hours_per_day,
-    overtime_hours: row.overtime_hours,
-    overtime_hourly_rate: row.overtime_hourly_rate,
-
-    hours: row.hours,
-    hourly_wage: row.hourly_wage,
-
-    total_due: row.total_due,
-    amount_paid: row.amount_paid,
-
-    notes: row.notes || '',
-    created_by: row.created_by || null
-  };
-}
-
-/* حسابات المعاينة */
-
-function calculatePreview() {
-  const days = numberOrZero($('workDays').value);
-  const dailyRate = numberOrZero($('dailyRate').value);
-  const regularHours = numberOrZero($('regularHours').value);
-  const overtimeHours = numberOrZero($('overtimeHours').value);
-  const overtimeRate = numberOrZero($('overtimeRate').value);
-  const paidAmount = numberOrZero($('workerPaid').value);
-
-  const regularTotal = days * regularHours;
-  const dailyPay = days * dailyRate;
-  const overtimePay = overtimeHours * overtimeRate;
-  const due = roundMoney(dailyPay + overtimePay);
-  const remaining = roundMoney(due - paidAmount);
-
-  $('previewRegularHours').textContent =
-    Number.isFinite(regularTotal)
-      ? regularTotal.toLocaleString('ar-SA', {
+      function money(value) {
+        return numberValue(value).toLocaleString('ar-SA', {
+          minimumFractionDigits: 2,
           maximumFractionDigits: 2
-        })
-      : '0';
+        });
+      }
 
-  $('previewDailyPay').textContent =
-    money(dailyPay) + ' ريال';
+      function readFormNumbers() {
+        return {
+          work_days: numberFromInput('workDays'),
+          daily_rate: numberFromInput('dailyRate'),
+          regular_hours_per_day: numberFromInput('regularHours'),
+          overtime_hours: numberFromInput('overtimeHours'),
+          overtime_hourly_rate: numberFromInput('overtimeRate'),
+          amount_paid: numberFromInput('amountPaid')
+        };
+      }
 
-  $('previewOvertimePay').textContent =
-    money(overtimePay) + ' ريال';
+      function calculate(numbers) {
+        const dailyTotal = numbers.work_days * numbers.daily_rate;
+        const overtimeTotal = numbers.overtime_hours * numbers.overtime_hourly_rate;
+        const due = dailyTotal + overtimeTotal;
+        const remaining = due - numbers.amount_paid;
 
-  $('previewDue').textContent =
-    money(due) + ' ريال';
+        return {
+          dailyTotal,
+          overtimeTotal,
+          due,
+          remaining
+        };
+      }
 
-  $('previewRemaining').textContent =
-    money(remaining) + ' ريال';
+      function updatePreview() {
+        const numbers = readFormNumbers();
+        const result = calculate(numbers);
 
-  $('previewRemaining').style.color =
-    paidAmount > due ? '#ff7777' : '';
+        $('previewDaily').textContent = money(result.dailyTotal) + ' ريال';
+        $('previewOvertime').textContent = money(result.overtimeTotal) + ' ريال';
+        $('previewDue').textContent = money(result.due) + ' ريال';
+        $('previewRemaining').textContent = money(result.remaining) + ' ريال';
+      }
 
-  const tooMuch = paidAmount > due;
+      function workerDue(worker) {
+        const hasNewCalculation =
+          worker.work_days !== null &&
+          worker.work_days !== undefined &&
+          worker.daily_rate !== null &&
+          worker.daily_rate !== undefined;
 
-  $('workerPaid').setCustomValidity(
-    tooMuch
-      ? 'المبلغ المدفوع لا يمكن أن يكون أكبر من إجمالي المستحق.'
-      : ''
-  );
+        if (hasNewCalculation) {
+          return (
+            numberValue(worker.work_days) * numberValue(worker.daily_rate) +
+            numberValue(worker.overtime_hours) *
+            numberValue(worker.overtime_hourly_rate)
+          );
+        }
 
-  $('saveButton').disabled = busy || tooMuch;
-}
+        // دعم السجلات القديمة التي كانت تعتمد على total_due.
+        if (worker.total_due !== null && worker.total_due !== undefined) {
+          return numberValue(worker.total_due);
+        }
 
-/* تسجيل الدخول أو إنشاء حساب */
+        return numberValue(worker.hours) * numberValue(worker.hourly_wage);
+      }
 
-function setAuthMode(mode) {
-  authMode = mode;
+      function workerPaid(worker) {
+        return numberValue(worker.amount_paid);
+      }
 
-  hideMessage('authMessage');
+      function workerRemaining(worker) {
+        return workerDue(worker) - workerPaid(worker);
+      }
 
-  if (mode === 'signup') {
-    $('authTitle').textContent = 'إنشاء حساب جديد';
+      function updateStats() {
+        const totalDue = state.workers.reduce((sum, worker) => {
+          return sum + workerDue(worker);
+        }, 0);
 
-    $('authDescription').textContent =
-      'أنشئ حسابك بالبريد الإلكتروني وكلمة المرور. ستكون بيانات العمال خاصة بحسابك.';
+        const totalPaid = state.workers.reduce((sum, worker) => {
+          return sum + workerPaid(worker);
+        }, 0);
 
-    $('authButton').textContent = 'إنشاء الحساب';
+        const totalRemaining = totalDue - totalPaid;
 
-    $('switchAuthButton').textContent =
-      'لدي حساب بالفعل — تسجيل الدخول';
+        $('statWorkers').textContent = state.workers.length.toLocaleString('ar-SA');
+        $('statDue').textContent = money(totalDue);
+        $('statPaid').textContent = money(totalPaid);
+        $('statRemaining').textContent = money(totalRemaining);
+      }
 
-    $('password').autocomplete = 'new-password';
-  } else {
-    $('authTitle').textContent = 'تسجيل الدخول';
+      function renderWorkers() {
+        const search = $('searchInput').value.trim().toLowerCase();
 
-    $('authDescription').textContent =
-      'سجّل الدخول إلى حسابك لمتابعة العمال والمستحقات الخاصة بك.';
+        const filtered = state.workers.filter(worker => {
+          const content = [
+            worker.name,
+            worker.work_location,
+            worker.notes,
+            worker.work_date
+          ].join(' ').toLowerCase();
 
-    $('authButton').textContent = 'دخول';
+          return content.includes(search);
+        });
 
-    $('switchAuthButton').textContent =
-      'إنشاء حساب جديد';
+        updateStats();
 
-    $('password').autocomplete = 'current-password';
-  }
-}
+        if (!filtered.length) {
+          $('workersList').innerHTML =
+            '<div class="empty">' +
+            (search ? 'لا توجد نتائج مطابقة للبحث.' : 'لا توجد سجلات عمال حتى الآن. أضف أول عامل من النموذج أعلاه.') +
+            '</div>';
+          return;
+        }
 
-$('switchAuthButton').addEventListener('click', function () {
-  setAuthMode(
-    authMode === 'login' ? 'signup' : 'login'
-  );
-});
+        $('workersList').innerHTML = filtered.map((worker, index) => {
+          const due = workerDue(worker);
+          const paid = workerPaid(worker);
+          const remaining = due - paid;
 
-$('authForm').addEventListener('submit', async function (event) {
-  event.preventDefault();
+          const days = numberValue(worker.work_days);
+          const dailyRate = numberValue(worker.daily_rate);
+          const regularHours = numberValue(worker.regular_hours_per_day);
+          const overtimeHours = numberValue(worker.overtime_hours);
+          const overtimeRate = numberValue(worker.overtime_hourly_rate);
 
-  if (busy) return;
+          return `
+            <article class="worker-card">
+              <div class="worker-head">
+                <div>
+                  <div class="worker-name">${escapeHTML(worker.name || 'بدون اسم')}</div>
+                  <div class="worker-number">سجل رقم ${escapeHTML(worker.id)}</div>
+                </div>
+                <div class="worker-number">${escapeHTML(worker.work_date || '')}</div>
+              </div>
 
-  hideMessage('authMessage');
+              <div class="worker-details">
+                <div class="detail">
+                  <span class="detail-label">مكان العمل</span>
+                  <span class="detail-value">${escapeHTML(worker.work_location || 'غير محدد')}</span>
+                </div>
 
-  const email = $('email').value.trim();
-  const password = $('password').value;
+                <div class="detail">
+                  <span class="detail-label">عدد الأيام</span>
+                  <span class="detail-value">${money(days)}</span>
+                </div>
 
-  if (!email || !password) {
-    showMessage(
-      'authMessage',
-      'اكتب البريد الإلكتروني وكلمة المرور.',
-      false
-    );
-    return;
-  }
+                <div class="detail">
+                  <span class="detail-label">سعر اليومية</span>
+                  <span class="detail-value">${money(dailyRate)} ريال</span>
+                </div>
 
-  if (password.length < 6) {
-    showMessage(
-      'authMessage',
-      'كلمة المرور يجب ألا تقل عن 6 أحرف.',
-      false
-    );
-    return;
-  }
+                <div class="detail">
+                  <span class="detail-label">الساعات الأساسية يوميًا</span>
+                  <span class="detail-value">${money(regularHours)} ساعة</span>
+                </div>
 
-  busy = true;
-  $('authButton').disabled = true;
-  $('switchAuthButton').disabled = true;
+                <div class="detail">
+                  <span class="detail-label">ساعات الإضافي</span>
+                  <span class="detail-value">${money(overtimeHours)} ساعة</span>
+                </div>
 
-  try {
-    if (authMode === 'signup') {
-      const redirectUrl =
-        window.location.origin +
-        window.location.pathname;
+                <div class="detail">
+                  <span class="detail-label">سعر ساعة الإضافي</span>
+                  <span class="detail-value">${money(overtimeRate)} ريال</span>
+                </div>
 
-      const { data, error } = await db.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          emailRedirectTo: redirectUrl
+                <div class="detail">
+                  <span class="detail-label">إجمالي المستحق</span>
+                  <span class="detail-value gold">${money(due)} ريال</span>
+                </div>
+
+                <div class="detail">
+                  <span class="detail-label">المبلغ المدفوع</span>
+                  <span class="detail-value green">${money(paid)} ريال</span>
+                </div>
+
+                <div class="detail">
+                  <span class="detail-label">المبلغ المتبقي</span>
+                  <span class="detail-value ${remaining > 0 ? 'red' : 'green'}">${money(remaining)} ريال</span>
+                </div>
+
+                <div class="detail">
+                  <span class="detail-label">الملاحظات</span>
+                  <span class="detail-value">${escapeHTML(worker.notes || 'لا توجد')}</span>
+                </div>
+              </div>
+
+              <div class="worker-actions">
+                <button class="btn btn-primary" type="button" data-action="edit" data-id="${escapeHTML(worker.id)}">
+                  تعديل
+                </button>
+
+                <button class="btn btn-danger" type="button" data-action="delete" data-id="${escapeHTML(worker.id)}">
+                  حذف
+                </button>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      function setAuthMode(mode) {
+        state.authMode = mode;
+
+        const isSignup = mode === 'signup';
+
+        $('authTitle').textContent = isSignup ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+        $('authSubmit').textContent = isSignup ? 'إنشاء الحساب' : 'دخول';
+        $('authSwitch').textContent = isSignup ? 'العودة لتسجيل الدخول' : 'إنشاء حساب جديد';
+        $('authPassword').autocomplete = isSignup ? 'new-password' : 'current-password';
+      }
+
+      function showLoggedOut() {
+        state.sessionGeneration++;
+        state.user = null;
+        state.workers = [];
+
+        $('authSection').classList.remove('hidden');
+        $('appSection').classList.add('hidden');
+        $('userEmail').textContent = '';
+        $('workersList').innerHTML = '<div class="empty">سجّل الدخول لعرض البيانات.</div>';
+        updateStats();
+      }
+
+      function showLoggedIn(user) {
+        state.user = user;
+        $('authSection').classList.add('hidden');
+        $('appSection').classList.remove('hidden');
+        $('userEmail').textContent = 'الحساب: ' + (user.email || '');
+      }
+
+      async function loadWorkers(generation) {
+        if (!state.user || state.loadingWorkers) {
+          return;
+        }
+
+        state.loadingWorkers = true;
+        $('workersList').innerHTML = '<div class="empty">جاري تحميل البيانات...</div>';
+
+        try {
+          const userId = state.user.id;
+
+          const { data, error } = await db
+            .from('workers')
+            .select('*')
+            .eq('created_by', userId)
+            .order('work_date', { ascending: false })
+            .order('id', { ascending: false });
+
+          if (error) {
+            throw error;
+          }
+
+          if (generation !== state.sessionGeneration || !state.user || state.user.id !== userId) {
+            return;
+          }
+
+          state.workers = data || [];
+          renderWorkers();
+        } catch (error) {
+          if (generation === state.sessionGeneration) {
+            $('workersList').innerHTML =
+              '<div class="empty">تعذر تحميل البيانات. ' +
+              escapeHTML(friendlyError(error)) +
+              '</div>';
+          }
+        } finally {
+          state.loadingWorkers = false;
+        }
+      }
+
+      async function refreshWorkers() {
+        if (!state.user) {
+          return;
+        }
+
+        if (state.loadingWorkers) {
+          return;
+        }
+
+        await loadWorkers(state.sessionGeneration);
+      }
+
+      function resetWorkerForm() {
+        $('workerForm').reset();
+        $('workerId').value = '';
+        $('formTitle').textContent = 'إضافة عامل جديد';
+        $('saveBtn').textContent = 'حفظ العامل';
+        $('cancelEditBtn').classList.add('hidden');
+
+        // لا نضع قيمًا افتراضية في خانات المستخدم.
+        $('workDate').value = new Date().toLocaleDateString('en-CA');
+        updatePreview();
+      }
+
+      function validateNumbers(numbers) {
+        const labels = {
+          work_days: 'عدد الأيام',
+          daily_rate: 'سعر اليومية',
+          regular_hours_per_day: 'ساعات العمل الأساسية',
+          overtime_hours: 'ساعات الإضافي',
+          overtime_hourly_rate: 'سعر ساعة الإضافي',
+          amount_paid: 'المبلغ المدفوع'
+        };
+
+        for (const [key, value] of Object.entries(numbers)) {
+          if (!Number.isFinite(value) || value < 0) {
+            return 'تأكد من أن قيمة "' + labels[key] + '" رقم صحيح وغير سالب.';
+          }
+        }
+
+        return null;
+      }
+
+      async function saveWorker(event) {
+        event.preventDefault();
+
+        if (!state.user) {
+          showMessage('سجّل الدخول أولًا.', 'error');
+          return;
+        }
+
+        if (state.savingWorker) {
+          return;
+        }
+
+        const name = $('workerName').value.trim();
+        const workDate = $('workDate').value;
+
+        if (!name) {
+          showMessage('اكتب اسم العامل.', 'error');
+          $('workerName').focus();
+          return;
+        }
+
+        if (!workDate) {
+          showMessage('اختر تاريخ العمل.', 'error');
+          $('workDate').focus();
+          return;
+        }
+
+        const numbers = readFormNumbers();
+        const validationError = validateNumbers(numbers);
+
+        if (validationError) {
+          showMessage(validationError, 'error');
+          return;
+        }
+
+        const totals = calculate(numbers);
+
+        /*
+         * نحتفظ بالحقول القديمة للتوافق مع الجدول الحالي.
+         * hours و hourly_wage لا يُستخدمان في حساب المستحق الجديد.
+         */
+        const payload = {
+          name,
+          work_date: workDate,
+          work_location: $('workLocation').value.trim() || null,
+
+          work_days: numbers.work_days,
+          daily_rate: numbers.daily_rate,
+          regular_hours_per_day: numbers.regular_hours_per_day,
+          overtime_hours: numbers.overtime_hours,
+          overtime_hourly_rate: numbers.overtime_hourly_rate,
+
+          hours: numbers.regular_hours_per_day,
+          hourly_wage: numbers.daily_rate,
+          total_due: totals.due,
+          amount_paid: numbers.amount_paid,
+          notes: $('workerNotes').value.trim() || null,
+
+          created_by: state.user.id,
+          updated_at: new Date().toISOString()
+        };
+
+        const id = $('workerId').value.trim();
+        const button = $('saveBtn');
+
+        state.savingWorker = true;
+        setButtonLoading(button, true, 'جاري الحفظ...', id ? 'حفظ التعديلات' : 'حفظ العامل');
+
+        try {
+          let result;
+
+          if (id) {
+            result = await db
+              .from('workers')
+              .update(payload)
+              .eq('id', id)
+              .eq('created_by', state.user.id)
+              .select()
+              .maybeSingle();
+          } else {
+            result = await db
+              .from('workers')
+              .insert(payload)
+              .select()
+              .single();
+          }
+
+          if (result.error) {
+            throw result.error;
+          }
+
+          if (id && !result.data) {
+            throw new Error('لم يتم تعديل السجل. تحقق من ملكية السجل وصلاحيات قاعدة البيانات.');
+          }
+
+          showMessage(id ? 'تم تعديل بيانات العامل بنجاح.' : 'تم حفظ العامل بنجاح.', 'success');
+          resetWorkerForm();
+
+          state.workers = await fetchWorkersForCurrentUser();
+          renderWorkers();
+        } catch (error) {
+          showMessage(friendlyError(error), 'error');
+        } finally {
+          state.savingWorker = false;
+          setButtonLoading(button, false, '', $('workerId').value ? 'حفظ التعديلات' : 'حفظ العامل');
+        }
+      }
+
+      async function fetchWorkersForCurrentUser() {
+        if (!state.user) {
+          return [];
+        }
+
+        const { data, error } = await db
+          .from('workers')
+          .select('*')
+          .eq('created_by', state.user.id)
+          .order('work_date', { ascending: false })
+          .order('id', { ascending: false });
+
+        if (error) {
+          throw error;
+        }
+
+        return data || [];
+      }
+
+      function startEdit(id) {
+        const worker = state.workers.find(item => String(item.id) === String(id));
+
+        if (!worker) {
+          showMessage('لم يتم العثور على سجل العامل.', 'error');
+          return;
+        }
+
+        $('workerId').value = worker.id;
+        $('workerName').value = worker.name || '';
+        $('workDate').value = worker.work_date || '';
+        $('workLocation').value = worker.work_location || '';
+
+        $('workDays').value = worker.work_days ?? '';
+        $('dailyRate').value = worker.daily_rate ?? '';
+        $('regularHours').value = worker.regular_hours_per_day ?? '';
+        $('overtimeHours').value = worker.overtime_hours ?? '';
+        $('overtimeRate').value = worker.overtime_hourly_rate ?? '';
+        $('amountPaid').value = worker.amount_paid ?? '';
+        $('workerNotes').value = worker.notes || '';
+
+        // توافق مع السجلات القديمة.
+        if (worker.work_days == null && worker.daily_rate == null) {
+          $('workDays').value = '';
+          $('dailyRate').value = '';
+        }
+
+        $('formTitle').textContent = 'تعديل بيانات العامل';
+        $('saveBtn').textContent = 'حفظ التعديلات';
+        $('cancelEditBtn').classList.remove('hidden');
+        updatePreview();
+
+        $('workerFormPanel').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+
+      async function deleteWorker(id) {
+        if (!state.user) {
+          return;
+        }
+
+        const worker = state.workers.find(item => String(item.id) === String(id));
+
+        if (!worker) {
+          showMessage('لم يتم العثور على سجل العامل.', 'error');
+          return;
+        }
+
+        const confirmed = window.confirm(
+          'هل أنت متأكد من حذف سجل العامل "' +
+          worker.name +
+          '"؟ لا يمكن التراجع عن الحذف.'
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        try {
+          const { data, error } = await db
+            .from('workers')
+            .delete()
+            .eq('id', id)
+            .eq('created_by', state.user.id)
+            .select('id');
+
+          if (error) {
+            throw error;
+          }
+
+          if (!data || data.length === 0) {
+            throw new Error('لم يتم حذف السجل. تحقق من صلاحيات قاعدة البيانات.');
+          }
+
+          state.workers = state.workers.filter(item => String(item.id) !== String(id));
+          renderWorkers();
+          showMessage('تم حذف سجل العامل.', 'success');
+
+          if ($('workerId').value === String(id)) {
+            resetWorkerForm();
+          }
+        } catch (error) {
+          showMessage(friendlyError(error), 'error');
+        }
+      }
+
+      async function handleAuthSubmit(event) {
+        event.preventDefault();
+
+        const email = $('authEmail').value.trim();
+        const password = $('authPassword').value;
+
+        if (!email || !password) {
+          showMessage('اكتب البريد الإلكتروني وكلمة المرور.', 'error');
+          return;
+        }
+
+        const button = $('authSubmit');
+        const isSignup = state.authMode === 'signup';
+
+        setButtonLoading(
+          button,
+          true,
+          'جاري التنفيذ...',
+          isSignup ? 'إنشاء الحساب' : 'دخول'
+        );
+
+        try {
+          if (isSignup) {
+            const { data, error } = await db.auth.signUp({
+              email,
+              password,
+              options: {
+                emailRedirectTo: window.location.href.split('#')[0]
+              }
+            });
+
+            if (error) {
+              throw error;
+            }
+
+            if (data.session && data.user) {
+              showMessage('تم إنشاء الحساب وتسجيل الدخول بنجاح.', 'success');
+            } else {
+              showMessage(
+                'تم إنشاء الحساب. إذا طُلب تأكيد البريد، افتح رسالة التأكيد ثم ارجع وسجّل الدخول.',
+                'success'
+              );
+              setAuthMode('login');
+            }
+          } else {
+            const { error } = await db.auth.signInWithPassword({
+              email,
+              password
+            });
+
+            if (error) {
+              throw error;
+            }
+
+            showMessage('تم تسجيل الدخول بنجاح.', 'success');
+          }
+        } catch (error) {
+          showMessage(friendlyError(error), 'error');
+        } finally {
+          setButtonLoading(
+            button,
+            false,
+            '',
+            isSignup ? 'إنشاء الحساب' : 'دخول'
+          );
+          $('authSubmit').textContent =
+            state.authMode === 'signup' ? 'إنشاء الحساب' : 'دخول';
+        }
+      }
+
+      async function logout() {
+        const button = $('logoutBtn');
+        button.disabled = true;
+
+        try {
+          const { error } = await db.auth.signOut();
+
+          if (error) {
+            throw error;
+          }
+
+          showLoggedOut();
+          setAuthMode('login');
+          showMessage('تم تسجيل الخروج.', 'success');
+        } catch (error) {
+          showMessage(friendlyError(error), 'error');
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      $('authForm').addEventListener('submit', handleAuthSubmit);
+
+      $('authSwitch').addEventListener('click', () => {
+        setAuthMode(state.authMode === 'login' ? 'signup' : 'login');
+        $('authPassword').value = '';
+        $('authPassword').focus();
+      });
+
+      $('logoutBtn').addEventListener('click', logout);
+      $('workerForm').addEventListener('submit', saveWorker);
+      $('searchInput').addEventListener('input', renderWorkers);
+      $('refreshBtn').addEventListener('click', refreshWorkers);
+      $('cancelEditBtn').addEventListener('click', resetWorkerForm);
+      $('resetFormBtn').addEventListener('click', resetWorkerForm);
+
+      [
+        'workDays',
+        'dailyRate',
+        'regularHours',
+        'overtimeHours',
+        'overtimeRate',
+        'amountPaid'
+      ].forEach(id => {
+        $(id).addEventListener('input', updatePreview);
+      });
+
+      $('workersList').addEventListener('click', event => {
+        const button = event.target.closest('button[data-action]');
+
+        if (!button) {
+          return;
+        }
+
+        const action = button.dataset.action;
+        const id = button.dataset.id;
+
+        if (action === 'edit') {
+          startEdit(id);
+        } else if (action === 'delete') {
+          deleteWorker(id);
         }
       });
 
-      if (error) throw error;
-
-      if (data.session) {
-        showMessage(
-          'authMessage',
-          'تم إنشاء الحساب بنجاح.',
-          true
-        );
-
-        await handleSession(data.session);
-      } else {
-        showMessage(
-          'authMessage',
-          'تم إرسال طلب إنشاء الحساب. إذا كان تأكيد البريد الإلكتروني مطلوبًا، افتح رسالة سوبيس في بريدك واضغط رابط التأكيد، ثم ارجع وسجّل الدخول.',
-          true
-        );
-
-        setAuthMode('login');
-      }
-
-    } else {
-      const { data, error } =
-        await db.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-
-      if (error) throw error;
-
-      if (data.session) {
-        await handleSession(data.session);
-      } else {
-        showMessage(
-          'authMessage',
-          'لم يتم إنشاء جلسة دخول. حاول مرة أخرى.',
-          false
-        );
-      }
-    }
-
-  } catch (error) {
-    showMessage(
-      'authMessage',
-      'تعذر إتمام العملية: ' +
-      (error.message || 'حدث خطأ غير معروف.'),
-      false
-    );
-  } finally {
-    busy = false;
-    $('authButton').disabled = false;
-    $('switchAuthButton').disabled = false;
-    calculatePreview();
-  }
-});
-
-/* عرض جلسة المستخدم */
-
-async function handleSession(session) {
-  const generation = ++sessionGeneration;
-
-  if (!session || !session.user) {
-    currentUser = null;
-    workers = [];
-    editingId = null;
-    sessionReady = true;
-
-    $('loginCard').classList.remove('hidden');
-    $('appArea').classList.add('hidden');
-
-    $('workerList').innerHTML =
-      '<div class="empty">سجّل الدخول لعرض بياناتك.</div>';
-
-    return;
-  }
-
-  currentUser = session.user;
-
-  $('loginCard').classList.add('hidden');
-  $('appArea').classList.remove('hidden');
-
-  $('userInfo').textContent =
-    session.user.email || 'حساب المستخدم';
-
-  $('workerFormCard').classList.remove('hidden');
-
-  hideMessage('appMessage');
-
-  await loadWorkers(generation);
-}
-
-/* تحميل العمال الخاصين بالمستخدم الحالي */
-
-async function loadWorkers(generation) {
-  if (!currentUser) return;
-
-  const requestedUserId = currentUser.id;
-
-  $('refreshButton').disabled = true;
-
-  $('workerList').innerHTML =
-    '<div class="empty">جارٍ تحميل البيانات...</div>';
-
-  try {
-    /*
-      نعرض سجلات المستخدم الحالي فقط.
-      وسياسات RLS في قاعدة البيانات هي الحماية الفعلية.
-    */
-
-    const { data, error } = await db
-      .from('workers')
-      .select('*')
-      .eq('created_by', requestedUserId)
-      .order('id', { ascending: false });
-
-    if (error) throw error;
-
-    if (
-      generation !== sessionGeneration ||
-      !currentUser ||
-      currentUser.id !== requestedUserId
-    ) {
-      return;
-    }
-
-    workers = (data || []).map(fromDb);
-
-    renderWorkers();
-    hideMessage('appMessage');
-
-  } catch (error) {
-    if (generation !== sessionGeneration) return;
-
-    $('workerList').innerHTML =
-      '<div class="empty">تعذر تحميل البيانات.</div>';
-
-    showMessage(
-      'appMessage',
-      'تعذر تحميل العمال: ' +
-      (error.message || 'خطأ غير معروف.'),
-      false
-    );
-
-  } finally {
-    if (generation === sessionGeneration) {
-      $('refreshButton').disabled = false;
-    }
-  }
-}
-
-/* عرض سجل العمال والملخص */
-
-function renderWorkers() {
-  const search = $('searchInput').value
-    .trim()
-    .toLowerCase();
-
-  const filtered = workers.filter(function (worker) {
-    const fields = [
-      worker.name,
-      worker.work_location,
-      worker.id,
-      worker.work_date
-    ];
-
-    return fields.some(function (value) {
-      return String(value ?? '')
-        .toLowerCase()
-        .includes(search);
-    });
-  });
-
-  $('workerCount').textContent =
-    workers.length.toLocaleString('ar-SA');
-
-  const dueSum = workers.reduce(
-    (sum, worker) => sum + workerDue(worker),
-    0
-  );
-
-  const paidSum = workers.reduce(
-    (sum, worker) => sum + workerPaid(worker),
-    0
-  );
-
-  $('totalDue').textContent = money(dueSum);
-  $('totalPaid').textContent = money(paidSum);
-
-  $('totalRemaining').textContent =
-    money(roundMoney(dueSum - paidSum));
-
-  if (!filtered.length) {
-    $('workerList').innerHTML =
-      '<div class="empty">لا توجد بيانات مطابقة للبحث.</div>';
-
-    return;
-  }
-
-  $('workerList').innerHTML = filtered.map(function (worker) {
-    const oldRecord =
-      !hasValue(worker.work_days) ||
-      !hasValue(worker.daily_rate);
-
-    const regularHours = oldRecord
-      ? numberOrZero(worker.hours)
-      : numberOrZero(worker.work_days) *
-        numberOrZero(worker.regular_hours_per_day);
-
-    const dailyPay = oldRecord
-      ? workerDue(worker)
-      : numberOrZero(worker.work_days) *
-        numberOrZero(worker.daily_rate);
-
-    const overtimePay = oldRecord
-      ? 0
-      : numberOrZero(worker.overtime_hours) *
-        numberOrZero(worker.overtime_hourly_rate);
-
-    return `
-      <article class="worker">
-
-        <h3>
-          العامل: ${escapeHTML(worker.name)}
-        </h3>
-
-        <p>
-          <b>الرقم المسلسل:</b>
-          ${escapeHTML(worker.id)}
-        </p>
-
-        <p>
-          <b>تاريخ العمل:</b>
-          ${escapeHTML(worker.work_date || 'غير محدد')}
-        </p>
-
-        <p>
-          <b>مكان العمل:</b>
-          ${escapeHTML(worker.work_location || 'غير محدد')}
-        </p>
-
-        <p>
-          <b>أيام العمل:</b>
-          ${oldRecord
-            ? 'سجل قديم'
-            : escapeHTML(worker.work_days)}
-        </p>
-
-        <p>
-          <b>أجر اليومية:</b>
-          ${oldRecord
-            ? 'سجل قديم'
-            : money(worker.daily_rate) + ' ريال'}
-        </p>
-
-        <p>
-          <b>ساعات العمل الأساسية:</b>
-          ${oldRecord
-            ? escapeHTML(worker.hours)
-            : escapeHTML(regularHours)}
-        </p>
-
-        <p>
-          <b>مستحق الأيام:</b>
-          ${money(dailyPay)} ريال
-        </p>
-
-        <p>
-          <b>ساعات الإضافي:</b>
-          ${oldRecord
-            ? 'سجل قديم'
-            : escapeHTML(numberOrZero(worker.overtime_hours))}
-        </p>
-
-        <p>
-          <b>سعر الساعة الإضافية:</b>
-          ${oldRecord
-            ? 'سجل قديم'
-            : money(worker.overtime_hourly_rate) + ' ريال'}
-        </p>
-
-        <p>
-          <b>مستحق الإضافي:</b>
-          ${money(overtimePay)} ريال
-        </p>
-
-        <p>
-          <b>إجمالي المستحق:</b>
-          ${money(workerDue(worker))} ريال
-        </p>
-
-        <p>
-          <b>المدفوع:</b>
-          ${money(workerPaid(worker))} ريال
-        </p>
-
-        <p>
-          <b>المتبقي:</b>
-          ${money(workerRemaining(worker))} ريال
-        </p>
-
-        <p>
-          <b>ملاحظات:</b>
-          ${escapeHTML(worker.notes || 'لا توجد')}
-        </p>
-
-        <div class="worker-actions">
-
-          <button
-            type="button"
-            data-action="edit"
-            data-id="${escapeHTML(worker.id)}"
-          >
-            تعديل البيانات
-          </button>
-
-          <button
-            type="button"
-            class="danger"
-            data-action="delete"
-            data-id="${escapeHTML(worker.id)}"
-          >
-            حذف العامل
-          </button>
-
-        </div>
-
-      </article>
-    `;
-  }).join('');
-}
-
-/* قراءة بيانات النموذج والتحقق منها */
-
-function readForm() {
-  const name = $('workerName').value.trim();
-
-  if (!name) {
-    throw new Error('اكتب اسم العامل أولًا.');
-  }
-
-  const inputIds = [
-    'workDays',
-    'dailyRate',
-    'regularHours',
-    'overtimeHours',
-    'overtimeRate',
-    'workerPaid'
-  ];
-
-  for (const id of inputIds) {
-    if ($(id).value.trim() === '') {
-      throw new Error(
-        'أكمل الخانات الرقمية. اكتب صفرًا في الخانة التي لا تحتاجها.'
-      );
-    }
-  }
-
-  const days = Number($('workDays').value);
-  const dailyRate = Number($('dailyRate').value);
-  const regularHours = Number($('regularHours').value);
-  const overtimeHours = Number($('overtimeHours').value);
-  const overtimeRate = Number($('overtimeRate').value);
-  const amountPaid = Number($('workerPaid').value);
-
-  const values = [
-    days,
-    dailyRate,
-    regularHours,
-    overtimeHours,
-    overtimeRate,
-    amountPaid
-  ];
-
-  if (!values.every(Number.isFinite)) {
-    throw new Error('راجع الأرقام المدخلة.');
-  }
-
-  if (
-    days < 0 || days > 10000 ||
-    dailyRate < 0 || dailyRate > 1000000 ||
-    regularHours < 0 || regularHours > 24 ||
-    overtimeHours < 0 || overtimeHours > 100000 ||
-    overtimeRate < 0 || overtimeRate > 1000000 ||
-    amountPaid < 0
-  ) {
-    throw new Error('توجد قيمة خارج النطاق المسموح.');
-  }
-
-  const regularTotal = days * regularHours;
-  const dailyPay = days * dailyRate;
-  const overtimePay = overtimeHours * overtimeRate;
-
-  const due = roundMoney(dailyPay + overtimePay);
-
-  if (!Number.isFinite(due)) {
-    throw new Error('تعذر حساب المستحقات. راجع الأرقام.');
-  }
-
-  if (amountPaid > due) {
-    throw new Error(
-      'المبلغ المدفوع لا يمكن أن يكون أكبر من إجمالي المستحق.'
-    );
-  }
-
-  /*
-    نحتفظ بالأعمدة القديمة لتوافق قاعدة البيانات الحالية.
-    hours = إجمالي ساعات العمل الأساسية.
-    hourly_wage = قيمة الساعة الأساسية المحسوبة من اليومية.
-  */
-
-  const oldHourlyWage = regularHours > 0
-    ? roundMoney(dailyRate / regularHours)
-    : 0;
-
-  return {
-    name: name,
-
-    work_date: $('workDate').value || null,
-
-    work_location:
-      $('workPlace').value.trim(),
-
-    work_days: days,
-
-    daily_rate: roundMoney(dailyRate),
-
-    regular_hours_per_day: regularHours,
-
-    overtime_hours: overtimeHours,
-
-    overtime_hourly_rate: roundMoney(overtimeRate),
-
-    hours: roundMoney(regularTotal),
-
-    hourly_wage: oldHourlyWage,
-
-    total_due: due,
-
-    amount_paid: roundMoney(amountPaid),
-
-    notes: $('workerNotes').value.trim(),
-
-    updated_at: new Date().toISOString()
-  };
-}
-
-/* تفريغ النموذج */
-
-function clearForm() {
-  $('workerForm').reset();
-
-  /*
-    لا توجد قيم افتراضية للأيام أو الساعات أو الأجور.
-    كل الخانات الرقمية تبدأ فارغة.
-  */
-
-  editingId = null;
-
-  $('formTitle').textContent =
-    'تسجيل عامل جديد';
-
-  $('saveButton').textContent =
-    'حفظ بيانات العامل';
-
-  $('cancelEdit').classList.add('hidden');
-
-  hideMessage('formMessage');
-
-  calculatePreview();
-}
-
-/* حفظ عامل جديد أو تعديل عامل */
-
-async function submitWorker(event) {
-  event.preventDefault();
-
-  if (busy) return;
-
-  hideMessage('formMessage');
-
-  if (!currentUser) {
-    showMessage(
-      'formMessage',
-      'انتهت جلسة الدخول. سجّل الدخول مرة أخرى.',
-      false
-    );
-    return;
-  }
-
-  let payload;
-
-  try {
-    payload = readForm();
-  } catch (error) {
-    showMessage(
-      'formMessage',
-      error.message,
-      false
-    );
-    return;
-  }
-
-  const selectedId = editingId;
-
-  if (selectedId !== null) {
-    const existing = workers.find(
-      worker => String(worker.id) === String(selectedId)
-    );
-
-    if (!existing || existing.created_by !== currentUser.id) {
-      showMessage(
-        'formMessage',
-        'لا يمكن تعديل هذا السجل من الحساب الحالي.',
-        false
-      );
-      return;
-    }
-  }
-
-  const userId = currentUser.id;
-
-  busy = true;
-  $('saveButton').disabled = true;
-
-  try {
-    let result;
-
-    if (selectedId !== null) {
-      result = await db
-        .from('workers')
-        .update(payload)
-        .eq('id', selectedId)
-        .eq('created_by', userId)
-        .select();
-    } else {
-      payload.created_by = userId;
-
-      result = await db
-        .from('workers')
-        .insert(payload)
-        .select();
-    }
-
-    if (result.error) {
-      throw result.error;
-    }
-
-    if (!result.data || result.data.length === 0) {
-      throw new Error(
-        'لم يتم تأكيد الحفظ. تحقق من صلاحيات قاعدة البيانات.'
-      );
-    }
-
-    showMessage(
-      'formMessage',
-      selectedId !== null
-        ? 'تم تحديث بيانات العامل بنجاح.'
-        : 'تم حفظ بيانات العامل بنجاح.',
-      true
-    );
-
-    clearForm();
-
-    await loadWorkers(sessionGeneration);
-
-  } catch (error) {
-    showMessage(
-      'formMessage',
-      'فشل الحفظ: ' +
-      (error.message || 'خطأ غير معروف.'),
-      false
-    );
-  } finally {
-    busy = false;
-    calculatePreview();
-  }
-}
-
-/* تعديل بيانات عامل */
-
-function editWorker(id) {
-  const worker = workers.find(
-    item => String(item.id) === String(id)
-  );
-
-  if (!worker || !currentUser) return;
-
-  if (worker.created_by !== currentUser.id) {
-    showMessage(
-      'appMessage',
-      'لا يمكن تعديل هذا العامل من الحساب الحالي.',
-      false
-    );
-    return;
-  }
-
-  editingId = worker.id;
-
-  $('workerName').value = worker.name;
-  $('workDate').value = worker.work_date || '';
-  $('workPlace').value = worker.work_location || '';
-
-  /*
-    السجلات القديمة لا تحتوي على الأعمدة الجديدة.
-    عند تعديل سجل قديم يجب إدخال بياناته الجديدة يدويًا.
-  */
-
-  $('workDays').value =
-    hasValue(worker.work_days)
-      ? worker.work_days
-      : '';
-
-  $('dailyRate').value =
-    hasValue(worker.daily_rate)
-      ? worker.daily_rate
-      : '';
-
-  $('regularHours').value =
-    hasValue(worker.regular_hours_per_day)
-      ? worker.regular_hours_per_day
-      : '';
-
-  $('overtimeHours').value =
-    hasValue(worker.overtime_hours)
-      ? worker.overtime_hours
-      : '';
-
-  $('overtimeRate').value =
-    hasValue(worker.overtime_hourly_rate)
-      ? worker.overtime_hourly_rate
-      : '';
-
-  $('workerPaid').value =
-    numberOrZero(worker.amount_paid);
-
-  $('workerNotes').value =
-    worker.notes || '';
-
-  $('formTitle').textContent =
-    'تعديل بيانات العامل رقم ' + worker.id;
-
-  $('saveButton').textContent =
-    'حفظ التعديلات';
-
-  $('cancelEdit').classList.remove('hidden');
-
-  hideMessage('formMessage');
-
-  calculatePreview();
-
-  $('workerFormCard').scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
-}
-
-/* حذف عامل */
-
-async function deleteWorker(id) {
-  if (busy || !currentUser) return;
-
-  const worker = workers.find(
-    item => String(item.id) === String(id)
-  );
-
-  if (!worker) return;
-
-  if (worker.created_by !== currentUser.id) {
-    showMessage(
-      'appMessage',
-      'لا يمكن حذف هذا العامل من الحساب الحالي.',
-      false
-    );
-    return;
-  }
-
-  const confirmed = confirm(
-    'هل أنت متأكد من حذف العامل "' +
-    worker.name +
-    '"؟ لا يمكن التراجع عن الحذف.'
-  );
-
-  if (!confirmed) return;
-
-  busy = true;
-
-  try {
-    const { data, error } = await db
-      .from('workers')
-      .delete()
-      .eq('id', worker.id)
-      .eq('created_by', currentUser.id)
-      .select('id');
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) {
-      throw new Error(
-        'لم يتم تأكيد الحذف. تحقق من صلاحيات قاعدة البيانات.'
-      );
-    }
-
-    if (String(editingId) === String(worker.id)) {
-      clearForm();
-    }
-
-    showMessage(
-      'appMessage',
-      'تم حذف العامل بنجاح.',
-      true
-    );
-
-    await loadWorkers(sessionGeneration);
-
-  } catch (error) {
-    showMessage(
-      'appMessage',
-      'فشل الحذف: ' +
-      (error.message || 'خطأ غير معروف.'),
-      false
-    );
-  } finally {
-    busy = false;
-  }
-}
-
-/* ربط الأزرار */
-
-$('workerForm').addEventListener(
-  'submit',
-  submitWorker
-);
-
-$('cancelEdit').addEventListener(
-  'click',
-  clearForm
-);
-
-$('refreshButton').addEventListener(
-  'click',
-  function () {
-    loadWorkers(sessionGeneration);
-  }
-);
-
-$('logoutButton').addEventListener(
-  'click',
-  async function () {
-    $('logoutButton').disabled = true;
-
-    try {
-      const { error } = await db.auth.signOut();
-
-      if (error) throw error;
-
-      currentUser = null;
-      workers = [];
-      editingId = null;
-
-      $('appArea').classList.add('hidden');
-      $('loginCard').classList.remove('hidden');
-
-      setAuthMode('login');
-      clearForm();
-
-      hideMessage('appMessage');
-      hideMessage('authMessage');
-
-    } catch (error) {
-      showMessage(
-        'appMessage',
-        'تعذر تسجيل الخروج: ' +
-        (error.message || 'خطأ غير معروف.'),
-        false
-      );
-    } finally {
-      $('logoutButton').disabled = false;
-    }
-  }
-);
-
-$('searchInput').addEventListener(
-  'input',
-  renderWorkers
-);
-
-$('workerList').addEventListener(
-  'click',
-  function (event) {
-    const button = event.target.closest(
-      'button[data-action]'
-    );
-
-    if (!button) return;
-
-    const action = button.dataset.action;
-    const id = button.dataset.id;
-
-    if (action === 'edit') {
-      editWorker(id);
-    }
-
-    if (action === 'delete') {
-      deleteWorker(id);
-    }
-  }
-);
-
-/* تحديث المعاينة عند تغيير أي رقم */
-
-[
-  'workDays',
-  'dailyRate',
-  'regularHours',
-  'overtimeHours',
-  'overtimeRate',
-  'workerPaid'
-].forEach(function (id) {
-  $(id).addEventListener(
-    'input',
-    calculatePreview
-  );
-});
-
-/* مراقبة جلسة الدخول */
-
-db.auth.onAuthStateChange(function (event, session) {
-  if (
-    event === 'SIGNED_IN' ||
-    event === 'INITIAL_SESSION' ||
-    event === 'TOKEN_REFRESHED'
-  ) {
-    if (session && session.user) {
-      setTimeout(function () {
-        handleSession(session);
-      }, 0);
-    }
-  }
-
-  if (event === 'SIGNED_OUT') {
-    setTimeout(function () {
-      if (!currentUser) return;
-
-      currentUser = null;
-      workers = [];
-      editingId = null;
-      sessionReady = true;
-
-      $('loginCard').classList.remove('hidden');
-      $('appArea').classList.add('hidden');
-
-      setAuthMode('login');
-    }, 0);
-  }
-});
-
-/* استعادة جلسة الدخول عند فتح التطبيق */
-
-db.auth.getSession().then(function (result) {
-  if (result.error) {
-    showMessage(
-      'authMessage',
-      'تعذر التحقق من جلسة الدخول: ' +
-      result.error.message,
-      false
-    );
-
-    sessionReady = true;
-    return;
-  }
-
-  if (!sessionReady) {
-    handleSession(result.data.session);
-  }
-});
-
-/* القيم الأولية للمعاينة فقط */
-
-calculatePreview();
-
-})();
-</script>
-
-<script>
-/* تسجيل Service Worker للتطبيق */
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker
-      .register('./service-worker.js')
-      .catch(function (error) {
-        console.error(
-          'تعذر تسجيل Service Worker:',
-          error
-        );
+      // متابعة حالة تسجيل الدخول دون تنفيذ تحميلات مكررة.
+      let authInitialized = false;
+
+      db.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+          state.sessionGeneration++;
+          state.user = null;
+          state.workers = [];
+          showLoggedOut();
+          return;
+        }
+
+        if (session && session.user) {
+          if (state.user && state.user.id === session.user.id && authInitialized) {
+            return;
+          }
+
+          authInitialized = true;
+          state.sessionGeneration++;
+          const generation = state.sessionGeneration;
+
+          showLoggedIn(session.user);
+          loadWorkers(generation);
+        } else if (event === 'INITIAL_SESSION') {
+          authInitialized = true;
+          showLoggedOut();
+        }
       });
-  });
-}
-</script>
 
+      async function initialize() {
+        resetWorkerForm();
+
+        try {
+          const { data, error } = await db.auth.getSession();
+
+          if (error) {
+            throw error;
+          }
+
+          const session = data?.session;
+
+          if (session?.user) {
+            if (!state.user || state.user.id !== session.user.id) {
+              state.sessionGeneration++;
+              const generation = state.sessionGeneration;
+
+              showLoggedIn(session.user);
+              await loadWorkers(generation);
+            }
+          } else if (!state.user) {
+            showLoggedOut();
+          }
+        } catch (error) {
+          showMessage(friendlyError(error), 'error');
+          showLoggedOut();
+        }
+      }
+
+      initialize();
+
+      // تسجيل Service Worker للتطبيق إذا كان الملف موجودًا.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .catch(error => {
+              console.warn('تعذر تسجيل Service Worker:', error);
+            });
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
