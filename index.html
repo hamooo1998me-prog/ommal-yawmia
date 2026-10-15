@@ -5,43 +5,164 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#111111">
 <title>عمال يوميه</title>
+
 <style>
-:root{--gold:#d9b45b;--bg:#111;--panel:#1e1e1e;--text:#fff;--muted:#bbb;--red:#6b2020;--green:#17482f}
+:root{
+  --gold:#d9b45b;
+  --bg:#111;
+  --panel:#1e1e1e;
+  --text:#fff;
+  --muted:#bbb;
+  --red:#6b2020;
+  --green:#17482f;
+}
+
 *{box-sizing:border-box}
-body{margin:0;padding:12px;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{text-align:center;padding:20px 10px;border-bottom:2px solid var(--gold);margin-bottom:15px}
+
+body{
+  margin:0;
+  padding:12px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+
+header{
+  text-align:center;
+  padding:20px 10px;
+  border-bottom:2px solid var(--gold);
+  margin-bottom:15px;
+}
+
 h1,h2,h3{color:var(--gold)}
 h1{margin:0 0 8px}
 header p,.note{color:var(--muted)}
+
 .container{max-width:850px;margin:auto}
-.card{background:var(--panel);border:1px solid #5c4a24;border-radius:13px;padding:15px;margin-bottom:15px}
+
+.card{
+  background:var(--panel);
+  border:1px solid #5c4a24;
+  border-radius:13px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
 h2{font-size:21px;margin-top:0}
+
 label{display:block;margin:12px 0 5px}
-input,textarea{display:block;width:100%;padding:12px;border-radius:8px;border:1px solid #555;background:#101010;color:white;font-size:16px}
+
+input,textarea{
+  display:block;
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #555;
+  background:#101010;
+  color:white;
+  font-size:16px;
+}
+
 textarea{min-height:75px}
-button{border:0;border-radius:8px;padding:12px;font-size:15px;font-weight:bold;cursor:pointer;background:var(--gold);color:#111;margin-top:10px}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:12px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  background:var(--gold);
+  color:#111;
+  margin-top:10px;
+}
+
+button:disabled{opacity:.5;cursor:wait}
 .primary{width:100%;font-size:17px}
 .secondary{background:#333;color:white;border:1px solid var(--gold)}
 .danger{background:var(--red);color:white}
-.grid,.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:#101010;border:1px solid #4c3d20;border-radius:10px;padding:12px;text-align:center}
-.stat span{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}
-.stat strong{color:var(--gold);font-size:20px;overflow-wrap:anywhere}
-.worker{border:1px solid #4c4c4c;padding:13px;border-radius:10px;margin-top:12px;background:#151515}
+
+.grid,.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.stat{
+  background:#101010;
+  border:1px solid #4c3d20;
+  border-radius:10px;
+  padding:12px;
+  text-align:center;
+}
+
+.stat span{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.stat strong{
+  color:var(--gold);
+  font-size:20px;
+  overflow-wrap:anywhere;
+}
+
+.worker{
+  border:1px solid #4c4c4c;
+  padding:13px;
+  border-radius:10px;
+  margin-top:12px;
+  background:#151515;
+}
+
 .worker h3{margin:0 0 10px}
 .worker p{margin:7px 0;overflow-wrap:anywhere}
-.worker-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+.worker-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
 .worker-actions button{width:100%}
-.message{display:none;padding:12px;margin-top:12px;border-radius:8px;overflow-wrap:anywhere}
+
+.message{
+  display:none;
+  padding:12px;
+  margin-top:12px;
+  border-radius:8px;
+  overflow-wrap:anywhere;
+}
+
 .message.ok{display:block;background:var(--green)}
 .message.error{display:block;background:var(--red)}
-.empty{text-align:center;color:var(--muted);padding:20px 5px}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:20px 5px;
+}
+
 .hidden{display:none!important}
+
 .note{font-size:13px;line-height:1.7}
-footer{text-align:center;color:var(--muted);padding:20px 5px;font-size:12px}
-@media(max-width:420px){.grid{grid-template-columns:1fr}}
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  padding:20px 5px;
+  font-size:12px;
+}
+
+@media(max-width:420px){
+  .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -53,13 +174,18 @@ footer{text-align:center;color:var(--muted);padding:20px 5px;font-size:12px}
 
 <section class="card" id="loginCard">
   <h2>تسجيل الدخول</h2>
-  <p class="note">سجّل الدخول بالبريد الإلكتروني وكلمة المرور التي أُنشئت في Supabase.</p>
+  <p class="note">
+    سجّل الدخول بالبريد الإلكتروني وكلمة المرور المسجلين في النظام.
+  </p>
+
   <form id="loginForm">
     <label for="email">البريد الإلكتروني</label>
     <input id="email" type="email" required autocomplete="username">
+
     <label for="password">كلمة المرور</label>
     <input id="password" type="password" required autocomplete="current-password">
-    <button class="primary" type="submit">دخول</button>
+
+    <button class="primary" id="loginButton" type="submit">دخول</button>
     <div id="loginMessage" class="message" role="status"></div>
   </form>
 </section>
@@ -72,28 +198,56 @@ footer{text-align:center;color:var(--muted);padding:20px 5px;font-size:12px}
         <h2 style="margin-bottom:5px">الحساب</h2>
         <div id="userInfo" class="note"></div>
       </div>
+
       <div>
-        <button id="refreshButton" class="secondary" style="width:100%">تحديث البيانات</button>
-        <button id="logoutButton" class="danger" style="width:100%">تسجيل الخروج</button>
+        <button id="refreshButton" class="secondary" style="width:100%">
+          تحديث البيانات
+        </button>
+
+        <button id="logoutButton" class="danger" style="width:100%">
+          تسجيل الخروج
+        </button>
       </div>
     </div>
+
     <div id="appMessage" class="message" role="status"></div>
   </section>
 
   <section class="card">
     <h2>ملخص الحسابات</h2>
+
     <div class="stats">
-      <div class="stat"><span>عدد العمال</span><strong id="workerCount">0</strong></div>
-      <div class="stat"><span>إجمالي المستحقات</span><strong id="totalDue">0.00</strong></div>
-      <div class="stat"><span>إجمالي المدفوع</span><strong id="totalPaid">0.00</strong></div>
-      <div class="stat"><span>إجمالي المتبقي</span><strong id="totalRemaining">0.00</strong></div>
+      <div class="stat">
+        <span>عدد العمال</span>
+        <strong id="workerCount">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>إجمالي المستحقات</span>
+        <strong id="totalDue">0.00</strong>
+      </div>
+
+      <div class="stat">
+        <span>إجمالي المدفوع</span>
+        <strong id="totalPaid">0.00</strong>
+      </div>
+
+      <div class="stat">
+        <span>إجمالي المتبقي</span>
+        <strong id="totalRemaining">0.00</strong>
+      </div>
     </div>
-    <p class="note">جميع المبالغ بالريال. تُحسب المستحقات من ساعات العمل × أجر الساعة.</p>
+
+    <p class="note">
+      جميع المبالغ بالريال السعودي.
+    </p>
   </section>
 
   <section class="card">
     <h2 id="formTitle">تسجيل عامل جديد</h2>
+
     <form id="workerForm">
+
       <label for="workerName">اسم العامل *</label>
       <input id="workerName" maxlength="100" required>
 
@@ -102,6 +256,7 @@ footer{text-align:center;color:var(--muted);padding:20px 5px;font-size:12px}
           <label for="workDate">تاريخ العمل</label>
           <input id="workDate" type="date">
         </div>
+
         <div>
           <label for="workPlace">مكان العمل أو الفرع</label>
           <input id="workPlace" maxlength="150">
@@ -111,35 +266,91 @@ footer{text-align:center;color:var(--muted);padding:20px 5px;font-size:12px}
       <div class="grid">
         <div>
           <label for="workHours">عدد ساعات العمل</label>
-          <input id="workHours" type="number" min="0" max="1000" step="0.25" value="8" required>
+          <input
+            id="workHours"
+            type="number"
+            min="0"
+            max="1000"
+            step="0.25"
+            value="8"
+            required
+          >
         </div>
+
         <div>
           <label for="hourRate">أجر الساعة بالريال</label>
-          <input id="hourRate" type="number" min="0" step="0.01" value="0" required>
+          <input
+            id="hourRate"
+            type="number"
+            min="0"
+            step="0.01"
+            value="0"
+            required
+          >
         </div>
       </div>
 
       <label for="workerPaid">المبلغ المدفوع بالريال</label>
-      <input id="workerPaid" type="number" min="0" step="0.01" value="0" required>
+      <input
+        id="workerPaid"
+        type="number"
+        min="0"
+        step="0.01"
+        value="0"
+        required
+      >
+
+      <div class="stats" style="margin-top:15px">
+        <div class="stat">
+          <span>إجمالي المستحق لهذا العامل</span>
+          <strong id="previewDue">0.00 ريال</strong>
+        </div>
+
+        <div class="stat">
+          <span>المتبقي لهذا العامل</span>
+          <strong id="previewRemaining">0.00 ريال</strong>
+        </div>
+      </div>
+
+      <p class="note">
+        الإجمالي يُحسب تلقائيًا من الساعات × أجر الساعة.
+        أدخل المبلغ المدفوع، وسيظهر المتبقي تلقائيًا.
+      </p>
 
       <label for="workerNotes">ملاحظات</label>
       <textarea id="workerNotes" maxlength="2000"></textarea>
 
-      <button id="saveButton" class="primary" type="submit">حفظ بيانات العامل</button>
-      <button id="cancelEdit" class="primary secondary hidden" type="button">إلغاء التعديل</button>
+      <button id="saveButton" class="primary" type="submit">
+        حفظ بيانات العامل
+      </button>
+
+      <button
+        id="cancelEdit"
+        class="primary secondary hidden"
+        type="button"
+      >
+        إلغاء التعديل
+      </button>
+
       <div id="formMessage" class="message" role="status"></div>
     </form>
   </section>
 
   <section class="card">
     <h2>البحث في سجل العمال</h2>
-    <label for="searchInput">ابحث بالاسم أو الرقم المسلسل أو مكان العمل</label>
+
+    <label for="searchInput">
+      ابحث بالاسم أو الرقم المسلسل أو مكان العمل
+    </label>
+
     <input id="searchInput" placeholder="اكتب كلمة البحث">
   </section>
 
   <section class="card">
     <h2>سجل العمال المشترك</h2>
-    <div id="workerList"><div class="empty">جارٍ تحميل البيانات...</div></div>
+    <div id="workerList">
+      <div class="empty">جارٍ تحميل البيانات...</div>
+    </div>
   </section>
 
 </section>
@@ -153,197 +364,332 @@ footer{text-align:center;color:var(--muted);padding:20px 5px;font-size:12px}
 (function(){
 'use strict';
 
-// بيانات الاتصال العامة بمشروع Supabase
-const SUPABASE_URL='https://qawnvmuwbcsfldcjikhb.supabase.co';
-const SUPABASE_KEY='sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7';
+const SUPABASE_URL =
+  'https://qawnvmuwbcsfldcjikhb.supabase.co';
 
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
+const SUPABASE_KEY =
+  'sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7';
 
-let workers=[];
-let editingId=null;
-let currentUser=null;
-let currentRole='supervisor';
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-function message(id,text,ok){
-  const e=$(id);
-  e.textContent=text;
-  e.className='message '+(ok?'ok':'error');
+const $ = id => document.getElementById(id);
+
+let workers = [];
+let editingId = null;
+let currentUser = null;
+let currentRole = 'supervisor';
+let busy = false;
+
+function message(id, text, ok){
+  const el = $(id);
+  el.textContent = text;
+  el.className = 'message ' + (ok ? 'ok' : 'error');
 }
 
 function hideMessage(id){
-  $(id).textContent='';
-  $(id).className='message';
+  $(id).textContent = '';
+  $(id).className = 'message';
 }
 
-function esc(v){
-  return String(v==null?'':v).replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
+function esc(value){
+  return String(value == null ? '' : value).replace(
+    /[&<>"']/g,
+    c => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[c])
+  );
 }
 
-function money(v){
-  return (Number(v)||0).toLocaleString('ar-SA',{
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
+function money(value){
+  return (Number(value) || 0).toLocaleString('ar-SA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
 }
 
+/* حساب إجمالي مستحقات العامل */
 function total(w){
-  return (Number(w.hours)||0)*(Number(w.hourly_wage)||0);
+  const saved = Number(w.total_due);
+
+  if(
+    w.total_due !== null &&
+    w.total_due !== undefined &&
+    Number.isFinite(saved)
+  ){
+    return saved;
+  }
+
+  return (Number(w.hours) || 0) *
+         (Number(w.rate) || 0);
 }
 
+/* قراءة المبلغ المدفوع */
 function paid(w){
-  return Number(w.amount_paid)||0;
+  return Number(w.amount_paid) || 0;
 }
 
+/* تحويل سجل قاعدة البيانات إلى بيانات التطبيق */
 function fromDb(w){
   return {
-    id:w.id,
-    name:w.name,
-    date:w.work_date||'',
-    place:w.work_location||'',
-    hours:Number(w.hours)||0,
-    rate:Number(w.hourly_wage)||0,
-    paid:Number(w.amount_paid)||0,
-    notes:w.notes||''
+    id: w.id,
+    name: w.name || '',
+    date: w.work_date || '',
+    place: w.work_location || '',
+    hours: Number(w.hours) || 0,
+    rate: Number(w.hourly_wage) || 0,
+    total_due: w.total_due == null
+      ? null
+      : Number(w.total_due),
+    amount_paid: Number(w.amount_paid) || 0,
+    notes: w.notes || ''
   };
 }
 
-async function loadWorkers(){
-  $('workerList').innerHTML='<div class="empty">جارٍ تحميل البيانات...</div>';
+/* حساب المبالغ أثناء إدخال البيانات */
+function updatePreview(){
+  const hours = Number($('workHours').value) || 0;
+  const rate = Number($('hourRate').value) || 0;
+  const amount = Number($('workerPaid').value) || 0;
 
-  const {data,error}=await db.from('workers')
+  const due = hours * rate;
+  const remaining = due - amount;
+
+  $('previewDue').textContent = money(due) + ' ريال';
+  $('previewRemaining').textContent =
+    money(remaining) + ' ريال';
+}
+
+/* تحميل العمال من قاعدة البيانات المشتركة */
+async function loadWorkers(){
+  $('workerList').innerHTML =
+    '<div class="empty">جارٍ تحميل البيانات...</div>';
+
+  const { data, error } = await db
+    .from('workers')
     .select('*')
-    .order('id',{ascending:false});
+    .order('id', { ascending: false });
 
   if(error){
-    message('appMessage','تعذر تحميل العمال: '+error.message,false);
-    $('workerList').innerHTML='<div class="empty">تعذر تحميل البيانات.</div>';
+    message(
+      'appMessage',
+      'تعذر تحميل العمال: ' + error.message,
+      false
+    );
+
+    $('workerList').innerHTML =
+      '<div class="empty">تعذر تحميل البيانات.</div>';
+
     return;
   }
 
-  workers=(data||[]).map(fromDb);
+  workers = (data || []).map(fromDb);
   render();
   hideMessage('appMessage');
 }
 
+/* عرض ملخص الحسابات وقائمة العمال */
 function render(){
-  const q=$('searchInput').value.trim().toLowerCase();
+  const q = $('searchInput').value.trim().toLowerCase();
 
-  const list=workers.filter(w=>
-    [w.name,w.place,w.id,w.date].some(v=>
-      String(v??'').toLowerCase().includes(q)
+  const list = workers.filter(w =>
+    [w.name, w.place, w.id, w.date].some(value =>
+      String(value ?? '').toLowerCase().includes(q)
     )
   );
 
-  $('workerCount').textContent=workers.length;
+  $('workerCount').textContent = workers.length;
 
-  const due=workers.reduce((s,w)=>s+total(w),0);
-  const p=workers.reduce((s,w)=>s+paid(w),0);
+  const due = workers.reduce((sum, w) => sum + total(w), 0);
+  const amount = workers.reduce((sum, w) => sum + paid(w), 0);
 
-  $('totalDue').textContent=money(due);
-  $('totalPaid').textContent=money(p);
-  $('totalRemaining').textContent=money(due-p);
+  $('totalDue').textContent = money(due);
+  $('totalPaid').textContent = money(amount);
+  $('totalRemaining').textContent = money(due - amount);
 
   if(!list.length){
-    $('workerList').innerHTML='<div class="empty">لا توجد بيانات مطابقة للبحث.</div>';
+    $('workerList').innerHTML =
+      '<div class="empty">لا توجد بيانات مطابقة للبحث.</div>';
     return;
   }
 
-  $('workerList').innerHTML=list.map(w=>`
+  $('workerList').innerHTML = list.map(w => `
     <article class="worker">
       <h3>العامل: ${esc(w.name)}</h3>
+
       <p><b>الرقم المسلسل:</b> ${esc(w.id)}</p>
-      <p><b>تاريخ العمل:</b> ${esc(w.date||'غير محدد')}</p>
-      <p><b>مكان العمل:</b> ${esc(w.place||'غير محدد')}</p>
+      <p><b>تاريخ العمل:</b> ${esc(w.date || 'غير محدد')}</p>
+      <p><b>مكان العمل:</b> ${esc(w.place || 'غير محدد')}</p>
       <p><b>عدد الساعات:</b> ${esc(w.hours)}</p>
       <p><b>أجر الساعة:</b> ${money(w.rate)} ريال</p>
-      <p><b>إجمالي المستحقات:</b> ${money(total(w))} ريال</p>
-      <p><b>المدفوع:</b> ${money(paid(w))} ريال</p>
-      <p><b>المتبقي:</b> ${money(total(w)-paid(w))} ريال</p>
-      <p><b>ملاحظات:</b> ${esc(w.notes||'لا توجد')}</p>
+
+      <p><b>إجمالي المستحقات:</b>
+        ${money(total(w))} ريال
+      </p>
+
+      <p><b>المدفوع:</b>
+        ${money(paid(w))} ريال
+      </p>
+
+      <p><b>المتبقي:</b>
+        ${money(total(w) - paid(w))} ريال
+      </p>
+
+      <p><b>ملاحظات:</b>
+        ${esc(w.notes || 'لا توجد')}
+      </p>
+
       <div class="worker-actions">
-        <button type="button" data-action="edit" data-id="${esc(w.id)}">تعديل البيانات</button>
-        <button type="button" class="danger" data-action="delete" data-id="${esc(w.id)}">حذف العامل</button>
+        <button
+          type="button"
+          data-action="edit"
+          data-id="${esc(w.id)}"
+        >تعديل البيانات</button>
+
+        <button
+          type="button"
+          class="danger"
+          data-action="delete"
+          data-id="${esc(w.id)}"
+        >حذف العامل</button>
       </div>
     </article>
   `).join('');
 }
 
+/* التحقق من المدخلات وتجهيز بيانات الحفظ */
 function formData(){
-  const name=$('workerName').value.trim();
-  const hours=$('workHours').value;
-  const rate=$('hourRate').value;
-  const amount=$('workerPaid').value;
+  const name = $('workerName').value.trim();
+  const hours = $('workHours').value;
+  const rate = $('hourRate').value;
+  const amount = $('workerPaid').value;
 
-  if(!name) throw Error('اكتب اسم العامل أولًا.');
-
-  if(hours===''||rate===''||amount===''){
-    throw Error('اكتب الساعات والأجر والمبلغ المدفوع. اكتب صفرًا إذا لم يوجد مبلغ.');
+  if(!name){
+    throw Error('اكتب اسم العامل أولًا.');
   }
 
-  if([hours,rate,amount].some(v=>!Number.isFinite(Number(v))||Number(v)<0)){
+  if(hours === '' || rate === '' || amount === ''){
+    throw Error(
+      'اكتب الساعات والأجر والمبلغ المدفوع. اكتب صفرًا إذا لم يوجد مبلغ.'
+    );
+  }
+
+  if(
+    !Number.isFinite(Number(hours)) ||
+    !Number.isFinite(Number(rate)) ||
+    !Number.isFinite(Number(amount)) ||
+    Number(hours) < 0 ||
+    Number(hours) > 1000 ||
+    Number(rate) < 0 ||
+    Number(amount) < 0
+  ){
     throw Error('راجع الأرقام المدخلة.');
   }
 
+  const h = Number(hours);
+  const r = Number(rate);
+  const p = Number(amount);
+  const due = Math.round(h * r * 100) / 100;
+
   return {
-    name,
-    work_date:$('workDate').value||null,
-    work_location:$('workPlace').value.trim(),
-    hours:Number(hours),
-    hourly_wage:Number(rate),
-    total_due:Number(hours)*Number(rate),
-    amount_paid:Number(amount),
-    notes:$('workerNotes').value.trim(),
-    updated_at:new Date().toISOString()
+    name: name,
+    work_date: $('workDate').value || null,
+    work_location: $('workPlace').value.trim(),
+    hours: h,
+    hourly_wage: r,
+    total_due: due,
+    amount_paid: p,
+    notes: $('workerNotes').value.trim(),
+    updated_at: new Date().toISOString()
   };
 }
 
+/* إعادة ضبط النموذج */
 function clearForm(){
   $('workerForm').reset();
-  $('workHours').value='8';
-  $('hourRate').value='0';
-  $('workerPaid').value='0';
-  editingId=null;
-  $('formTitle').textContent='تسجيل عامل جديد';
-  $('saveButton').textContent='حفظ بيانات العامل';
+
+  $('workHours').value = '8';
+  $('hourRate').value = '0';
+  $('workerPaid').value = '0';
+
+  editingId = null;
+
+  $('formTitle').textContent = 'تسجيل عامل جديد';
+  $('saveButton').textContent = 'حفظ بيانات العامل';
   $('cancelEdit').classList.add('hidden');
+
   hideMessage('formMessage');
+  updatePreview();
 }
 
+/* إضافة عامل جديد أو تعديل عامل موجود */
 async function submitWorker(e){
   e.preventDefault();
+
+  if(busy) return;
+
   hideMessage('formMessage');
 
   let payload;
+
   try{
-    payload=formData();
+    payload = formData();
   }catch(err){
-    message('formMessage',err.message,false);
+    message('formMessage', err.message, false);
     return;
   }
 
-  $('saveButton').disabled=true;
+  if(!currentUser){
+    message(
+      'formMessage',
+      'انتهت جلسة الدخول. سجّل الدخول مرة أخرى.',
+      false
+    );
+    return;
+  }
+
+  busy = true;
+  $('saveButton').disabled = true;
 
   try{
     let result;
 
-    if(editingId!==null){
-      result=await db.from('workers')
+    if(editingId !== null){
+      result = await db
+        .from('workers')
         .update(payload)
-        .eq('id',editingId)
+        .eq('id', editingId)
         .select();
     }else{
-      payload.created_by=currentUser.id;
-      result=await db.from('workers').insert(payload).select();
+      payload.created_by = currentUser.id;
+
+      result = await db
+        .from('workers')
+        .insert(payload)
+        .select();
     }
 
-    if(result.error) throw result.error;
+    if(result.error){
+      throw result.error;
+    }
+
+    if(!result.data || result.data.length === 0){
+      throw Error(
+        'لم يرجع النظام سجلًا محفوظًا. تحقق من صلاحيات قاعدة البيانات.'
+      );
+    }
 
     message(
       'formMessage',
-      editingId!==null?'تم تحديث بيانات العامل.':'تم حفظ بيانات العامل على قاعدة البيانات المشتركة.',
+      editingId !== null
+        ? 'تم تحديث بيانات العامل بنجاح.'
+        : 'تم حفظ بيانات العامل بنجاح.',
       true
     );
 
@@ -351,141 +697,219 @@ async function submitWorker(e){
     await loadWorkers();
 
   }catch(err){
-    message('formMessage','فشل الحفظ: '+(err.message||'خطأ غير معروف'),false);
+    message(
+      'formMessage',
+      'فشل الحفظ: ' + (err.message || 'خطأ غير معروف'),
+      false
+    );
   }finally{
-    $('saveButton').disabled=false;
+    busy = false;
+    $('saveButton').disabled = false;
   }
 }
 
+/* تحميل بيانات العامل في النموذج للتعديل */
 function editWorker(id){
-  const w=workers.find(x=>String(x.id)===String(id));
-  if(!w)return;
+  const w = workers.find(x => String(x.id) === String(id));
 
-  editingId=w.id;
-  $('workerName').value=w.name;
-  $('workDate').value=w.date;
-  $('workPlace').value=w.place;
-  $('workHours').value=w.hours;
-  $('hourRate').value=w.rate;
-  $('workerPaid').value=w.paid;
-  $('workerNotes').value=w.notes;
-  $('formTitle').textContent='تعديل بيانات العامل رقم '+w.id;
-  $('saveButton').textContent='حفظ التعديلات';
+  if(!w) return;
+
+  editingId = w.id;
+
+  $('workerName').value = w.name;
+  $('workDate').value = w.date;
+  $('workPlace').value = w.place;
+  $('workHours').value = w.hours;
+  $('hourRate').value = w.rate;
+  $('workerPaid').value = w.amount_paid;
+  $('workerNotes').value = w.notes;
+
+  $('formTitle').textContent =
+    'تعديل بيانات العامل رقم ' + w.id;
+
+  $('saveButton').textContent = 'حفظ التعديلات';
   $('cancelEdit').classList.remove('hidden');
 
-  window.scrollTo({top:0,behavior:'smooth'});
+  updatePreview();
+  hideMessage('formMessage');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* حذف عامل */
 async function deleteWorker(id){
-  const w=workers.find(x=>String(x.id)===String(id));
-  if(!w||!confirm('هل أنت متأكد من حذف العامل '+w.name+'؟'))return;
+  const w = workers.find(x => String(x.id) === String(id));
 
-  const {error}=await db.from('workers').delete().eq('id',id);
+  if(!w) return;
 
-  if(error){
-    message('appMessage','فشل الحذف: '+error.message,false);
+  if(!confirm('هل أنت متأكد من حذف العامل ' + w.name + '؟')){
     return;
   }
 
-  message('appMessage','تم حذف العامل.',true);
+  const { error } = await db
+    .from('workers')
+    .delete()
+    .eq('id', id);
+
+  if(error){
+    message('appMessage', 'فشل الحذف: ' + error.message, false);
+    return;
+  }
+
+  message('appMessage', 'تم حذف العامل.', true);
   await loadWorkers();
 }
 
+/* إظهار التطبيق بعد تسجيل الدخول */
 async function showSession(session){
   if(!session){
-    currentUser=null;
+    currentUser = null;
+
     $('loginCard').classList.remove('hidden');
     $('appArea').classList.add('hidden');
+
     return;
   }
 
-  currentUser=session.user;
+  currentUser = session.user;
+
   $('loginCard').classList.add('hidden');
   $('appArea').classList.remove('hidden');
-  $('userInfo').textContent=session.user.email||'';
 
-  const {data:profile,error}=await db.from('profiles')
+  $('userInfo').textContent = session.user.email || '';
+
+  const { data: profile, error } = await db
+    .from('profiles')
     .select('full_name,role')
-    .eq('id',session.user.id)
+    .eq('id', session.user.id)
     .maybeSingle();
 
   if(error){
-    message('appMessage','تعذر قراءة صلاحية الحساب: '+error.message,false);
+    message(
+      'appMessage',
+      'تعذر قراءة صلاحية الحساب: ' + error.message,
+      false
+    );
     return;
   }
 
   if(profile){
-    currentRole=profile.role||'supervisor';
-    $('userInfo').textContent=
-      (profile.full_name||session.user.email)+' — '+
-      (currentRole==='admin'?'مدير':'مشرف');
+    currentRole = profile.role || 'supervisor';
+
+    $('userInfo').textContent =
+      (profile.full_name || session.user.email) + ' — ' +
+      (currentRole === 'admin' ? 'مدير' : 'مشرف');
   }else{
-    const {error:insertError}=await db.from('profiles').insert({
-      id:session.user.id,
-      full_name:'',
-      role:'supervisor'
-    });
+    const { error: insertError } = await db
+      .from('profiles')
+      .insert({
+        id: session.user.id,
+        full_name: '',
+        role: 'supervisor'
+      });
 
     if(insertError){
-      message('appMessage','الحساب دخل، لكن تعذر إعداد ملف المشرف: '+insertError.message,false);
+      message(
+        'appMessage',
+        'تم الدخول، لكن تعذر إعداد ملف المشرف: ' +
+        insertError.message,
+        false
+      );
       return;
     }
 
-    currentRole='supervisor';
+    currentRole = 'supervisor';
   }
 
   await loadWorkers();
 }
 
-$('loginForm').addEventListener('submit',async e=>{
+/* تسجيل الدخول */
+$('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
-  hideMessage('loginMessage');
 
-  const {data,error}=await db.auth.signInWithPassword({
-    email:$('email').value.trim(),
-    password:$('password').value
-  });
+  hideMessage('loginMessage');
+  $('loginButton').disabled = true;
+
+  try{
+    const { data, error } = await db.auth.signInWithPassword({
+      email: $('email').value.trim(),
+      password: $('password').value
+    });
+
+    if(error) throw error;
+
+    await showSession(data.session);
+
+  }catch(err){
+    message(
+      'loginMessage',
+      'تعذر تسجيل الدخول: ' + err.message,
+      false
+    );
+  }finally{
+    $('loginButton').disabled = false;
+  }
+});
+
+/* تسجيل الخروج */
+$('logoutButton').addEventListener('click', async () => {
+  const { error } = await db.auth.signOut();
 
   if(error){
-    message('loginMessage','تعذر تسجيل الدخول: '+error.message,false);
+    message('appMessage', 'تعذر تسجيل الخروج: ' + error.message, false);
     return;
   }
 
-  await showSession(data.session);
-});
-
-$('logoutButton').addEventListener('click',async()=>{
-  await db.auth.signOut();
-  workers=[];
+  workers = [];
   clearForm();
   await showSession(null);
 });
 
-$('refreshButton').addEventListener('click',loadWorkers);
-$('workerForm').addEventListener('submit',submitWorker);
-$('cancelEdit').addEventListener('click',clearForm);
-$('searchInput').addEventListener('input',render);
+/* الأزرار والأحداث */
+$('refreshButton').addEventListener('click', loadWorkers);
+$('workerForm').addEventListener('submit', submitWorker);
+$('cancelEdit').addEventListener('click', clearForm);
+$('searchInput').addEventListener('input', render);
 
-$('workerList').addEventListener('click',e=>{
-  const b=e.target.closest('button[data-action]');
-  if(!b)return;
-
-  b.dataset.action==='edit'
-    ?editWorker(b.dataset.id)
-    :deleteWorker(b.dataset.id);
+['workHours','hourRate','workerPaid'].forEach(id => {
+  $(id).addEventListener('input', updatePreview);
 });
 
-db.auth.getSession().then(({data})=>showSession(data.session));
+$('workerList').addEventListener('click', e => {
+  const button = e.target.closest('button[data-action]');
 
-db.auth.onAuthStateChange((_event,session)=>{
+  if(!button) return;
+
+  if(button.dataset.action === 'edit'){
+    editWorker(button.dataset.id);
+  }else if(button.dataset.action === 'delete'){
+    deleteWorker(button.dataset.id);
+  }
+});
+
+/* استعادة جلسة الدخول */
+db.auth.getSession().then(({ data, error }) => {
+  if(error){
+    message('loginMessage', error.message, false);
+    return;
+  }
+
+  showSession(data.session);
+});
+
+db.auth.onAuthStateChange((_event, session) => {
   if(!session){
-    currentUser=null;
+    currentUser = null;
     $('loginCard').classList.remove('hidden');
     $('appArea').classList.add('hidden');
   }
 });
 
+updatePreview();
+
 })();
 </script>
+
 </body>
 </html>
