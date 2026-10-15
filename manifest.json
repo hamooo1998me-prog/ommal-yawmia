@@ -1,11 +1,11 @@
 {
-"name": "عمال يوميه",
-"short_name": "عمال يوميه",
-"id": "/ommal-yawmia/",
-"start_url": "/ommal-yawmia/",
-"scope": "/ommal-yawmia/",
-"display": "standalone",
-"background_color": "#111111",
-"theme_color": "#D4AF37",
-"description": "تطبيق عمال يوميه لإدارة العمال وتسجيل ساعات العمل والأجور والمدفوعات والمبالغ المتبقية، مع مشاركة البيانات بين المدير والمشرفين."
+  "id": "/ommal-yawmia/",
+  "name": "عمال يوميه",
+  "short_name": "عمال يوميه",
+  "description": "تطبيق عمال يوميه لإدارة العمال وتسجيل ساعات العمل والأجور والمدفوعات والمبالغ المتبقية.",
+  "start_url": "/ommal-yawmia/",
+  "scope": "/ommal-yawmia/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#D4AF37"
 }
