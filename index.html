@@ -1,165 +1,228 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<link rel="manifest" href="manifest.json">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#111111">
+<meta name="description" content="تطبيق عمال يوميه لإدارة العمال وساعات العمل والأجور والمدفوعات">
+<link rel="manifest" href="./manifest.json">
 <title>عمال يوميه</title>
 
 <style>
-:root{
-  --gold:#d9b45b;
-  --bg:#111;
-  --panel:#1e1e1e;
-  --text:#fff;
-  --muted:#bbb;
-  --red:#6b2020;
-  --green:#17482f;
+:root {
+  --gold: #d9b45b;
+  --bg: #111;
+  --panel: #1e1e1e;
+  --text: #fff;
+  --muted: #bbb;
+  --red: #6b2020;
+  --green: #17482f;
 }
 
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  padding:12px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
+* {
+  box-sizing: border-box;
 }
 
-header{
-  text-align:center;
-  padding:20px 10px;
-  border-bottom:2px solid var(--gold);
-  margin-bottom:15px;
+body {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
 }
 
-h1,h2,h3{color:var(--gold)}
-h1{margin:0 0 8px}
-header p,.note{color:var(--muted)}
-
-.container{max-width:850px;margin:auto}
-
-.card{
-  background:var(--panel);
-  border:1px solid #5c4a24;
-  border-radius:13px;
-  padding:15px;
-  margin-bottom:15px;
+header {
+  text-align: center;
+  padding: 20px 10px;
+  border-bottom: 2px solid var(--gold);
+  margin-bottom: 15px;
 }
 
-h2{font-size:21px;margin-top:0}
-
-label{display:block;margin:12px 0 5px}
-
-input,textarea{
-  display:block;
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  border:1px solid #555;
-  background:#101010;
-  color:white;
-  font-size:16px;
+h1, h2, h3 {
+  color: var(--gold);
 }
 
-textarea{min-height:75px}
-
-button{
-  border:0;
-  border-radius:8px;
-  padding:12px;
-  font-size:15px;
-  font-weight:bold;
-  cursor:pointer;
-  background:var(--gold);
-  color:#111;
-  margin-top:10px;
+h1 {
+  margin: 0 0 8px;
 }
 
-button:disabled{opacity:.5;cursor:wait}
-.primary{width:100%;font-size:17px}
-.secondary{background:#333;color:white;border:1px solid var(--gold)}
-.danger{background:var(--red);color:white}
-
-.grid,.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+header p, .note {
+  color: var(--muted);
 }
 
-.stat{
-  background:#101010;
-  border:1px solid #4c3d20;
-  border-radius:10px;
-  padding:12px;
-  text-align:center;
+.container {
+  max-width: 850px;
+  margin: auto;
 }
 
-.stat span{
-  display:block;
-  color:var(--muted);
-  font-size:13px;
-  margin-bottom:8px;
+.card {
+  background: var(--panel);
+  border: 1px solid #5c4a24;
+  border-radius: 13px;
+  padding: 15px;
+  margin-bottom: 15px;
 }
 
-.stat strong{
-  color:var(--gold);
-  font-size:20px;
-  overflow-wrap:anywhere;
+h2 {
+  font-size: 21px;
+  margin-top: 0;
 }
 
-.worker{
-  border:1px solid #4c4c4c;
-  padding:13px;
-  border-radius:10px;
-  margin-top:12px;
-  background:#151515;
+label {
+  display: block;
+  margin: 12px 0 5px;
 }
 
-.worker h3{margin:0 0 10px}
-.worker p{margin:7px 0;overflow-wrap:anywhere}
-
-.worker-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
+input, textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #101010;
+  color: white;
+  font-size: 16px;
 }
 
-.worker-actions button{width:100%}
-
-.message{
-  display:none;
-  padding:12px;
-  margin-top:12px;
-  border-radius:8px;
-  overflow-wrap:anywhere;
+textarea {
+  min-height: 75px;
 }
 
-.message.ok{display:block;background:var(--green)}
-.message.error{display:block;background:var(--red)}
-
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:20px 5px;
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--gold);
+  color: #111;
+  margin-top: 10px;
 }
 
-.hidden{display:none!important}
-
-.note{font-size:13px;line-height:1.7}
-
-footer{
-  text-align:center;
-  color:var(--muted);
-  padding:20px 5px;
-  font-size:12px;
+button:disabled {
+  opacity: .5;
+  cursor: wait;
 }
 
-@media(max-width:420px){
-  .grid{grid-template-columns:1fr}
-  .stats{grid-template-columns:1fr 1fr}
+.primary {
+  width: 100%;
+  font-size: 17px;
+}
+
+.secondary {
+  background: #333;
+  color: white;
+  border: 1px solid var(--gold);
+}
+
+.danger {
+  background: var(--red);
+  color: white;
+}
+
+.grid, .stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat {
+  background: #101010;
+  border: 1px solid #4c3d20;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.stat strong {
+  color: var(--gold);
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.worker {
+  border: 1px solid #4c4c4c;
+  padding: 13px;
+  border-radius: 10px;
+  margin-top: 12px;
+  background: #151515;
+}
+
+.worker h3 {
+  margin: 0 0 10px;
+}
+
+.worker p {
+  margin: 7px 0;
+  overflow-wrap: anywhere;
+}
+
+.worker-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.worker-actions button {
+  width: 100%;
+}
+
+.message {
+  display: none;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.message.ok {
+  display: block;
+  background: var(--green);
+}
+
+.message.error {
+  display: block;
+  background: var(--red);
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px 5px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.note {
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px 5px;
+  font-size: 12px;
+}
+
+@media(max-width: 420px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>
 </head>
@@ -175,18 +238,32 @@ footer{
 
 <section class="card" id="loginCard">
   <h2>تسجيل الدخول</h2>
+
   <p class="note">
     سجّل الدخول بالبريد الإلكتروني وكلمة المرور المسجلين في النظام.
   </p>
 
   <form id="loginForm">
     <label for="email">البريد الإلكتروني</label>
-    <input id="email" type="email" required autocomplete="username">
+    <input
+      id="email"
+      type="email"
+      required
+      autocomplete="username"
+    >
 
     <label for="password">كلمة المرور</label>
-    <input id="password" type="password" required autocomplete="current-password">
+    <input
+      id="password"
+      type="password"
+      required
+      autocomplete="current-password"
+    >
 
-    <button class="primary" id="loginButton" type="submit">دخول</button>
+    <button class="primary" id="loginButton" type="submit">
+      دخول
+    </button>
+
     <div id="loginMessage" class="message" role="status"></div>
   </form>
 </section>
@@ -201,11 +278,21 @@ footer{
       </div>
 
       <div>
-        <button id="refreshButton" class="secondary" style="width:100%">
+        <button
+          id="refreshButton"
+          class="secondary"
+          style="width:100%"
+          type="button"
+        >
           تحديث البيانات
         </button>
 
-        <button id="logoutButton" class="danger" style="width:100%">
+        <button
+          id="logoutButton"
+          class="danger"
+          style="width:100%"
+          type="button"
+        >
           تسجيل الخروج
         </button>
       </div>
@@ -239,16 +326,13 @@ footer{
       </div>
     </div>
 
-    <p class="note">
-      جميع المبالغ بالريال السعودي.
-    </p>
+    <p class="note">جميع المبالغ بالريال السعودي.</p>
   </section>
 
-  <section class="card">
+  <section class="card" id="workerFormCard">
     <h2 id="formTitle">تسجيل عامل جديد</h2>
 
     <form id="workerForm">
-
       <label for="workerName">اسم العامل *</label>
       <input id="workerName" maxlength="100" required>
 
@@ -284,6 +368,7 @@ footer{
             id="hourRate"
             type="number"
             min="0"
+            max="1000000"
             step="0.01"
             value="0"
             required
@@ -314,8 +399,8 @@ footer{
       </div>
 
       <p class="note">
-        الإجمالي يُحسب تلقائيًا من الساعات × أجر الساعة.
-        أدخل المبلغ المدفوع، وسيظهر المتبقي تلقائيًا.
+        المستحق = عدد الساعات × أجر الساعة.
+        لا يمكن تسجيل مبلغ مدفوع أكبر من المستحق.
       </p>
 
       <label for="workerNotes">ملاحظات</label>
@@ -348,7 +433,8 @@ footer{
   </section>
 
   <section class="card">
-    <h2>سجل العمال المشترك</h2>
+    <h2>سجل العمال</h2>
+
     <div id="workerList">
       <div class="empty">جارٍ تحميل البيانات...</div>
     </div>
@@ -362,7 +448,7 @@ footer{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-(function(){
+(function () {
 'use strict';
 
 const SUPABASE_URL =
@@ -381,238 +467,350 @@ const $ = id => document.getElementById(id);
 let workers = [];
 let editingId = null;
 let currentUser = null;
-let currentRole = 'supervisor';
+let currentRole = null;
 let busy = false;
+let sessionReady = false;
 
-function message(id, text, ok){
+function showMessage(id, text, ok) {
   const el = $(id);
   el.textContent = text;
   el.className = 'message ' + (ok ? 'ok' : 'error');
 }
 
-function hideMessage(id){
+function hideMessage(id) {
   $(id).textContent = '';
   $(id).className = 'message';
 }
 
-function esc(value){
+function escapeHTML(value) {
   return String(value == null ? '' : value).replace(
     /[&<>"']/g,
     c => ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
     }[c])
   );
 }
 
-function money(value){
+function money(value) {
   return (Number(value) || 0).toLocaleString('ar-SA', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
 }
 
-/* حساب إجمالي مستحقات العامل */
-function total(w){
-  const saved = Number(w.total_due);
+function roundMoney(value) {
+  return Math.round((value + Number.EPSILON) * 100) / 100;
+}
 
-  if(
-    w.total_due !== null &&
-    w.total_due !== undefined &&
-    Number.isFinite(saved)
-  ){
-    return saved;
+function total(worker) {
+  if (
+    worker.total_due !== null &&
+    worker.total_due !== undefined &&
+    Number.isFinite(Number(worker.total_due))
+  ) {
+    return roundMoney(Number(worker.total_due));
   }
 
-  return (Number(w.hours) || 0) *
-         (Number(w.rate) || 0);
+  return roundMoney(
+    (Number(worker.hours) || 0) *
+    (Number(worker.rate) || 0)
+  );
 }
 
-/* قراءة المبلغ المدفوع */
-function paid(w){
-  return Number(w.amount_paid) || 0;
+function paid(worker) {
+  return roundMoney(Number(worker.amount_paid) || 0);
 }
 
-/* تحويل سجل قاعدة البيانات إلى بيانات التطبيق */
-function fromDb(w){
+function fromDb(worker) {
   return {
-    id: w.id,
-    name: w.name || '',
-    date: w.work_date || '',
-    place: w.work_location || '',
-    hours: Number(w.hours) || 0,
-    rate: Number(w.hourly_wage) || 0,
-    total_due: w.total_due == null
+    id: worker.id,
+    name: worker.name || '',
+    date: worker.work_date || '',
+    place: worker.work_location || '',
+    hours: Number(worker.hours) || 0,
+    rate: Number(worker.hourly_wage) || 0,
+    total_due: worker.total_due == null
       ? null
-      : Number(w.total_due),
-    amount_paid: Number(w.amount_paid) || 0,
-    notes: w.notes || ''
+      : Number(worker.total_due),
+    amount_paid: Number(worker.amount_paid) || 0,
+    notes: worker.notes || '',
+    created_by: worker.created_by || null
   };
 }
 
-/* حساب المبالغ أثناء إدخال البيانات */
-function updatePreview(){
-  const hours = Number($('workHours').value) || 0;
-  const rate = Number($('hourRate').value) || 0;
-  const amount = Number($('workerPaid').value) || 0;
+function isAdmin() {
+  return currentRole === 'admin';
+}
 
-  const due = hours * rate;
-  const remaining = due - amount;
+function canManage(worker) {
+  if (!currentUser) return false;
+
+  if (isAdmin()) return true;
+
+  return Boolean(
+    worker.created_by &&
+    worker.created_by === currentUser.id
+  );
+}
+
+function updatePreview() {
+  const hours = Number($('workHours').value);
+  const rate = Number($('hourRate').value);
+  const amount = Number($('workerPaid').value);
+
+  const validHours = Number.isFinite(hours) && hours >= 0;
+  const validRate = Number.isFinite(rate) && rate >= 0;
+  const validAmount = Number.isFinite(amount) && amount >= 0;
+
+  const due = validHours && validRate
+    ? roundMoney(hours * rate)
+    : 0;
+
+  const remaining = validAmount
+    ? roundMoney(due - amount)
+    : due;
 
   $('previewDue').textContent = money(due) + ' ريال';
   $('previewRemaining').textContent =
     money(remaining) + ' ريال';
+
+  const tooMuch = validAmount && amount > due;
+
+  $('previewRemaining').style.color =
+    tooMuch ? '#ff7777' : '';
+
+  $('saveButton').disabled = busy || tooMuch;
+
+  if (tooMuch) {
+    $('workerPaid').setCustomValidity(
+      'المبلغ المدفوع لا يمكن أن يكون أكبر من المستحق.'
+    );
+  } else {
+    $('workerPaid').setCustomValidity('');
+  }
 }
 
-/* تحميل العمال من قاعدة البيانات المشتركة */
-async function loadWorkers(){
+async function loadWorkers() {
+  if (!currentUser || !currentRole) return;
+
+  $('refreshButton').disabled = true;
   $('workerList').innerHTML =
     '<div class="empty">جارٍ تحميل البيانات...</div>';
 
-  const { data, error } = await db
-    .from('workers')
-    .select('*')
-    .order('id', { ascending: false });
+  try {
+    let query = db
+      .from('workers')
+      .select('*')
+      .order('id', { ascending: false });
 
-  if(error){
-    message(
+    /*
+      هذه التصفية تنظّم العرض فقط.
+      حماية البيانات الفعلية يجب أن تفرضها سياسات RLS.
+    */
+    if (!isAdmin()) {
+      query = query.eq('created_by', currentUser.id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    workers = (data || []).map(fromDb);
+
+    render();
+    hideMessage('appMessage');
+
+  } catch (error) {
+    $('workerList').innerHTML =
+      '<div class="empty">تعذر تحميل البيانات.</div>';
+
+    showMessage(
       'appMessage',
       'تعذر تحميل العمال: ' + error.message,
       false
     );
-
-    $('workerList').innerHTML =
-      '<div class="empty">تعذر تحميل البيانات.</div>';
-
-    return;
+  } finally {
+    $('refreshButton').disabled = false;
   }
-
-  workers = (data || []).map(fromDb);
-  render();
-  hideMessage('appMessage');
 }
 
-/* عرض ملخص الحسابات وقائمة العمال */
-function render(){
-  const q = $('searchInput').value.trim().toLowerCase();
+function render() {
+  const search = $('searchInput').value
+    .trim()
+    .toLowerCase();
 
-  const list = workers.filter(w =>
-    [w.name, w.place, w.id, w.date].some(value =>
-      String(value ?? '').toLowerCase().includes(q)
+  const list = workers.filter(worker =>
+    [
+      worker.name,
+      worker.place,
+      worker.id,
+      worker.date
+    ].some(value =>
+      String(value ?? '').toLowerCase().includes(search)
     )
   );
 
   $('workerCount').textContent = workers.length;
 
-  const due = workers.reduce((sum, w) => sum + total(w), 0);
-  const amount = workers.reduce((sum, w) => sum + paid(w), 0);
+  const dueSum = workers.reduce(
+    (sum, worker) => sum + total(worker),
+    0
+  );
 
-  $('totalDue').textContent = money(due);
-  $('totalPaid').textContent = money(amount);
-  $('totalRemaining').textContent = money(due - amount);
+  const paidSum = workers.reduce(
+    (sum, worker) => sum + paid(worker),
+    0
+  );
 
-  if(!list.length){
+  $('totalDue').textContent = money(dueSum);
+  $('totalPaid').textContent = money(paidSum);
+  $('totalRemaining').textContent =
+    money(roundMoney(dueSum - paidSum));
+
+  if (!list.length) {
     $('workerList').innerHTML =
       '<div class="empty">لا توجد بيانات مطابقة للبحث.</div>';
     return;
   }
 
-  $('workerList').innerHTML = list.map(w => `
-    <article class="worker">
-      <h3>العامل: ${esc(w.name)}</h3>
+  $('workerList').innerHTML = list.map(worker => {
+    const remaining = roundMoney(
+      total(worker) - paid(worker)
+    );
 
-      <p><b>الرقم المسلسل:</b> ${esc(w.id)}</p>
-      <p><b>تاريخ العمل:</b> ${esc(w.date || 'غير محدد')}</p>
-      <p><b>مكان العمل:</b> ${esc(w.place || 'غير محدد')}</p>
-      <p><b>عدد الساعات:</b> ${esc(w.hours)}</p>
-      <p><b>أجر الساعة:</b> ${money(w.rate)} ريال</p>
+    const actions = canManage(worker)
+      ? `
+        <div class="worker-actions">
+          <button
+            type="button"
+            data-action="edit"
+            data-id="${escapeHTML(worker.id)}"
+          >تعديل البيانات</button>
 
-      <p><b>إجمالي المستحقات:</b>
-        ${money(total(w))} ريال
-      </p>
+          <button
+            type="button"
+            class="danger"
+            data-action="delete"
+            data-id="${escapeHTML(worker.id)}"
+          >حذف العامل</button>
+        </div>
+      `
+      : '';
 
-      <p><b>المدفوع:</b>
-        ${money(paid(w))} ريال
-      </p>
+    return `
+      <article class="worker">
+        <h3>العامل: ${escapeHTML(worker.name)}</h3>
 
-      <p><b>المتبقي:</b>
-        ${money(total(w) - paid(w))} ريال
-      </p>
+        <p><b>الرقم المسلسل:</b>
+          ${escapeHTML(worker.id)}
+        </p>
 
-      <p><b>ملاحظات:</b>
-        ${esc(w.notes || 'لا توجد')}
-      </p>
+        <p><b>تاريخ العمل:</b>
+          ${escapeHTML(worker.date || 'غير محدد')}
+        </p>
 
-      <div class="worker-actions">
-        <button
-          type="button"
-          data-action="edit"
-          data-id="${esc(w.id)}"
-        >تعديل البيانات</button>
+        <p><b>مكان العمل:</b>
+          ${escapeHTML(worker.place || 'غير محدد')}
+        </p>
 
-        <button
-          type="button"
-          class="danger"
-          data-action="delete"
-          data-id="${esc(w.id)}"
-        >حذف العامل</button>
-      </div>
-    </article>
-  `).join('');
+        <p><b>عدد الساعات:</b>
+          ${escapeHTML(worker.hours)}
+        </p>
+
+        <p><b>أجر الساعة:</b>
+          ${money(worker.rate)} ريال
+        </p>
+
+        <p><b>إجمالي المستحق:</b>
+          ${money(total(worker))} ريال
+        </p>
+
+        <p><b>المدفوع:</b>
+          ${money(paid(worker))} ريال
+        </p>
+
+        <p><b>المتبقي:</b>
+          ${money(remaining)} ريال
+        </p>
+
+        <p><b>ملاحظات:</b>
+          ${escapeHTML(worker.notes || 'لا توجد')}
+        </p>
+
+        ${actions}
+      </article>
+    `;
+  }).join('');
 }
 
-/* التحقق من المدخلات وتجهيز بيانات الحفظ */
-function formData(){
+function readForm() {
   const name = $('workerName').value.trim();
-  const hours = $('workHours').value;
-  const rate = $('hourRate').value;
-  const amount = $('workerPaid').value;
+  const hoursText = $('workHours').value;
+  const rateText = $('hourRate').value;
+  const paidText = $('workerPaid').value;
 
-  if(!name){
-    throw Error('اكتب اسم العامل أولًا.');
+  if (!name) {
+    throw new Error('اكتب اسم العامل أولًا.');
   }
 
-  if(hours === '' || rate === '' || amount === ''){
-    throw Error(
-      'اكتب الساعات والأجر والمبلغ المدفوع. اكتب صفرًا إذا لم يوجد مبلغ.'
+  if (
+    hoursText === '' ||
+    rateText === '' ||
+    paidText === ''
+  ) {
+    throw new Error(
+      'أدخل الساعات والأجر والمبلغ المدفوع. اكتب صفرًا إذا لم يوجد مبلغ.'
     );
   }
 
-  if(
-    !Number.isFinite(Number(hours)) ||
-    !Number.isFinite(Number(rate)) ||
-    !Number.isFinite(Number(amount)) ||
-    Number(hours) < 0 ||
-    Number(hours) > 1000 ||
-    Number(rate) < 0 ||
-    Number(amount) < 0
-  ){
-    throw Error('راجع الأرقام المدخلة.');
+  const hours = Number(hoursText);
+  const rate = Number(rateText);
+  const amountPaid = Number(paidText);
+
+  if (
+    !Number.isFinite(hours) ||
+    !Number.isFinite(rate) ||
+    !Number.isFinite(amountPaid)
+  ) {
+    throw new Error('راجع الأرقام المدخلة.');
   }
 
-  const h = Number(hours);
-  const r = Number(rate);
-  const p = Number(amount);
-  const due = Math.round(h * r * 100) / 100;
+  if (
+    hours < 0 ||
+    hours > 1000 ||
+    rate < 0 ||
+    rate > 1000000 ||
+    amountPaid < 0
+  ) {
+    throw new Error('القيم المدخلة خارج النطاق المسموح.');
+  }
+
+  const due = roundMoney(hours * rate);
+
+  if (amountPaid > due) {
+    throw new Error(
+      'لا يمكن أن يكون المبلغ المدفوع أكبر من إجمالي المستحق.'
+    );
+  }
 
   return {
-    name: name,
+    name,
     work_date: $('workDate').value || null,
     work_location: $('workPlace').value.trim(),
-    hours: h,
-    hourly_wage: r,
+    hours,
+    hourly_wage: rate,
     total_due: due,
-    amount_paid: p,
+    amount_paid: roundMoney(amountPaid),
     notes: $('workerNotes').value.trim(),
     updated_at: new Date().toISOString()
   };
 }
 
-/* إعادة ضبط النموذج */
-function clearForm(){
+function clearForm() {
   $('workerForm').reset();
 
   $('workHours').value = '8';
@@ -629,45 +827,59 @@ function clearForm(){
   updatePreview();
 }
 
-/* إضافة عامل جديد أو تعديل عامل موجود */
-async function submitWorker(e){
-  e.preventDefault();
+async function submitWorker(event) {
+  event.preventDefault();
 
-  if(busy) return;
+  if (busy) return;
 
   hideMessage('formMessage');
 
-  let payload;
-
-  try{
-    payload = formData();
-  }catch(err){
-    message('formMessage', err.message, false);
-    return;
-  }
-
-  if(!currentUser){
-    message(
+  if (!currentUser || !currentRole) {
+    showMessage(
       'formMessage',
-      'انتهت جلسة الدخول. سجّل الدخول مرة أخرى.',
+      'يرجى تسجيل الدخول مرة أخرى.',
       false
     );
     return;
   }
 
+  let payload;
+
+  try {
+    payload = readForm();
+  } catch (error) {
+    showMessage('formMessage', error.message, false);
+    return;
+  }
+
+  if (editingId !== null) {
+    const existing = workers.find(
+      worker => String(worker.id) === String(editingId)
+    );
+
+    if (!existing || !canManage(existing)) {
+      showMessage(
+        'formMessage',
+        'ليس لديك صلاحية تعديل هذا العامل.',
+        false
+      );
+      return;
+    }
+  }
+
   busy = true;
   $('saveButton').disabled = true;
 
-  try{
+  try {
     let result;
 
-    if(editingId !== null){
+    if (editingId !== null) {
       result = await db
         .from('workers')
         .update(payload)
         .eq('id', editingId)
         .select();
-    }else{
+    } else {
       payload.created_by = currentUser.id;
 
       result = await db
@@ -676,17 +888,17 @@ async function submitWorker(e){
         .select();
     }
 
-    if(result.error){
+    if (result.error) {
       throw result.error;
     }
 
-    if(!result.data || result.data.length === 0){
-      throw Error(
-        'لم يرجع النظام سجلًا محفوظًا. تحقق من صلاحيات قاعدة البيانات.'
+    if (!result.data || result.data.length === 0) {
+      throw new Error(
+        'لم يتم تأكيد حفظ السجل. تحقق من صلاحيات قاعدة البيانات.'
       );
     }
 
-    message(
+    showMessage(
       'formMessage',
       editingId !== null
         ? 'تم تحديث بيانات العامل بنجاح.'
@@ -697,36 +909,46 @@ async function submitWorker(e){
     clearForm();
     await loadWorkers();
 
-  }catch(err){
-    message(
+  } catch (error) {
+    showMessage(
       'formMessage',
-      'فشل الحفظ: ' + (err.message || 'خطأ غير معروف'),
+      'فشل الحفظ: ' + (error.message || 'خطأ غير معروف'),
       false
     );
-  }finally{
+  } finally {
     busy = false;
-    $('saveButton').disabled = false;
+    updatePreview();
   }
 }
 
-/* تحميل بيانات العامل في النموذج للتعديل */
-function editWorker(id){
-  const w = workers.find(x => String(x.id) === String(id));
+function editWorker(id) {
+  const worker = workers.find(
+    item => String(item.id) === String(id)
+  );
 
-  if(!w) return;
+  if (!worker) return;
 
-  editingId = w.id;
+  if (!canManage(worker)) {
+    showMessage(
+      'appMessage',
+      'ليس لديك صلاحية تعديل هذا العامل.',
+      false
+    );
+    return;
+  }
 
-  $('workerName').value = w.name;
-  $('workDate').value = w.date;
-  $('workPlace').value = w.place;
-  $('workHours').value = w.hours;
-  $('hourRate').value = w.rate;
-  $('workerPaid').value = w.amount_paid;
-  $('workerNotes').value = w.notes;
+  editingId = worker.id;
+
+  $('workerName').value = worker.name;
+  $('workDate').value = worker.date;
+  $('workPlace').value = worker.place;
+  $('workHours').value = worker.hours;
+  $('hourRate').value = worker.rate;
+  $('workerPaid').value = worker.amount_paid;
+  $('workerNotes').value = worker.notes;
 
   $('formTitle').textContent =
-    'تعديل بيانات العامل رقم ' + w.id;
+    'تعديل بيانات العامل رقم ' + worker.id;
 
   $('saveButton').textContent = 'حفظ التعديلات';
   $('cancelEdit').classList.remove('hidden');
@@ -734,37 +956,79 @@ function editWorker(id){
   updatePreview();
   hideMessage('formMessage');
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  $('workerFormCard').scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
 }
 
-/* حذف عامل */
-async function deleteWorker(id){
-  const w = workers.find(x => String(x.id) === String(id));
+async function deleteWorker(id) {
+  if (busy) return;
 
-  if(!w) return;
+  const worker = workers.find(
+    item => String(item.id) === String(id)
+  );
 
-  if(!confirm('هل أنت متأكد من حذف العامل ' + w.name + '؟')){
+  if (!worker) return;
+
+  if (!canManage(worker)) {
+    showMessage(
+      'appMessage',
+      'ليس لديك صلاحية حذف هذا العامل.',
+      false
+    );
     return;
   }
 
-  const { error } = await db
-    .from('workers')
-    .delete()
-    .eq('id', id);
+  const confirmed = confirm(
+    'هل أنت متأكد من حذف العامل ' +
+    worker.name +
+    '؟ لا يمكن التراجع عن الحذف.'
+  );
 
-  if(error){
-    message('appMessage', 'فشل الحذف: ' + error.message, false);
-    return;
+  if (!confirmed) return;
+
+  busy = true;
+
+  try {
+    const { data, error } = await db
+      .from('workers')
+      .delete()
+      .eq('id', worker.id)
+      .select('id');
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      throw new Error(
+        'لم يتم تأكيد حذف السجل. قد لا تسمح صلاحيات قاعدة البيانات بالحذف.'
+      );
+    }
+
+    if (String(editingId) === String(worker.id)) {
+      clearForm();
+    }
+
+    showMessage('appMessage', 'تم حذف العامل بنجاح.', true);
+    await loadWorkers();
+
+  } catch (error) {
+    showMessage(
+      'appMessage',
+      'فشل الحذف: ' + error.message,
+      false
+    );
+  } finally {
+    busy = false;
   }
-
-  message('appMessage', 'تم حذف العامل.', true);
-  await loadWorkers();
 }
 
-/* إظهار التطبيق بعد تسجيل الدخول */
-async function showSession(session){
-  if(!session){
+async function showSession(session) {
+  if (!session) {
     currentUser = null;
+    currentRole = null;
+    workers = [];
+    sessionReady = true;
 
     $('loginCard').classList.remove('hidden');
     $('appArea').classList.add('hidden');
@@ -779,137 +1043,184 @@ async function showSession(session){
 
   $('userInfo').textContent = session.user.email || '';
 
-  const { data: profile, error } = await db
-    .from('profiles')
-    .select('full_name,role')
-    .eq('id', session.user.id)
-    .maybeSingle();
+  try {
+    const { data: profile, error } = await db
+      .from('profiles')
+      .select('full_name, role')
+      .eq('id', session.user.id)
+      .maybeSingle();
 
-  if(error){
-    message(
+    if (error) throw error;
+
+    if (!profile || !profile.role) {
+      currentRole = null;
+
+      showMessage(
+        'appMessage',
+        'هذا الحساب لا يملك دورًا مسجلًا في profiles. اطلب من المدير إعداد صلاحية الحساب.',
+        false
+      );
+
+      $('workerList').innerHTML =
+        '<div class="empty">تعذر تحميل العمال قبل إعداد صلاحية الحساب.</div>';
+
+      return;
+    }
+
+    currentRole = String(profile.role).toLowerCase();
+
+    if (!['admin', 'supervisor'].includes(currentRole)) {
+      currentRole = null;
+
+      showMessage(
+        'appMessage',
+        'دور هذا الحساب غير معتمد في التطبيق.',
+        false
+      );
+
+      return;
+    }
+
+    $('userInfo').textContent =
+      (profile.full_name || session.user.email) +
+      ' — ' +
+      (currentRole === 'admin' ? 'مدير' : 'مشرف');
+
+    $('workerFormCard').classList.remove('hidden');
+
+    await loadWorkers();
+
+  } catch (error) {
+    currentRole = null;
+
+    showMessage(
       'appMessage',
       'تعذر قراءة صلاحية الحساب: ' + error.message,
       false
     );
-    return;
+  } finally {
+    sessionReady = true;
   }
-
-  if(profile){
-    currentRole = profile.role || 'supervisor';
-
-    $('userInfo').textContent =
-      (profile.full_name || session.user.email) + ' — ' +
-      (currentRole === 'admin' ? 'مدير' : 'مشرف');
-  }else{
-    const { error: insertError } = await db
-      .from('profiles')
-      .insert({
-        id: session.user.id,
-        full_name: '',
-        role: 'supervisor'
-      });
-
-    if(insertError){
-      message(
-        'appMessage',
-        'تم الدخول، لكن تعذر إعداد ملف المشرف: ' +
-        insertError.message,
-        false
-      );
-      return;
-    }
-
-    currentRole = 'supervisor';
-  }
-
-  await loadWorkers();
 }
 
-/* تسجيل الدخول */
-$('loginForm').addEventListener('submit', async e => {
-  e.preventDefault();
+$('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
 
   hideMessage('loginMessage');
   $('loginButton').disabled = true;
 
-  try{
+  try {
     const { data, error } = await db.auth.signInWithPassword({
       email: $('email').value.trim(),
       password: $('password').value
     });
 
-    if(error) throw error;
+    if (error) throw error;
 
     await showSession(data.session);
 
-  }catch(err){
-    message(
+  } catch (error) {
+    showMessage(
       'loginMessage',
-      'تعذر تسجيل الدخول: ' + err.message,
+      'تعذر تسجيل الدخول: ' + error.message,
       false
     );
-  }finally{
+  } finally {
     $('loginButton').disabled = false;
   }
 });
 
-/* تسجيل الخروج */
 $('logoutButton').addEventListener('click', async () => {
   const { error } = await db.auth.signOut();
 
-  if(error){
-    message('appMessage', 'تعذر تسجيل الخروج: ' + error.message, false);
+  if (error) {
+    showMessage(
+      'appMessage',
+      'تعذر تسجيل الخروج: ' + error.message,
+      false
+    );
     return;
   }
 
-  workers = [];
   clearForm();
   await showSession(null);
 });
 
-/* الأزرار والأحداث */
 $('refreshButton').addEventListener('click', loadWorkers);
 $('workerForm').addEventListener('submit', submitWorker);
 $('cancelEdit').addEventListener('click', clearForm);
 $('searchInput').addEventListener('input', render);
 
-['workHours','hourRate','workerPaid'].forEach(id => {
+['workHours', 'hourRate', 'workerPaid'].forEach(id => {
   $(id).addEventListener('input', updatePreview);
 });
 
-$('workerList').addEventListener('click', e => {
-  const button = e.target.closest('button[data-action]');
+$('workerList').addEventListener('click', event => {
+  const button = event.target.closest('button[data-action]');
 
-  if(!button) return;
+  if (!button) return;
 
-  if(button.dataset.action === 'edit'){
-    editWorker(button.dataset.id);
-  }else if(button.dataset.action === 'delete'){
-    deleteWorker(button.dataset.id);
+  const action = button.dataset.action;
+  const id = button.dataset.id;
+
+  if (action === 'edit') {
+    editWorker(id);
+  } else if (action === 'delete') {
+    deleteWorker(id);
   }
 });
 
-/* استعادة جلسة الدخول */
+db.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    currentRole = null;
+    workers = [];
+
+    $('loginCard').classList.remove('hidden');
+    $('appArea').classList.add('hidden');
+    return;
+  }
+
+  if (
+    event === 'SIGNED_IN' &&
+    !sessionReady
+  ) {
+    setTimeout(() => {
+      if (!sessionReady) {
+        showSession(session);
+      }
+    }, 0);
+  }
+});
+
 db.auth.getSession().then(({ data, error }) => {
-  if(error){
-    message('loginMessage', error.message, false);
+  if (error) {
+    showMessage('loginMessage', error.message, false);
+    sessionReady = true;
     return;
   }
 
   showSession(data.session);
 });
 
-db.auth.onAuthStateChange((_event, session) => {
-  if(!session){
-    currentUser = null;
-    $('loginCard').classList.remove('hidden');
-    $('appArea').classList.add('hidden');
-  }
-});
-
 updatePreview();
 
 })();
+</script>
+
+<script>
+/* تسجيل Service Worker */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./service-worker.js')
+      .catch(function (error) {
+        console.error(
+          'تعذر تسجيل Service Worker:',
+          error
+        );
+      });
+  });
+}
 </script>
 
 </body>
