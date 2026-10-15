@@ -3,23 +3,815 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111111">
 <title>عمال يوميه</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#111;color:#fff;font-family:Arial,sans-serif;padding:18px}
-header{text-align:center;color:#d9b65d;font-size:27px;font-weight:bold;padding:20px}
-.card{background:#202020;border:1px solid #b99742;border-radius:12px;padding:16px;margin:14px 0}
-h3{color:#e5c36a}
-input,button,textarea{width:100%;padding:13px;margin:7px 0;border-radius:8px;font-size:16px}
-input,textarea{background:#111;color:white;border:1px solid #666}
-button{background:#d4af50;color:#111;font-weight:bold;border:0;cursor:pointer}
-.row{display:flex;gap:8px}
-.row>*{min-width:0;flex:1}
-.worker{border-bottom:1px solid #555;padding:12px 0}
-.small{color:#e5c36a}
-.msg{padding:10px;border-radius:8px;margin-top:8px;display:none}
-.ok{background:#174b2b;color:#fff}
-.err{background:#672525;color:#fff}
+:root {
+  --gold: #d9b45b;
+  --bg: #111111;
+  --panel: #1e1e1e;
+  --text: #ffffff;
+  --muted: #bbbbbb;
+  --danger: #ff6868;
+  --green: #42d392;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+header {
+  text-align: center;
+  padding: 22px 10px;
+  border-bottom: 2px solid var(--gold);
+  margin-bottom: 15px;
+}
+
+header h1 {
+  color: var(--gold);
+  margin: 0 0 8px;
+  font-size: 29px;
+}
+
+header p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.container {
+  max-width: 850px;
+  margin: auto;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid #5c4a24;
+  border-radius: 13px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+h2 {
+  color: var(--gold);
+  font-size: 21px;
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  margin: 12px 0 5px;
+  color: #eee;
+}
+
+input, textarea, select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #101010;
+  color: white;
+  font-size: 16px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 75px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--gold);
+  color: #111;
+  margin-top: 10px;
+}
+
+button:active {
+  opacity: .75;
+}
+
+.primary {
+  width: 100%;
+  font-size: 17px;
+}
+
+.secondary {
+  background: #333;
+  color: white;
+  border: 1px solid var(--gold);
+}
+
+.danger {
+  background: #6b2020;
+  color: white;
+}
+
+.success {
+  background: #17482f;
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat {
+  background: #101010;
+  border: 1px solid #4c3d20;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.stat strong {
+  color: var(--gold);
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.worker {
+  border: 1px solid #4c4c4c;
+  padding: 13px;
+  border-radius: 10px;
+  margin-top: 12px;
+  background: #151515;
+}
+
+.worker h3 {
+  color: var(--gold);
+  margin: 0 0 10px;
+}
+
+.worker p {
+  margin: 7px 0;
+  overflow-wrap: anywhere;
+}
+
+.worker-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.worker-actions button {
+  width: 100%;
+}
+
+.message {
+  display: none;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.message.ok {
+  display: block;
+  background: #17482f;
+  color: white;
+}
+
+.message.error {
+  display: block;
+  background: #6b2020;
+  color: white;
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 20px 5px;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.hidden {
+  display: none !important;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px 5px;
+  font-size: 12px;
+}
+
+@media (max-width: 420px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
-</head
+</head>
+
+<body>
+
+<header>
+  <h1>عمال يوميه</h1>
+  <p>إدارة العمال والأجور والمستحقات</p>
+</header>
+
+<main class="container">
+
+  <section class="card">
+    <h2>ملخص الحسابات</h2>
+    <div class="stats">
+      <div class="stat">
+        <span>عدد العمال</span>
+        <strong id="workerCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>إجمالي المستحقات</span>
+        <strong id="totalDue">0.00</strong>
+      </div>
+      <div class="stat">
+        <span>إجمالي المدفوع</span>
+        <strong id="totalPaid">0.00</strong>
+      </div>
+      <div class="stat">
+        <span>إجمالي المتبقي</span>
+        <strong id="totalRemaining">0.00</strong>
+      </div>
+    </div>
+    <p class="note">جميع المبالغ بالريال. تُحسب المستحقات من ساعات العمل × أجر الساعة.</p>
+  </section>
+
+  <section class="card">
+    <h2 id="formTitle">تسجيل عامل جديد</h2>
+
+    <form id="workerForm">
+      <label for="workerName">اسم العامل *</label>
+      <input id="workerName" maxlength="100" required placeholder="اكتب اسم العامل">
+
+      <div class="grid">
+        <div>
+          <label for="workDate">تاريخ العمل</label>
+          <input id="workDate" type="date">
+        </div>
+        <div>
+          <label for="workPlace">مكان العمل أو الفرع</label>
+          <input id="workPlace" maxlength="150" placeholder="اسم الفرع أو الموقع">
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label for="workHours">عدد ساعات العمل</label>
+          <input id="workHours" type="number" min="0" max="1000" step="0.25" value="8">
+        </div>
+        <div>
+          <label for="hourRate">أجر الساعة بالريال</label>
+          <input id="hourRate" type="number" min="0" max="1000000" step="0.01" value="0">
+        </div>
+      </div>
+
+      <label for="workerPaid">المبلغ المدفوع بالريال</label>
+      <input id="workerPaid" type="number" min="0" max="100000000" step="0.01" value="0">
+
+      <label for="workerNotes">ملاحظات</label>
+      <textarea id="workerNotes" maxlength="2000" placeholder="اكتب أي ملاحظات عن العامل"></textarea>
+
+      <button class="primary" id="saveButton" type="submit">حفظ بيانات العامل</button>
+      <button class="primary secondary hidden" id="cancelEdit" type="button">إلغاء التعديل</button>
+
+      <div id="formMessage" class="message" role="status" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>البحث في سجل العمال</h2>
+    <label for="searchInput">ابحث بالاسم أو الرقم المسلسل أو مكان العمل</label>
+    <input id="searchInput" placeholder="اكتب كلمة البحث">
+  </section>
+
+  <section class="card">
+    <h2>سجل العمال</h2>
+    <div id="workerList">
+      <div class="empty">لا توجد بيانات عمال حتى الآن.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>النسخ الاحتياطي</h2>
+    <button id="exportButton" class="primary">تصدير بيانات العمال إلى ملف</button>
+
+    <label for="importInput">استيراد بيانات من نسخة احتياطية</label>
+    <input id="importInput" type="file" accept=".json,application/json">
+
+    <button id="clearButton" class="primary danger">حذف جميع بيانات العمال</button>
+    <p class="note">
+      احتفظ بنسخة احتياطية بشكل دوري. حذف بيانات العمال نهائي داخل هذا المتصفح.
+      لا تستورد ملفًا غير موثوق.
+    </p>
+    <div id="backupMessage" class="message" role="status"></div>
+  </section>
+
+</main>
+
+<footer>
+  عمال يوميه — إدارة العمال والمستحقات
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'ommal_yawmia_workers_v3';
+
+  const $ = function (id) {
+    return document.getElementById(id);
+  };
+
+  let workers = [];
+  let editingId = null;
+
+  function money(value) {
+    return (Number(value) || 0).toLocaleString('ar-SA', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function escapeHTML(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  }
+
+  function showMessage(id, message, success) {
+    const element = $(id);
+    element.textContent = message;
+    element.className = 'message ' + (success ? 'ok' : 'error');
+  }
+
+  function hideMessage(id) {
+    const element = $(id);
+    element.textContent = '';
+    element.className = 'message';
+  }
+
+  function getTotal(worker) {
+    return (Number(worker.hours) || 0) * (Number(worker.rate) || 0);
+  }
+
+  function getPaid(worker) {
+    return Number(worker.paid) || 0;
+  }
+
+  function getRemaining(worker) {
+    return getTotal(worker) - getPaid(worker);
+  }
+
+  function loadWorkers() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        workers = [];
+        return;
+      }
+
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        throw new Error('بيانات غير صحيحة');
+      }
+
+      workers = parsed;
+    } catch (error) {
+      workers = [];
+      showMessage(
+        'backupMessage',
+        'تعذرت قراءة البيانات المحفوظة. لا تحفظ بيانات مهمة قبل التأكد من سلامة المتصفح.',
+        false
+      );
+    }
+  }
+
+  function saveWorkers() {
+    try {
+      const raw = JSON.stringify(workers);
+      localStorage.setItem(STORAGE_KEY, raw);
+
+      if (localStorage.getItem(STORAGE_KEY) !== raw) {
+        throw new Error('تعذر التحقق من التخزين');
+      }
+
+      return true;
+    } catch (error) {
+      showMessage(
+        'formMessage',
+        'فشل الحفظ داخل المتصفح. تأكد أنك تفتح الموقع في Chrome العادي وليس التصفح الخفي.',
+        false
+      );
+      return false;
+    }
+  }
+
+  function nextId() {
+    return workers.reduce(function (max, worker) {
+      return Math.max(max, Number(worker.id) || 0);
+    }, 0) + 1;
+  }
+
+  function getFormData() {
+    const name = $('workerName').value.trim();
+    const hours = Number($('workHours').value);
+    const rate = Number($('hourRate').value);
+    const paid = Number($('workerPaid').value);
+
+    if (!name) {
+      throw new Error('اكتب اسم العامل أولًا.');
+    }
+
+    if (
+      $('workHours').value === '' ||
+      $('hourRate').value === '' ||
+      $('workerPaid').value === ''
+    ) {
+      throw new Error('اكتب عدد الساعات وأجر الساعة والمبلغ المدفوع. اكتب صفرًا إذا لم يوجد مبلغ.');
+    }
+
+    if (
+      !Number.isFinite(hours) ||
+      !Number.isFinite(rate) ||
+      !Number.isFinite(paid) ||
+      hours < 0 ||
+      rate < 0 ||
+      paid < 0
+    ) {
+      throw new Error('راجع الأرقام؛ يجب أن تكون صحيحة وغير سالبة.');
+    }
+
+    return {
+      name: name,
+      date: $('workDate').value,
+      place: $('workPlace').value.trim(),
+      hours: hours,
+      rate: rate,
+      paid: paid,
+      notes: $('workerNotes').value.trim()
+    };
+  }
+
+  function clearForm() {
+    $('workerForm').reset();
+    $('workHours').value = '8';
+    $('hourRate').value = '0';
+    $('workerPaid').value = '0';
+    editingId = null;
+    $('formTitle').textContent = 'تسجيل عامل جديد';
+    $('saveButton').textContent = 'حفظ بيانات العامل';
+    $('cancelEdit').classList.add('hidden');
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    hideMessage('formMessage');
+
+    let formData;
+
+    try {
+      formData = getFormData();
+    } catch (error) {
+      showMessage('formMessage', error.message, false);
+      return;
+    }
+
+    let previous = workers.slice();
+
+    if (editingId !== null) {
+      const index = workers.findIndex(function (worker) {
+        return Number(worker.id) === Number(editingId);
+      });
+
+      if (index < 0) {
+        showMessage('formMessage', 'العامل المطلوب تعديله غير موجود.', false);
+        return;
+      }
+
+      workers[index] = Object.assign({}, workers[index], formData);
+    } else {
+      workers.push(Object.assign({ id: nextId() }, formData));
+    }
+
+    if (!saveWorkers()) {
+      workers = previous;
+      return;
+    }
+
+    renderWorkers();
+    renderStats();
+    clearForm();
+
+    showMessage('formMessage', 'تم حفظ بيانات العامل بنجاح.', true);
+  }
+
+  function renderStats() {
+    let due = 0;
+    let paid = 0;
+
+    workers.forEach(function (worker) {
+      due += getTotal(worker);
+      paid += getPaid(worker);
+    });
+
+    $('workerCount').textContent = String(workers.length);
+    $('totalDue').textContent = money(due);
+    $('totalPaid').textContent = money(paid);
+    $('totalRemaining').textContent = money(due - paid);
+  }
+
+  function renderWorkers() {
+    const list = $('workerList');
+    const query = $('searchInput').value.trim().toLowerCase();
+
+    const filtered = workers.filter(function (worker) {
+      return [
+        worker.name,
+        worker.place,
+        worker.id,
+        worker.date
+      ].some(function (value) {
+        return String(value == null ? '' : value).toLowerCase().includes(query);
+      });
+    });
+
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty">لا توجد بيانات مطابقة للبحث.</div>';
+      return;
+    }
+
+    list.innerHTML = filtered.map(function (worker) {
+      const id = Number(worker.id);
+      const total = getTotal(worker);
+      const paid = getPaid(worker);
+      const remaining = getRemaining(worker);
+
+      return `
+        <article class="worker">
+          <h3>العامل: ${escapeHTML(worker.name)}</h3>
+          <p><b>الرقم المسلسل:</b> ${escapeHTML(id)}</p>
+          <p><b>تاريخ العمل:</b> ${escapeHTML(worker.date || 'غير محدد')}</p>
+          <p><b>مكان العمل:</b> ${escapeHTML(worker.place || 'غير محدد')}</p>
+          <p><b>عدد الساعات:</b> ${escapeHTML(worker.hours)}</p>
+          <p><b>أجر الساعة:</b> ${money(worker.rate)} ريال</p>
+          <p><b>إجمالي المستحقات:</b> ${money(total)} ريال</p>
+          <p><b>المدفوع:</b> ${money(paid)} ريال</p>
+          <p><b>المتبقي:</b> ${money(remaining)} ريال</p>
+          <p><b>ملاحظات:</b> ${escapeHTML(worker.notes || 'لا توجد')}</p>
+          <div class="worker-actions">
+            <button type="button" data-action="edit" data-id="${id}">تعديل البيانات</button>
+            <button type="button" class="danger" data-action="delete" data-id="${id}">حذف العامل</button>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  function editWorker(id) {
+    const worker = workers.find(function (item) {
+      return Number(item.id) === Number(id);
+    });
+
+    if (!worker) {
+      showMessage('formMessage', 'لم يتم العثور على العامل.', false);
+      return;
+    }
+
+    editingId = worker.id;
+
+    $('workerName').value = worker.name || '';
+    $('workDate').value = worker.date || '';
+    $('workPlace').value = worker.place || '';
+    $('workHours').value = worker.hours == null ? 0 : worker.hours;
+    $('hourRate').value = worker.rate == null ? 0 : worker.rate;
+    $('workerPaid').value = worker.paid == null ? 0 : worker.paid;
+    $('workerNotes').value = worker.notes || '';
+
+    $('formTitle').textContent = 'تعديل بيانات العامل رقم ' + worker.id;
+    $('saveButton').textContent = 'حفظ التعديلات';
+    $('cancelEdit').classList.remove('hidden');
+
+    showMessage('formMessage', 'عدّل البيانات ثم اضغط حفظ التعديلات.', true);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function deleteWorker(id) {
+    const worker = workers.find(function (item) {
+      return Number(item.id) === Number(id);
+    });
+
+    if (!worker) {
+      return;
+    }
+
+    if (!window.confirm('هل أنت متأكد من حذف العامل ' + worker.name + '؟')) {
+      return;
+    }
+
+    const previous = workers.slice();
+
+    workers = workers.filter(function (item) {
+      return Number(item.id) !== Number(id);
+    });
+
+    if (!saveWorkers()) {
+      workers = previous;
+      return;
+    }
+
+    renderWorkers();
+    renderStats();
+    showMessage('backupMessage', 'تم حذف العامل بنجاح.', true);
+  }
+
+  function exportWorkers() {
+    try {
+      const blob = new Blob(
+        [JSON.stringify(workers, null, 2)],
+        { type: 'application/json;charset=utf-8' }
+      );
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = 'عمال-يوميه-نسخة-احتياطية.json';
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 1500);
+
+      showMessage('backupMessage', 'تم تجهيز ملف النسخة الاحتياطية.', true);
+    } catch (error) {
+      showMessage('backupMessage', 'تعذر تصدير البيانات.', false);
+    }
+  }
+
+  function importWorkers(event) {
+    const file = event.target.files && event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      try {
+        const imported = JSON.parse(reader.result);
+
+        if (!Array.isArray(imported)) {
+          throw new Error('ملف غير صالح');
+        }
+
+        const valid = imported.every(function (worker) {
+          return worker &&
+            Number.isFinite(Number(worker.id)) &&
+            typeof worker.name === 'string';
+        });
+
+        if (!valid) {
+          throw new Error('بيانات غير صالحة');
+        }
+
+        if (!window.confirm('سيتم استبدال السجل الحالي بالبيانات المستوردة. هل تريد المتابعة؟')) {
+          return;
+        }
+
+        const previous = workers.slice();
+        workers = imported;
+
+        if (!saveWorkers()) {
+          workers = previous;
+          return;
+        }
+
+        renderWorkers();
+        renderStats();
+
+        showMessage('backupMessage', 'تم استيراد البيانات بنجاح.', true);
+      } catch (error) {
+        showMessage('backupMessage', 'تعذر الاستيراد. تأكد من اختيار ملف نسخة احتياطية صحيح.', false);
+      } finally {
+        event.target.value = '';
+      }
+    };
+
+    reader.onerror = function () {
+      showMessage('backupMessage', 'تعذرت قراءة الملف.', false);
+      event.target.value = '';
+    };
+
+    reader.readAsText(file);
+  }
+
+  function clearAll() {
+    if (!workers.length) {
+      showMessage('backupMessage', 'لا توجد بيانات لحذفها.', false);
+      return;
+    }
+
+    if (!window.confirm('تحذير: سيتم حذف جميع بيانات العمال من هذا المتصفح. هل تريد المتابعة؟')) {
+      return;
+    }
+
+    const previous = workers.slice();
+    workers = [];
+
+    if (!saveWorkers()) {
+      workers = previous;
+      return;
+    }
+
+    renderWorkers();
+    renderStats();
+    clearForm();
+
+    showMessage('backupMessage', 'تم حذف جميع البيانات من هذا المتصفح.', true);
+  }
+
+  // ربط جميع الأزرار والأحداث
+  $('workerForm').addEventListener('submit', handleSubmit);
+
+  $('cancelEdit').addEventListener('click', function () {
+    clearForm();
+    hideMessage('formMessage');
+  });
+
+  $('searchInput').addEventListener('input', renderWorkers);
+
+  $('workerList').addEventListener('click', function (event) {
+    const button = event.target.closest('button[data-action]');
+
+    if (!button) {
+      return;
+    }
+
+    const id = button.getAttribute('data-id');
+    const action = button.getAttribute('data-action');
+
+    if (action === 'edit') {
+      editWorker(id);
+    } else if (action === 'delete') {
+      deleteWorker(id);
+    }
+  });
+
+  $('exportButton').addEventListener('click', exportWorkers);
+  $('importInput').addEventListener('change', importWorkers);
+  $('clearButton').addEventListener('click', clearAll);
+
+  // بدء التطبيق
+  loadWorkers();
+  renderWorkers();
+  renderStats();
+
+})();
+</script>
+
+</body>
+</html>
