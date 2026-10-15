@@ -5,7 +5,10 @@
   "description": "تطبيق عمال يوميه لإدارة العمال وتسجيل ساعات العمل والأجور والمدفوعات والمبالغ المتبقية.",
   "start_url": "/ommal-yawmia/",
   "scope": "/ommal-yawmia/",
+  "lang": "ar",
+  "dir": "rtl",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#111111",
   "theme_color": "#D4AF37"
 }
