@@ -3,68 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#172554">
+<meta name="theme-color" content="#080808">
 <title>عمال يوميه | Ommal Yawmia</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--navy:#172554;--blue:#2563eb;--green:#16a34a;--orange:#f59e0b;--purple:#7c3aed;--red:#dc2626;--bg:#f3f6fb;--white:#fff;--text:#182235;--muted:#64748b;--border:#e2e8f0}
+:root{--navy:#080808;--blue:#d4af37;--green:#d4af37;--orange:#f0c75e;--purple:#b8962e;--red:#dc2626;--bg:#0b0b0b;--white:#141414;--text:#f5f0df;--muted:#b7ad8b;--border:#3c3420}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px Tahoma,Arial,sans-serif}
 button,input,select,textarea{font:inherit}
-button{border:0;border-radius:10px;padding:11px 14px;background:var(--blue);color:white;font-weight:bold;cursor:pointer}
+button{border:0;border-radius:10px;padding:11px 14px;background:#d4af37;color:#090909;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.55}
-.btn2{background:#e8eefb;color:var(--navy)}
-.danger{background:#fee2e2;color:#b91c1c}
+.btn2{background:#252116;color:#f1d477;border:1px solid #6b5722}
+.danger{background:#451717;color:#fecaca}
 .hidden{display:none!important}
 .muted,small{color:var(--muted)}
-.gold{color:var(--blue)}
-input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--text);outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 2px #2563eb18}
-label{display:block;margin-bottom:7px;font-weight:bold;color:#334155}
+.gold{color:#f1d477}
+input,select,textarea{width:100%;padding:12px;border:1px solid #514321;border-radius:10px;background:#151515;color:#f5f0df;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#d4af37;box-shadow:0 0 0 2px #d4af3725}
+label{display:block;margin-bottom:7px;font-weight:bold;color:#eadba8}
 .field{margin-bottom:14px}
-h2{font-size:21px;margin:8px 0 15px}
-h3{font-size:17px;margin:0 0 15px}
-.box{background:white;border:1px solid var(--border);border-radius:16px;padding:17px;margin-bottom:15px;box-shadow:0 3px 12px #17255408}
-.logo{text-align:center;font-size:28px;font-weight:bold;color:var(--blue);margin:15px}
+h2{font-size:21px;margin:8px 0 15px;color:#f1d477}
+h3{font-size:17px;margin:0 0 15px;color:#f1d477}
+.box{background:#141414;border:1px solid #3c3420;border-radius:16px;padding:17px;margin-bottom:15px;box-shadow:0 4px 16px #0008}
+.logo{text-align:center;font-size:28px;font-weight:bold;color:#d4af37;margin:15px}
 #auth{max-width:430px;margin:5vh auto;padding:15px}
-.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 15px;background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
-.brand{font-size:18px;font-weight:bold;color:var(--navy)}
-.brand small{font-size:10px;display:block;margin-top:3px}
+.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 15px;background:#080808;border-bottom:1px solid #6b5722;position:sticky;top:0;z-index:10}
+.brand{position:absolute;left:50%;transform:translateX(-50%);text-align:center;font-size:18px;font-weight:bold;color:#f1d477;white-space:nowrap;line-height:1.15}
+.brand small{font-size:10px;display:block;margin-top:3px;color:#b7ad8b}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.menuBtn{display:block;background:var(--navy)}
+.menuBtn{display:block;background:#d4af37;color:#080808;min-width:44px;font-size:21px;padding:8px 12px}
+.refreshBtn{margin-right:auto}
 .layout{min-height:calc(100vh - 66px)}
-.sidebar{position:fixed;right:0;top:66px;bottom:0;width:260px;max-width:80vw;padding:12px;background:var(--navy);color:white;z-index:30;overflow:auto;display:flex;flex-direction:column;transform:translateX(105%);transition:transform .22s ease;box-shadow:-10px 0 30px #0002}
+.sidebar{position:fixed;right:0;top:66px;bottom:0;width:260px;max-width:80vw;padding:12px;background:#080808;color:#f5f0df;z-index:30;overflow:auto;display:flex;flex-direction:column;transform:translateX(105%);transition:transform .22s ease;box-shadow:-10px 0 30px #0008;border-left:1px solid #6b5722}
 .sidebar.open{transform:translateX(0)}
-.nav{display:flex;align-items:center;gap:10px;width:100%;text-align:right;margin-bottom:6px;background:transparent;color:#e2e8f0;border:1px solid transparent;font-weight:normal;padding:12px}
-.nav .ico{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#ffffff16;font-size:17px}
-.nav.active,.nav:hover{background:#ffffff16;border-color:#ffffff20;color:white}
-.nav.active .ico{background:var(--blue)}
-.sidefoot{margin-top:auto;padding:16px 5px 8px;color:#cbd5e1;font-size:11px;line-height:1.9}
-#menuShade{position:fixed;inset:66px 0 0;background:#0f172a66;z-index:25}
+.nav{display:flex;align-items:center;gap:10px;width:100%;text-align:right;margin-bottom:6px;background:transparent;color:#e9dfbd;border:1px solid transparent;font-weight:normal;padding:12px}
+.nav .ico{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#d4af371c;color:#f1d477;font-size:17px}
+.nav.active,.nav:hover{background:#d4af371c;border-color:#8a7029;color:#f8e6a0}
+.nav.active .ico{background:#d4af37;color:#080808}
+.sidefoot{margin-top:auto;padding:16px 5px 8px;color:#b7ad8b;font-size:11px;line-height:1.9;border-top:1px solid #3c3420}
+#menuShade{position:fixed;inset:66px 0 0;background:#000b;z-index:25}
 main{padding:18px;max-width:1250px;margin:auto}
-.notice{padding:13px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;margin-bottom:13px;line-height:1.9;color:#1e40af}
+.notice{padding:13px;border-radius:12px;background:#211c0e;border:1px solid #6b5722;margin-bottom:13px;line-height:1.9;color:#f1d477}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}
-.stat{position:relative;overflow:hidden;background:white;border:1px solid var(--border);border-radius:15px;padding:15px;min-width:0;border-top:4px solid var(--blue);box-shadow:0 4px 15px #17255408}
-.stat:nth-child(2){border-top-color:var(--green)}
-.stat:nth-child(3){border-top-color:var(--orange)}
-.stat span{display:block;color:var(--muted);margin-bottom:12px;font-size:12px}
-.stat strong{font-size:21px;color:var(--navy);overflow-wrap:anywhere}
+.stat{position:relative;overflow:hidden;background:#141414;border:1px solid #3c3420;border-radius:15px;padding:15px;min-width:0;border-top:4px solid #d4af37;box-shadow:0 4px 16px #0008}
+.stat:nth-child(2),.stat:nth-child(3){border-top-color:#d4af37}
+.stat span{display:block;color:#b7ad8b;margin-bottom:12px;font-size:12px}
+.stat strong{font-size:21px;color:#f1d477;overflow-wrap:anywhere}
 .grid,.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:11px}
-table{border-collapse:collapse;width:100%;min-width:620px;background:white}
-th,td{padding:12px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
-th{color:var(--navy);background:#eff6ff}
+.tablewrap{overflow:auto;border:1px solid #3c3420;border-radius:11px}
+table{border-collapse:collapse;width:100%;min-width:620px;background:#141414}
+th,td{padding:12px;text-align:right;border-bottom:1px solid #3c3420;white-space:nowrap}
+th{color:#f1d477;background:#211c0e}
 tr:last-child td{border-bottom:0}
-.success{color:#15803d}.error{color:#b91c1c}
-.empty{text-align:center;color:var(--muted);padding:22px}
-#toast{position:fixed;bottom:18px;left:12px;right:12px;max-width:520px;margin:auto;background:var(--navy);color:white;border-radius:12px;padding:14px;z-index:60;display:none;box-shadow:0 8px 25px #0002}
-.pill{display:inline-block;border-radius:20px;padding:5px 9px;background:#dcfce7;color:#166534;font-size:12px}
+.success{color:#f1d477}.error{color:#ff8a8a}
+.empty{text-align:center;color:#b7ad8b;padding:22px}
+#toast{position:fixed;bottom:18px;left:12px;right:12px;max-width:520px;margin:auto;background:#080808;border:1px solid #d4af37;color:#f1d477;border-radius:12px;padding:14px;z-index:60;display:none;box-shadow:0 8px 25px #0008}
+.pill{display:inline-block;border-radius:20px;padding:5px 9px;background:#302710;color:#f1d477;font-size:12px}
 #pageTitle{display:flex;align-items:center;justify-content:space-between}
-hr{border:0;border-top:1px solid var(--border)}
+hr{border:0;border-top:1px solid #3c3420}
 @media(max-width:600px){
  main{padding:11px}
  .topbar{padding:8px 10px}
- .brand{font-size:16px}
+ .brand{font-size:15px}
+ .brand small{font-size:9px}
+ .refreshBtn{padding:9px 10px;font-size:12px}
  .stats{gap:7px}
  .stat{padding:10px 8px}
  .stat span{font-size:10px}
@@ -87,7 +89,7 @@ hr{border:0;border-top:1px solid var(--border)}
 <body>
 <section id="auth">
  <div class="logo">👷 عمال يوميه</div>
- <p style="text-align:center;color:#64748b">Ommal Yawmia — إدارة العمال والمستحقات</p>
+ <p style="text-align:center;color:#b7ad8b">Ommal Yawmia — إدارة العمال والمستحقات</p>
  <div class="box">
   <div id="loginBox">
    <h2>🔐 تسجيل الدخول</h2>
@@ -107,16 +109,14 @@ hr{border:0;border-top:1px solid var(--border)}
   </div>
   <div id="authMsg" class="notice hidden"></div>
  </div>
- <p style="text-align:center;color:#94a3b8;font-size:11px">© 2026 عمال يوميه</p>
+ <p style="text-align:center;color:#b7ad8b;font-size:11px">© 2026 عمال يوميه</p>
 </section>
 
 <div id="app" class="hidden">
  <header class="topbar">
-  <div class="brand">👷 عمال يوميه<small>Ommal Yawmia</small></div>
-  <div class="actions" style="margin:0">
-   <button class="menuBtn" onclick="toggleMenu()">☰ القائمة</button>
-   <button class="btn2" onclick="refreshAll()">↻ تحديث</button>
-  </div>
+  <button class="menuBtn" aria-label="فتح القائمة" onclick="toggleMenu()">☰</button>
+  <div class="brand">عمال يوميه<small>Ommal Yawmia</small></div>
+  <button class="btn2 refreshBtn" onclick="refreshAll()">↻ تحديث</button>
  </header>
  <div id="menuShade" class="hidden" onclick="toggleMenu(false)"></div>
  <aside class="sidebar" id="sidebar">
@@ -234,7 +234,7 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 const num=v=>Number(v||0);
 const money=v=>num(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function toast(m,bad=false){const e=$('toast');e.textContent=m;e.style.display='block';e.style.background=bad?'#991b1b':'#172554';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',5500)}
+function toast(m,bad=false){const e=$('toast');e.textContent=m;e.style.display='block';e.style.background=bad?'#991b1b':'#080808';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',5500)}
 function authMessage(m,bad=true){$('authMsg').textContent=m;$('authMsg').className='notice '+(bad?'error':'success')}
 function showLogin(){$('loginBox').classList.remove('hidden');$('signupBox').classList.add('hidden');$('authMsg').classList.add('hidden')}
 function showSignup(){$('loginBox').classList.add('hidden');$('signupBox').classList.remove('hidden');$('authMsg').classList.add('hidden')}
