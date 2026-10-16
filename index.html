@@ -2,880 +2,493 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111111">
-<meta name="description" content="عمال يوميه لإدارة العمال وأيام العمل والأجور والمدفوعات والتقارير">
-<link rel="manifest" href="./manifest.json">
 <title>عمال يوميه</title>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{
-  --bg:#101010;--panel:#191919;--panel2:#202020;
-  --gold:#d9ae52;--gold2:#f1d58b;--text:#f5f5f5;
-  --muted:#aaa;--border:#333;--red:#f16b6b;--green:#65d6a0;
-}
+:root{--bg:#0d0e10;--p:#191b20;--p2:#24262c;--g:#d8ad52;--gt:#f0d38a;--t:#f5f5f5;--m:#a8adb5;--l:#30333a;--gr:#59c58a;--r:#f08080}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,Tahoma,sans-serif}
+body{margin:0;background:var(--bg);color:var(--t);font:15px/1.7 Tahoma,Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-.hidden{display:none!important}
-.app{display:flex;min-height:100vh}
-.sidebar{width:245px;background:#151515;border-left:1px solid var(--border);
-padding:20px 14px;position:fixed;right:0;top:0;bottom:0;overflow:auto;z-index:10}
-.brand{padding:10px 8px 22px;border-bottom:1px solid var(--border);margin-bottom:18px}
-.brand-icon{display:inline-flex;background:var(--gold);color:#111;width:42px;height:42px;
-border-radius:13px;align-items:center;justify-content:center;font-size:23px;font-weight:bold}
-.brand h2{margin:12px 0 5px;color:var(--gold2);font-size:22px}
-.brand p{margin:0;color:var(--muted);font-size:12px}
-.nav-title{color:#777;font-size:11px;padding:12px 12px 6px}
-.nav-btn{display:flex;align-items:center;gap:11px;width:100%;padding:12px;
-border:0;border-radius:10px;background:transparent;color:#ddd;text-align:right;
-margin:3px 0;font-size:14px}
-.nav-btn .ico{width:23px;text-align:center;font-size:18px}
-.nav-btn:hover,.nav-btn.active{background:#302817;color:var(--gold2)}
-.sidebar-bottom{margin-top:25px;padding-top:15px;border-top:1px solid var(--border)}
-.main{margin-right:245px;width:calc(100% - 245px);padding:24px;min-width:0}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px}
-.topbar h1{font-size:25px;margin:0 0 6px}
-.sub{color:var(--muted);font-size:13px}
-.user-chip{border:1px solid var(--border);border-radius:30px;padding:10px 13px;
-color:var(--gold2);font-size:12px;max-width:45%;overflow-wrap:anywhere}
-.page{display:none}.page.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:18px}
-.stat{position:relative;overflow:hidden}
-.stat .label{color:var(--muted);font-size:13px}
-.stat .value{font-size:26px;font-weight:bold;margin-top:12px;color:var(--gold2);overflow-wrap:anywhere}
-.stat .stat-icon{position:absolute;left:17px;top:17px;font-size:24px;opacity:.8}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;
-flex-wrap:wrap;margin:24px 0 15px}
-.section-head h2{font-size:19px;margin:0}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:1px solid var(--border);background:#292929;color:#eee;border-radius:9px;
-padding:11px 14px;font-size:13px}
-.btn:hover{border-color:var(--gold)}
-.btn.primary{background:var(--gold);color:#151515;border-color:var(--gold);font-weight:bold}
-.btn.danger{color:#ff9b9b}
-.btn.success{color:var(--green)}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-.field{display:flex;flex-direction:column;gap:7px;min-width:0}
-.field.full{grid-column:1/-1}
-label{font-size:13px;color:#ddd}
-input,select,textarea{width:100%;background:#111;color:#f5f5f5;border:1px solid #3a3a3a;
-border-radius:9px;padding:12px;outline:none;min-width:0}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-textarea{min-height:85px;resize:vertical}
-input::placeholder,textarea::placeholder{color:#777}
-.form-card{max-width:950px}
-.form-note{font-size:12px;color:var(--muted);line-height:1.8;margin:12px 0}
-.divider{border:0;border-top:1px solid var(--border);margin:22px 0}
-.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
-table{border-collapse:collapse;width:100%;min-width:650px;background:var(--panel)}
-th,td{padding:13px 12px;text-align:right;border-bottom:1px solid #303030;font-size:13px}
-th{background:#252118;color:var(--gold2);font-weight:bold;white-space:nowrap}
-td{color:#eee}
-tr:last-child td{border-bottom:0}
-.empty{text-align:center;padding:35px;color:var(--muted)}
-.searchbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.searchbar input,.searchbar select{max-width:300px}
-.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#302817;color:var(--gold2);font-size:11px}
-.notice{padding:13px;border-radius:10px;background:#252118;border:1px solid #514321;
-color:var(--gold2);font-size:13px;line-height:1.8;margin-bottom:15px}
-.toast{position:fixed;bottom:20px;left:20px;z-index:100;background:#252525;
-border:1px solid var(--gold);padding:14px 18px;border-radius:10px;max-width:90%;font-size:14px}
-.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
-.login-card{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--border);
-border-radius:18px;padding:25px}
-.login-card h1{color:var(--gold2);margin:14px 0 7px}
-.login-card .field{margin:14px 0}
-.auth-tabs{display:flex;gap:8px;margin:20px 0}
-.auth-tabs button{flex:1}
-.mobile-menu{display:none}
-.footer-note{color:#777;text-align:center;font-size:11px;margin-top:25px}
-.amount{color:var(--gold2);font-weight:bold}
-.about-hero{background:linear-gradient(135deg,#302817,#191919 70%);
-border:1px solid #544526;border-radius:15px;padding:24px;line-height:2}
-.about-hero h2{color:var(--gold2)}
-.mini-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}
-@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){
- .sidebar{width:275px;transform:translateX(110%);transition:transform .2s;box-shadow:none}
- .sidebar.open{transform:translateX(0);box-shadow:0 0 0 100vmax #0009}
- .main{margin-right:0;width:100%;padding:16px}
- .mobile-menu{display:inline-flex}
- .topbar h1{font-size:21px}
- .user-chip{display:none}
- .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- .card{padding:14px}
- .stat .value{font-size:22px}
- .form-grid{grid-template-columns:1fr}
- .field.full{grid-column:auto}
- .mini-cards{grid-template-columns:1fr}
+.hide{display:none!important}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{width:100%;padding:11px;background:#101114;color:var(--t);border:1px solid var(--l);border-radius:10px}
+textarea{resize:vertical;min-height:75px}
+label{display:block;font-size:13px;margin-bottom:5px;color:#d5d7dc}
+.field{margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.span2{grid-column:1/-1}
+.btn{background:var(--g);color:#17130a;border:0;border-radius:10px;padding:10px 14px;font-weight:bold}
+.btn.alt{background:var(--p2);color:var(--t);border:1px solid var(--l)}
+.btn.danger{background:#512626;color:#fff}
+.btn.sm{padding:6px 10px;font-size:12px}
+.panel{background:var(--p);border:1px solid var(--l);border-radius:15px;padding:16px;margin-bottom:15px}
+.status{font-size:13px;min-height:20px;margin-top:8px;color:var(--m);overflow-wrap:anywhere}
+.error{color:var(--r)}
+.green{color:var(--gr)}
+.gold{color:var(--gt)}
+.muted{color:var(--m)}
+.loginwrap{min-height:100vh;display:grid;place-items:center;padding:18px;background:radial-gradient(ellipse at top,#302718,transparent 55%),var(--bg)}
+.login{width:min(100%,420px);padding:24px;background:var(--p);border:1px solid #5a4928;border-radius:20px}
+.logo{margin:auto auto 12px;width:54px;height:54px;display:grid;place-items:center;background:var(--g);color:#111;border-radius:15px;font-size:28px;font-weight:bold}
+.center{text-align:center}
+.top{height:64px;position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:0 15px;background:#111216f5;border-bottom:1px solid var(--l)}
+.brand{display:flex;gap:10px;align-items:center;font-weight:bold}
+.brand i{font-style:normal;background:var(--g);color:#111;padding:5px 11px;border-radius:10px}
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 64px)}
+aside{padding:14px 10px;background:#111216;border-left:1px solid var(--l)}
+.nav{display:block;width:100%;text-align:right;color:#c8cbd1;background:transparent;border:0;padding:11px;border-radius:10px;margin-bottom:4px}
+.nav.active,.nav:hover{background:#2a251b;color:var(--gt)}
+.navtitle{font-size:11px;color:#777;padding:8px}
+main{padding:22px;max-width:1400px;width:100%;margin:auto}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+.head h1{font-size:24px;margin:0}
+.head p{margin:0;color:var(--m);font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:16px}
+.stat{background:linear-gradient(145deg,#1d1f24,#141518);border:1px solid var(--l);border-radius:14px;padding:14px;min-width:0}
+.stat small{display:block;color:var(--m)}
+.stat strong{display:block;font-size:21px;overflow-wrap:anywhere}
+.shorts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.short{background:var(--p2);color:var(--t);border:1px solid var(--l);border-radius:13px;padding:13px 7px}
+.short b,.short small{display:block}
+.short span{font-size:23px}
+.short small{color:var(--m)}
+.filters{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.filters .field{flex:1;min-width:150px}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+td,th{text-align:right;padding:10px 8px;border-bottom:1px solid var(--l);vertical-align:middle}
+th{color:var(--m);font-size:12px;font-weight:normal}
+td{font-size:13px}
+.empty{text-align:center;padding:25px;color:var(--m)}
+.details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.detail{background:#111216;border:1px solid var(--l);border-radius:10px;padding:12px;overflow-wrap:anywhere}
+.detail b{display:block;font-size:18px}
+.menu{display:none}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rule{border:0;border-top:1px solid var(--l);margin:18px 0}
+.notice{background:#2b261b;border:1px solid #5a4928;color:var(--gt);padding:11px;border-radius:10px;margin:12px 0}
+.tag{display:inline-block;padding:3px 8px;border-radius:8px;background:#29251d;color:var(--gt);font-size:12px}
+@media(max-width:850px){
+.layout{display:block}
+aside{position:fixed;z-index:9;top:64px;bottom:0;right:0;width:245px;overflow:auto;transform:translateX(110%);transition:.2s;box-shadow:-10px 0 25px #0008}
+aside.open{transform:translateX(0)}
+.menu{display:inline-block}
+.cards,.shorts{grid-template-columns:repeat(2,minmax(0,1fr))}
+main{padding:14px}
 }
-@media(max-width:380px){.grid{grid-template-columns:1fr}}
+@media(max-width:520px){
+.grid{grid-template-columns:1fr}
+.span2{grid-column:auto}
+.head{align-items:flex-start;flex-direction:column}
+.panel{padding:12px}
+.stat{padding:11px}
+.stat strong{font-size:18px}
+.details{grid-template-columns:1fr 1fr}
+.useremail{display:none}
+}
 @media print{
- body{background:#fff;color:#111}
- .sidebar,.topbar,.no-print,.btn{display:none!important}
- .main{margin:0;width:100%;padding:0}
- .page{display:none!important}
- #page-report{display:block!important}
- .card,.table-wrap,table{background:#fff;color:#111;border-color:#ccc}
- th{background:#eee;color:#111}
- td{color:#111;border-color:#ddd}
- .report-print{color:#111}
+body{background:white;color:black}
+.top,aside,.noprint,.shorts{display:none!important}
+.layout{display:block}
+main{padding:0;max-width:none}
+.panel,.stat,.detail{background:white;color:black;border:1px solid #aaa}
+.cards{grid-template-columns:repeat(4,1fr)}
+td,th{color:black;white-space:normal;border-color:#aaa}
+table{min-width:0}
 }
 </style>
 </head>
-
 <body>
 
-<div id="authScreen" class="login-screen">
-  <div class="login-card">
-    <div class="brand-icon">ع</div>
-    <h1>عمال يوميه</h1>
-    <div class="sub">إدارة العمال والمستحقات والمدفوعات بسهولة</div>
-
-    <div class="auth-tabs">
-      <button class="btn primary" id="loginTab" onclick="setAuthMode('login')">تسجيل الدخول</button>
-      <button class="btn" id="signupTab" onclick="setAuthMode('signup')">إنشاء حساب جديد</button>
-    </div>
-
-    <form id="authForm">
-      <div class="field hidden" id="authNameField">
-        <label for="authName">الاسم</label>
-        <input id="authName" autocomplete="name" placeholder="اكتب اسمك">
-      </div>
-      <div class="field">
-        <label for="authEmail">البريد الإلكتروني</label>
-        <input id="authEmail" type="email" required autocomplete="email" placeholder="name@example.com">
-      </div>
-      <div class="field">
-        <label for="authPassword">كلمة المرور</label>
-        <input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="6 أحرف على الأقل">
-      </div>
-      <div class="field hidden" id="authConfirmField">
-        <label for="authConfirm">تأكيد كلمة المرور</label>
-        <input id="authConfirm" type="password" minlength="6" placeholder="اكتب كلمة المرور مرة أخرى">
-      </div>
-      <button id="authSubmit" class="btn primary" style="width:100%;margin-top:12px" type="submit">تسجيل الدخول</button>
-      <p class="form-note">بيانات كل حساب منفصلة عن حسابات المستخدمين الآخرين.</p>
-    </form>
-  </div>
+<section id="loginScreen" class="loginwrap">
+<form id="loginForm" class="login">
+<div class="logo">ع</div>
+<h1 class="center">عمال يوميه</h1>
+<p class="center muted">إدارة العمال وأيام العمل والمدفوعات</p>
+<div class="field">
+<label>البريد الإلكتروني</label>
+<input id="email" type="email" required autocomplete="username">
 </div>
-
-<div id="app" class="app hidden">
-  <aside id="sidebar" class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">ع</div>
-      <h2>عمال يوميه</h2>
-      <p>نظام إدارة العمال والمستحقات</p>
-    </div>
-
-    <div class="nav-title">القائمة الرئيسية</div>
-    <button class="nav-btn active" data-page="dashboard"><span class="ico">🏠</span>الرئيسية</button>
-    <button class="nav-btn" data-page="workers"><span class="ico">👷</span>العمال</button>
-    <button class="nav-btn" data-page="workdays"><span class="ico">📅</span>أيام العمل</button>
-    <button class="nav-btn" data-page="payments"><span class="ico">💰</span>المدفوعات والسُلف</button>
-    <button class="nav-btn" data-page="report"><span class="ico">📊</span>التقارير وكشف الحساب</button>
-
-    <div class="nav-title">الحساب والتطبيق</div>
-    <button class="nav-btn" data-page="about"><span class="ico">ℹ️</span>نبذة عن التطبيق</button>
-    <button class="nav-btn" id="switchAccount"><span class="ico">🔄</span>تبديل الحساب</button>
-    <button class="nav-btn" id="logoutBtn"><span class="ico">🚪</span>تسجيل الخروج</button>
-
-    <div class="footer-note">عمال يوميه © 2026</div>
-  </aside>
-
-  <main class="main">
-    <header class="topbar">
-      <div style="display:flex;align-items:center;gap:12px">
-        <button class="btn mobile-menu" id="menuToggle">☰</button>
-        <div>
-          <h1 id="pageTitle">الرئيسية</h1>
-          <div class="sub" id="todayText"></div>
-        </div>
-      </div>
-      <div id="userEmail" class="user-chip"></div>
-    </header>
-
-    <!-- الرئيسية -->
-    <section class="page active" id="page-dashboard">
-      <div class="notice">أهلاً بيك في تطبيق عمال يوميه. سجّل العمال، وتابع أيام العمل والمدفوعات، واطبع كشف حساب واضح لكل عامل.</div>
-
-      <div class="actions" style="margin-bottom:20px">
-        <button class="btn primary" onclick="openPage('newworker')">＋ تسجيل عامل جديد</button>
-        <button class="btn" onclick="openPage('workers')">👷 عرض العمال</button>
-        <button class="btn" onclick="openPage('report')">📄 إعداد تقرير</button>
-      </div>
-
-      <div class="grid">
-        <div class="card stat"><div class="label">عدد العمال</div><div class="value" id="statWorkers">0</div><div class="stat-icon">👷</div></div>
-        <div class="card stat"><div class="label">إجمالي المستحقات</div><div class="value" id="statDue">0.00</div><div class="stat-icon">📋</div></div>
-        <div class="card stat"><div class="label">إجمالي المدفوع</div><div class="value" id="statPaid">0.00</div><div class="stat-icon">💵</div></div>
-        <div class="card stat"><div class="label">المتبقي</div><div class="value" id="statRemain">0.00</div><div class="stat-icon">🧾</div></div>
-      </div>
-
-      <div class="section-head">
-        <h2>آخر العمال المسجلين</h2>
-        <button class="btn" onclick="openPage('workers')">عرض الكل ←</button>
-      </div>
-      <div class="table-wrap">
-        <table><thead><tr><th>م</th><th>اسم العامل</th><th>مكان العمل</th><th>التفاصيل</th></tr></thead>
-        <tbody id="recentWorkers"></tbody></table>
-      </div>
-    </section>
-
-    <!-- العمال -->
-    <section class="page" id="page-workers">
-      <div class="section-head">
-        <h2>قائمة العمال</h2>
-        <button class="btn primary" onclick="openPage('newworker')">＋ تسجيل عامل جديد</button>
-      </div>
-      <div class="searchbar">
-        <input id="workerSearch" placeholder="🔎 ابحث باسم العامل">
-      </div>
-      <div class="table-wrap">
-        <table><thead><tr><th>م</th><th>اسم العامل</th><th>تاريخ التسجيل</th><th>مكان العمل</th><th>إجراءات</th></tr></thead>
-        <tbody id="workersTable"></tbody></table>
-      </div>
-    </section>
-
-    <!-- تسجيل عامل جديد: شاشة منفصلة -->
-    <section class="page" id="page-newworker">
-      <div class="section-head">
-        <h2>تسجيل عامل جديد</h2>
-        <button class="btn" onclick="openPage('workers')">← الرجوع للعمال</button>
-      </div>
-      <div class="card form-card">
-        <div class="notice">سجّل بيانات العامل، ويمكنك إضافة أول يوم عمل وأول دفعة من نفس الشاشة. الحقول الرقمية اختيارية ولا توجد أسعار ثابتة.</div>
-        <form id="newWorkerForm">
-          <div class="form-grid">
-            <div class="field">
-              <label for="newName">اسم العامل *</label>
-              <input id="newName" required maxlength="120" placeholder="اسم العامل بالكامل">
-            </div>
-            <div class="field">
-              <label for="newLocation">مكان العمل</label>
-              <input id="newLocation" placeholder="الموقع أو الفرع">
-            </div>
-            <div class="field full">
-              <label for="newNotes">ملاحظات عن العامل</label>
-              <textarea id="newNotes" placeholder="أي بيانات إضافية"></textarea>
-            </div>
-          </div>
-
-          <hr class="divider">
-          <h3>📅 أول يوم عمل (اختياري)</h3>
-          <div class="form-grid">
-            <div class="field"><label for="firstWorkDate">تاريخ العمل</label><input type="date" id="firstWorkDate"></div>
-            <div class="field"><label for="firstWorkLocation">مكان العمل لهذا اليوم</label><input id="firstWorkLocation" placeholder="اتركه فارغًا لاستخدام مكان العمل بالأعلى"></div>
-            <div class="field"><label for="firstDays">عدد الأيام</label><input id="firstDays" type="number" min="0" step="0.25" placeholder="اكتب عدد الأيام"></div>
-            <div class="field"><label for="firstRate">سعر اليومية (ريال)</label><input id="firstRate" type="number" min="0" step="0.01" placeholder="اكتب سعر اليومية"></div>
-            <div class="field"><label for="firstOvertime">عدد الساعات الإضافية</label><input id="firstOvertime" type="number" min="0" step="0.25" placeholder="اختياري"></div>
-            <div class="field"><label for="firstOvertimeRate">سعر الساعة الإضافية (ريال)</label><input id="firstOvertimeRate" type="number" min="0" step="0.01" placeholder="اختياري"></div>
-            <div class="field full"><label for="firstWorkNotes">ملاحظات يوم العمل</label><input id="firstWorkNotes" placeholder="ملاحظات اختيارية"></div>
-          </div>
-
-          <hr class="divider">
-          <h3>💰 أول دفعة أو سُلفة (اختياري)</h3>
-          <div class="form-grid">
-            <div class="field"><label for="firstPaymentDate">تاريخ الدفع</label><input id="firstPaymentDate" type="date"></div>
-            <div class="field"><label for="firstPaymentAmount">المبلغ المدفوع (ريال)</label><input id="firstPaymentAmount" type="number" min="0" step="0.01" placeholder="اكتب المبلغ"></div>
-            <div class="field full"><label for="firstPaymentNotes">ملاحظات الدفعة</label><input id="firstPaymentNotes" placeholder="مثلاً: سُلفة أو دفعة أسبوعية"></div>
-          </div>
-          <p class="form-note">لو أدخلت بيانات يوم العمل، لازم تحدد تاريخ العمل وعدد الأيام وسعر اليومية. لو لم تدخل بيانات يوم أو دفعة، سيتم تسجيل العامل فقط.</p>
-          <div class="actions">
-            <button id="saveWorkerBtn" class="btn primary" type="submit">حفظ بيانات العامل</button>
-            <button class="btn" type="reset">مسح الخانات</button>
-            <button class="btn" type="button" onclick="openPage('workers')">إلغاء</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- أيام العمل -->
-    <section class="page" id="page-workdays">
-      <div class="section-head">
-        <h2>أيام العمل</h2>
-        <button class="btn primary" onclick="openPage('newworker')">＋ تسجيل عامل</button>
-      </div>
-      <div class="card" style="margin-bottom:15px">
-        <form id="workdayForm">
-          <div class="form-grid">
-            <div class="field"><label>العامل</label><select id="workWorker" required></select></div>
-            <div class="field"><label>تاريخ العمل</label><input id="workDate" type="date" required></div>
-            <div class="field"><label>مكان العمل</label><input id="workLocation" placeholder="الموقع"></div>
-            <div class="field"><label>عدد الأيام</label><input id="workDaysCount" type="number" min="0" step="0.25" required placeholder="عدد الأيام"></div>
-            <div class="field"><label>سعر اليومية</label><input id="workDailyRate" type="number" min="0" step="0.01" required placeholder="سعر اليومية"></div>
-            <div class="field"><label>الساعات الإضافية</label><input id="workOvertime" type="number" min="0" step="0.25" placeholder="اختياري"></div>
-            <div class="field"><label>سعر الساعة الإضافية</label><input id="workOvertimeRate" type="number" min="0" step="0.01" placeholder="اختياري"></div>
-            <div class="field"><label>ملاحظات</label><input id="workNotes" placeholder="اختياري"></div>
-          </div>
-          <p class="form-note">إجمالي يوم العمل = عدد الأيام × سعر اليومية + الساعات الإضافية × سعر الساعة الإضافية.</p>
-          <button class="btn primary" id="saveWorkBtn">حفظ يوم العمل</button>
-        </form>
-      </div>
-      <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>العامل</th><th>الموقع</th><th>الأيام</th><th>المستحق</th><th>ملاحظات</th></tr></thead><tbody id="workdaysTable"></tbody></table></div>
-    </section>
-
-    <!-- المدفوعات -->
-    <section class="page" id="page-payments">
-      <div class="section-head"><h2>المدفوعات والسُلف</h2></div>
-      <div class="card" style="margin-bottom:15px">
-        <form id="paymentForm">
-          <div class="form-grid">
-            <div class="field"><label>العامل</label><select id="paymentWorker" required></select></div>
-            <div class="field"><label>تاريخ الدفع</label><input id="paymentDate" type="date" required></div>
-            <div class="field"><label>المبلغ (ريال)</label><input id="paymentAmount" type="number" min="0.01" step="0.01" required placeholder="اكتب المبلغ"></div>
-            <div class="field"><label>ملاحظات</label><input id="paymentNotes" placeholder="مثلاً: سُلفة أو دفعة"></div>
-          </div>
-          <button class="btn primary" id="savePaymentBtn" style="margin-top:15px">حفظ الدفعة</button>
-        </form>
-      </div>
-      <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>العامل</th><th>المبلغ</th><th>ملاحظات</th></tr></thead><tbody id="paymentsTable"></tbody></table></div>
-    </section>
-
-    <!-- التقارير -->
-    <section class="page" id="page-report">
-      <div class="section-head">
-        <h2>التقارير وكشف حساب العامل</h2>
-        <div class="actions no-print">
-          <button class="btn primary" onclick="downloadPDF()">⬇ حفظ التقرير PDF</button>
-          <button class="btn" onclick="shareReport()">📤 مشاركة التقرير</button>
-          <button class="btn" onclick="window.print()">🖨 طباعة</button>
-        </div>
-      </div>
-      <div class="card no-print" style="margin-bottom:15px">
-        <div class="form-grid">
-          <div class="field"><label>اختر العامل</label><select id="reportWorker"></select></div>
-          <div class="field"><label>من تاريخ (اختياري)</label><input id="reportFrom" type="date"></div>
-          <div class="field"><label>إلى تاريخ (اختياري)</label><input id="reportTo" type="date"></div>
-          <div class="field"><label>عنوان التقرير</label><input id="reportTitle" value="كشف حساب عامل"></div>
-        </div>
-        <div class="actions" style="margin-top:15px">
-          <button class="btn primary" onclick="buildReport()">عرض كشف الحساب</button>
-        </div>
-      </div>
-      <div id="reportContent" class="report-print">
-        <div class="card empty">اختر العامل ثم اضغط «عرض كشف الحساب» لعرض التقرير.</div>
-      </div>
-    </section>
-
-    <!-- نبذة -->
-    <section class="page" id="page-about">
-      <div class="about-hero">
-        <span class="badge">الإصدار الأول</span>
-        <h2>عن تطبيق عمال يوميه</h2>
-        <p>تطبيق عمال يوميه هو نظام مبسط لمساعدة أصحاب الأعمال والمشرفين على تنظيم بيانات العمال ومتابعة أيام العمل والأجور والمدفوعات والمبالغ المتبقية.</p>
-        <p>يتيح التطبيق تسجيل العامل، وتوثيق أيام العمل وعدد الأيام وسعر اليومية والساعات الإضافية، وتسجيل الدفعات والسُلف، وعرض كشف حساب لفترة زمنية محددة، مع إمكانية طباعة التقرير أو حفظه بصيغة PDF ومشاركته مع العامل لمراجعة البيانات.</p>
-        <p>صُمم التطبيق ليكون سهل الاستخدام على الهاتف، مع إدخال الأسعار والأعداد يدويًا حسب الاتفاق الفعلي مع كل عامل، دون فرض أسعار ثابتة.</p>
-        <hr class="divider">
-        <h3>صاحب الفكرة والتطوير</h3>
-        <p><strong style="color:var(--gold2);font-size:20px">محمد كرم</strong></p>
-        <p>صاحب فكرة تطبيق عمال يوميه والمسؤول عن تطويره وتنظيم وظائفه لتسهيل إدارة العمال والحسابات اليومية.</p>
-      </div>
-    </section>
-  </main>
+<div class="field">
+<label>كلمة المرور</label>
+<input id="password" type="password" required autocomplete="current-password">
 </div>
+<button class="btn" id="loginBtn" style="width:100%">تسجيل الدخول</button>
+<div id="loginStatus" class="status"></div>
+</form>
+</section>
 
-<div id="toast" class="toast hidden"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<div id="app" class="hide">
+<header class="top">
+<div class="brand">
+<button class="btn alt sm menu" id="menuBtn">☰</button>
+<i>ع</i> عمال يوميه
+</div>
+<div class="row">
+<span id="userEmail" class="muted useremail"></span>
+<button id="refresh" class="btn alt sm">↻ تحديث</button>
+</div>
+</header>
+<div class="layout">
+<aside id="sidebar">
+<div class="navtitle">القائمة الرئيسية</div>
+<button class="nav active" data-page="home">⌂　الرئيسية</button>
+<button class="nav" data-page="workers">♙　العمال</button>
+<button class="nav" data-page="newWorker">＋　تسجيل عامل جديد</button>
+<button class="nav" data-page="workdays">▦　أيام العمل</button>
+<button class="nav" data-page="payments">⇄　المدفوعات</button>
+<button class="nav" data-page="reports">▤　التقارير وكشوف الحساب</button>
+<button class="nav" data-page="about">ⓘ　نبذة عن التطبيق</button>
+<hr class="rule">
+<button class="nav" id="switch">⇆　تبديل الحساب</button>
+<button class="nav" id="logout">↪　تسجيل الخروج</button>
+</aside>
+<main id="main"><div class="empty">جارٍ التحميل...</div></main>
+</div>
+</div>
 
 <script>
+"use strict";
+
+/* إعدادات المشروع الحالي */
 const SUPABASE_URL = "https://qawnvmuwbcsfldcjikhb.supabase.co";
 const SUPABASE_KEY = "sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7";
-
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser = null;
-let authMode = "login";
-let workers = [];
-let workdays = [];
-let payments = [];
-let reportData = null;
+const $ = id => document.getElementById(id);
+const money = n => (Number(n)||0).toLocaleString("ar-SA",{minimumFractionDigits:2,maximumFractionDigits:2})+" ر.س";
+const num = v => Math.max(0,Number(v)||0);
+const today = () => new Date().toLocaleDateString("en-CA");
+const esc = v => String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const val = id => $(id)?.value?.trim() ?? "";
+const setStatus = (id,msg,error=false) => {if($(id)){$(id).textContent=msg;$(id).className="status"+(error?" error":"");}};
+let user=null, workers=[], days=[], payments=[], page="home", selectedWorker=null;
 
-const titles = {
-  dashboard:"الرئيسية",
-  workers:"قائمة العمال",
-  newworker:"تسجيل عامل جديد",
-  workdays:"أيام العمل",
-  payments:"المدفوعات والسُلف",
-  report:"التقارير وكشف الحساب",
-  about:"نبذة عن التطبيق"
-};
+function pageHead(title,sub=""){
+return `<div class="head"><div><h1>${esc(title)}</h1><p>${esc(sub)}</p></div></div>`;
+}
+function stat(title,value,icon=""){
+return `<div class="stat"><small>${icon} ${esc(title)}</small><strong>${value}</strong></div>`;
+}
+function panel(title,body,extra=""){
+return `<section class="panel"><h2>${title}</h2>${extra}${body}</section>`;
+}
+function field(label,id,type="text",required=false,placeholder="",value=""){
+return `<div class="field"><label for="${id}">${esc(label)}${required?" *":""}</label><input id="${id}" type="${type}" ${required?"required":""} placeholder="${esc(placeholder)}" value="${esc(value)}"></div>`;
+}
+function selectWorker(id="workerSelect",chosen=""){
+return `<div class="field"><label for="${id}">العامل *</label><select id="${id}" required><option value="">اختر العامل</option>${workers.map(w=>`<option value="${w.id}" ${String(chosen)===String(w.id)?"selected":""}>${esc(w.name)}${w.work_location?" — "+esc(w.work_location):""}</option>`).join("")}</select></div>`;
+}
+function calcTotal(){
+const d=num(val("daysCount")),rate=num(val("dailyRate")),oh=num(val("overtimeHours")),orate=num(val("overtimeRate"));
+if($("liveTotal"))$("liveTotal").textContent=money(d*rate+oh*orate);
+}
+function calcPayment(){
+const id=val("payWorker"),amount=num(val("payAmount")),w=workers.find(x=>String(x.id)===String(id));
+if($("payBalance"))$("payBalance").textContent=w?money(workerDue(w.id)-workerPaid(w.id)-amount):"—";
+}
+function workerDue(id){
+return days.filter(d=>String(d.worker_id)===String(id)).reduce((s,d)=>s+Number(d.total_due||Number(d.days_count||0)*Number(d.daily_rate||0)+Number(d.overtime_hours||0)*Number(d.overtime_hourly_rate||0)),0);
+}
+function workerPaid(id){
+return payments.filter(p=>String(p.worker_id)===String(id)).reduce((s,p)=>s+Number(p.amount||0),0);
+}
+function totalDue(){return days.reduce((s,d)=>s+Number(d.total_due||Number(d.days_count||0)*Number(d.daily_rate||0)+Number(d.overtime_hours||0)*Number(d.overtime_hourly_rate||0)),0)}
+function totalPaid(){return payments.reduce((s,p)=>s+Number(p.amount||0),0)}
+function balance(id){return workerDue(id)-workerPaid(id)}
 
-function $(id){return document.getElementById(id)}
-function esc(value){
-  return String(value ?? "").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+async function loadData(){
+if(!user)return;
+$("main").innerHTML='<div class="empty">جارٍ تحميل البيانات...</div>';
+try{
+const [wr,dr,pr]=await Promise.all([
+db.from("workers").select("*").order("id",{ascending:false}),
+db.from("work_days").select("*").order("work_date",{ascending:false}),
+db.from("worker_payments").select("*").order("payment_date",{ascending:false})
+]);
+if(wr.error)throw wr.error;
+if(dr.error)throw dr.error;
+if(pr.error)throw pr.error;
+workers=wr.data||[];days=dr.data||[];payments=pr.data||[];
+render();
+}catch(e){
+$("main").innerHTML=panel("تعذر تحميل البيانات",`<p class="error">${esc(e.message||"حدث خطأ غير معروف")}</p><button class="btn" onclick="loadData()">إعادة المحاولة</button><p class="muted">تأكد من تسجيل الدخول وصلاحيات قاعدة البيانات والجداول الموجودة.</p>`);
 }
-function money(value){return (Number(value)||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function today(){return new Date().toLocaleDateString("en-CA")}
-function showToast(message){
-  $("toast").textContent=message;
-  $("toast").classList.remove("hidden");
-  setTimeout(()=>$("toast").classList.add("hidden"),4000);
 }
-function val(id){return $(id).value.trim()}
-function num(id){return val(id)===""?0:Number(val(id))}
-function disableButton(id,disabled,text){
-  const b=$(id); if(!b)return;
-  b.disabled=disabled;
-  if(text)b.textContent=text;
+function go(p){
+page=p;
+document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
+$("sidebar").classList.remove("open");
+render();
 }
-function setAuthMode(mode){
-  authMode=mode;
-  const signup=mode==="signup";
-  $("authNameField").classList.toggle("hidden",!signup);
-  $("authConfirmField").classList.toggle("hidden",!signup);
-  $("loginTab").classList.toggle("primary",!signup);
-  $("signupTab").classList.toggle("primary",signup);
-  $("authSubmit").textContent=signup?"إنشاء الحساب":"تسجيل الدخول";
-  $("authPassword").autocomplete=signup?"new-password":"current-password";
+function render(){
+if(!user)return;
+if(page==="home")renderHome();
+else if(page==="workers")renderWorkers();
+else if(page==="newWorker")renderNewWorker();
+else if(page==="workdays")renderWorkdays();
+else if(page==="payments")renderPayments();
+else if(page==="reports")renderReports();
+else if(page==="detail")renderDetail();
+else if(page==="about")renderAbout();
 }
-$("loginTab").onclick=()=>setAuthMode("login");
-$("signupTab").onclick=()=>setAuthMode("signup");
-
-$("authForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const email=val("authEmail").toLowerCase();
-  const password=$("authPassword").value;
-  try{
-    $("authSubmit").disabled=true;
-    if(authMode==="signup"){
-      const name=val("authName");
-      const confirm=$("authConfirm").value;
-      if(password!==confirm)throw new Error("كلمتا المرور غير متطابقتين.");
-      if(password.length<6)throw new Error("كلمة المرور لازم تكون 6 أحرف على الأقل.");
-      const {data,error}=await db.auth.signUp({
-        email,password,options:{data:{full_name:name}}
-      });
-      if(error)throw error;
-      if(!data.session){
-        showToast("تم إرسال طلب إنشاء الحساب. لو طُلب تأكيد البريد، افتح رسالة التأكيد ثم سجّل الدخول.");
-        setAuthMode("login");
-        return;
-      }
-      currentUser=data.user;
-      await enterApp();
-    }else{
-      const {data,error}=await db.auth.signInWithPassword({email,password});
-      if(error)throw error;
-      currentUser=data.user;
-      await enterApp();
-    }
-  }catch(err){showToast("تعذر إكمال العملية: "+(err.message||"خطأ غير معروف"))}
-  finally{$("authSubmit").disabled=false}
-});
-
-async function enterApp(){
-  $("authScreen").classList.add("hidden");
-  $("app").classList.remove("hidden");
-  $("userEmail").textContent=currentUser?.email||"الحساب الحالي";
-  $("todayText").textContent=new Date().toLocaleDateString("ar-SA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-  $("firstWorkDate").value=today();
-  $("firstPaymentDate").value=today();
-  $("workDate").value=today();
-  $("paymentDate").value=today();
-  await loadAll();
-  openPage("dashboard");
+function renderHome(){
+$("main").innerHTML=pageHead("الرئيسية","ملخص حسابات العمال وأيام العمل والمدفوعات")+
+`<div class="cards">
+${stat("عدد العمال",workers.length,"♙")}
+${stat("إجمالي المستحقات",money(totalDue()),"◈")}
+${stat("إجمالي المدفوع",money(totalPaid()),"⇄")}
+${stat("المتبقي",money(totalDue()-totalPaid()),"◉")}
+</div>
+<div class="panel"><h2>اختصارات سريعة</h2><div class="shorts">
+<button class="short" onclick="go('newWorker')"><span>＋</span><b>تسجيل عامل</b><small>إضافة عامل جديد</small></button>
+<button class="short" onclick="go('workers')"><span>♙</span><b>قائمة العمال</b><small>عرض ملفات العمال</small></button>
+<button class="short" onclick="go('payments')"><span>⇄</span><b>تسجيل دفعة</b><small>إضافة مبلغ مدفوع</small></button>
+<button class="short" onclick="go('reports')"><span>▤</span><b>التقارير</b><small>كشف حساب وطباعة</small></button>
+</div></div>`+
+panel("آخر العمال",workers.length?`<div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الموقع</th><th>المستحق</th><th>المدفوع</th><th>المتبقي</th><th></th></tr></thead><tbody>${workers.slice(0,8).map(w=>workerRow(w)).join("")}</tbody></table></div>`:'<div class="empty">لا يوجد عمال حتى الآن.</div>');
 }
-async function checkSession(){
-  const {data,error}=await db.auth.getSession();
-  if(error){showToast(error.message);return}
-  if(data.session){
-    currentUser=data.session.user;
-    await enterApp();
-  }else{
-    $("authScreen").classList.remove("hidden");
-    $("app").classList.add("hidden");
-  }
-}
-$("logoutBtn").onclick=logout;
-$("switchAccount").onclick=logout;
-async function logout(){
-  await db.auth.signOut();
-  currentUser=null;
-  $("app").classList.add("hidden");
-  $("authScreen").classList.remove("hidden");
-  $("authForm").reset();
-  setAuthMode("login");
-  $("sidebar").classList.remove("open");
-  showToast("تم تسجيل الخروج. يمكنك الدخول بحساب آخر.");
-}
-
-document.querySelectorAll(".nav-btn[data-page]").forEach(button=>{
-  button.addEventListener("click",()=>openPage(button.dataset.page));
-});
-$("menuToggle").onclick=()=>$("sidebar").classList.toggle("open");
-
-function openPage(name){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  const target=$("page-"+name);
-  if(target)target.classList.add("active");
-  document.querySelectorAll(".nav-btn[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
-  $("pageTitle").textContent=titles[name]||"عمال يوميه";
-  $("sidebar").classList.remove("open");
-  if(name==="report" && !$("reportWorker").value)populateSelects();
-}
-
-async function loadAll(){
-  if(!currentUser)return;
-  try{
-    const [w,wd,p]=await Promise.all([
-      db.from("workers").select("*").order("id",{ascending:false}),
-      db.from("work_days").select("*").order("work_date",{ascending:false}),
-      db.from("worker_payments").select("*").order("payment_date",{ascending:false})
-    ]);
-    if(w.error)throw w.error;
-    if(wd.error)throw wd.error;
-    if(p.error)throw p.error;
-    workers=w.data||[];
-    workdays=wd.data||[];
-    payments=p.data||[];
-    renderAll();
-  }catch(err){
-    showToast("تعذر تحميل البيانات: "+err.message);
-  }
-}
-function workerName(id){
-  const w=workers.find(x=>String(x.id)===String(id));
-  return w?w.name:"عامل غير موجود";
-}
-function dueForWorker(id){
-  return workdays.filter(x=>String(x.worker_id)===String(id)).reduce((s,x)=>s+Number(x.total_due||0),0);
-}
-function paidForWorker(id){
-  return payments.filter(x=>String(x.worker_id)===String(id)).reduce((s,x)=>s+Number(x.amount||0),0);
-}
-function totalDue(){return workdays.reduce((s,x)=>s+Number(x.total_due||0),0)}
-function totalPaid(){return payments.reduce((s,x)=>s+Number(x.amount||0),0)}
-function renderAll(){
-  $("statWorkers").textContent=workers.length;
-  $("statDue").textContent=money(totalDue());
-  $("statPaid").textContent=money(totalPaid());
-  $("statRemain").textContent=money(totalDue()-totalPaid());
-  renderWorkers();
-  renderWorkdays();
-  renderPayments();
-  renderRecent();
-  populateSelects();
-}
-function renderRecent(){
-  const list=workers.slice(0,5);
-  $("recentWorkers").innerHTML=list.length?list.map((w,i)=>`
-    <tr><td>${workers.length-i}</td><td>${esc(w.name)}</td>
-    <td>${esc(w.work_location||"—")}</td>
-    <td><button class="btn" onclick="quickReport('${w.id}')">كشف الحساب</button></td></tr>
-  `).join(""):`<tr><td colspan="4" class="empty">لا يوجد عمال مسجلون حتى الآن.</td></tr>`;
+function workerRow(w){
+return `<tr><td>${esc(w.name)}</td><td>${esc(w.work_location||"—")}</td><td>${money(workerDue(w.id))}</td><td>${money(workerPaid(w.id))}</td><td class="${balance(w.id)<0?"error":"green"}">${money(balance(w.id))}</td><td><button class="btn alt sm" onclick="openWorker('${w.id}')">فتح الملف</button></td></tr>`;
 }
 function renderWorkers(){
-  const query=val("workerSearch").toLowerCase();
-  const list=workers.filter(w=>(w.name||"").toLowerCase().includes(query));
-  $("workersTable").innerHTML=list.length?list.map(w=>`
-    <tr>
-      <td>${workers.indexOf(w)+1}</td>
-      <td><strong>${esc(w.name)}</strong></td>
-      <td>${esc(w.created_at?String(w.created_at).slice(0,10):"—")}</td>
-      <td>${esc(w.work_location||"—")}</td>
-      <td><div class="actions">
-        <button class="btn" onclick="quickReport('${w.id}')">كشف الحساب</button>
-        <button class="btn" onclick="editWorker('${w.id}')">تعديل</button>
-      </div></td>
-    </tr>`).join(""):`<tr><td colspan="5" class="empty">لا توجد نتائج.</td></tr>`;
+$("main").innerHTML=pageHead("العمال","بحث وعرض أرصدة العمال")+
+panel("قائمة العمال",`<div class="field"><label>بحث بالاسم أو الموقع</label><input id="workerSearch" placeholder="اكتب اسم العامل أو الموقع..."></div>
+<div id="workersTable"></div>`);
+const draw=()=>{
+const q=val("workerSearch").toLowerCase();
+const list=workers.filter(w=>(w.name||"").toLowerCase().includes(q)||(w.work_location||"").toLowerCase().includes(q));
+$("workersTable").innerHTML=list.length?`<div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الموقع</th><th>المستحق</th><th>المدفوع</th><th>المتبقي</th><th>الملف</th></tr></thead><tbody>${list.map(workerRow).join("")}</tbody></table></div>`:'<div class="empty">لا توجد نتائج.</div>';
+};
+$("workerSearch").addEventListener("input",draw);draw();
 }
-$("workerSearch").addEventListener("input",renderWorkers);
-
-function populateSelects(){
-  const options=workers.map(w=>`<option value="${esc(w.id)}">${esc(w.name)}</option>`).join("");
-  ["workWorker","paymentWorker","reportWorker"].forEach(id=>{
-    const select=$(id),old=select.value;
-    select.innerHTML=options||'<option value="">لا يوجد عمال</option>';
-    if(workers.some(w=>String(w.id)===String(old)))select.value=old;
-  });
+function renderNewWorker(){
+$("main").innerHTML=pageHead("تسجيل عامل جديد","بيانات العامل وأول يوم عمل ودفعة اختيارية")+
+`<form id="newWorkerForm">
+${panel("بيانات العامل",`<div class="grid">
+${field("اسم العامل","newName","text",true,"اسم العامل")}
+${field("الموقع أو الفرع","newLocation","text",false,"مكان العمل")}
+${field("تاريخ التسجيل / أول يوم عمل","newDate","date",false,"",today())}
+<div class="field span2"><label>ملاحظات العامل</label><textarea id="newNotes" placeholder="ملاحظات اختيارية"></textarea></div>
+</div>`)}
+${panel("أول يوم عمل (اختياري)",`<div class="grid">
+${field("عدد الأيام","daysCount","number",false,"مثال: 1")}
+${field("أجرة اليوم","dailyRate","number",false,"المبلغ بالريال")}
+${field("ساعات إضافية","overtimeHours","number",false,"0")}
+${field("سعر الساعة الإضافية","overtimeRate","number",false,"0")}
+<div class="span2 detail"><small class="muted">إجمالي أول يوم عمل</small><b id="liveTotal">0.00 ر.س</b></div>
+<div class="field span2"><label>ملاحظات يوم العمل</label><textarea id="dayNotes"></textarea></div>
+</div>`)}
+${panel("دفعة أولى (اختياري)",`<div class="grid">
+${field("المبلغ المدفوع","initialPayment","number",false,"المبلغ بالريال")}
+${field("تاريخ الدفع","initialPaymentDate","date",false,"",today())}
+<div class="field span2"><label>ملاحظات الدفع</label><textarea id="initialPaymentNotes"></textarea></div>
+</div>`)}
+<div class="row"><button class="btn" id="saveNewWorker">حفظ العامل</button><button type="button" class="btn alt" onclick="go('workers')">إلغاء</button></div>
+<div id="newWorkerStatus" class="status"></div>
+</form>`;
+["daysCount","dailyRate","overtimeHours","overtimeRate"].forEach(id=>$(id).addEventListener("input",calcTotal));
+$("newWorkerForm").addEventListener("submit",saveNewWorker);
+}
+async function saveNewWorker(e){
+e.preventDefault();
+const btn=$("saveNewWorker");btn.disabled=true;
+setStatus("newWorkerStatus","جارٍ حفظ البيانات...");
+try{
+const name=val("newName");
+if(!name)throw Error("اكتب اسم العامل.");
+const d=num(val("daysCount")),rate=num(val("dailyRate")),oh=num(val("overtimeHours")),orate=num(val("overtimeRate"));
+const hasDay=val("daysCount")!==""||val("dailyRate")!==""||val("overtimeHours")!==""||val("overtimeRate")!=="";
+const initial=num(val("initialPayment"));
+const workerData={name,work_location:val("newLocation")||null,notes:val("newNotes")||null,created_by:user.id};
+const {data:w,error}=await db.from("workers").insert(workerData).select().single();
+if(error)throw error;
+let partial=[];
+if(hasDay){
+const {error:de}=await db.from("work_days").insert({
+worker_id:w.id,created_by:user.id,work_date:val("newDate")||today(),
+work_location:val("newLocation")||null,days_count:d,daily_rate:rate,
+overtime_hours:oh,overtime_hourly_rate:orate,notes:val("dayNotes")||null
+});
+if(de)partial.push("تعذر حفظ أول يوم عمل: "+de.message);
+}
+if(initial>0){
+const {error:pe}=await db.from("worker_payments").insert({
+worker_id:w.id,created_by:user.id,payment_date:val("initialPaymentDate")||today(),
+amount:initial,notes:val("initialPaymentNotes")||null
+});
+if(pe)partial.push("تعذر حفظ الدفعة الأولى: "+pe.message);
+}
+await loadData();
+if(partial.length){alert("تم تسجيل العامل، لكن توجد مشكلة:\n"+partial.join("\n"));openWorker(w.id);}
+else{alert("تم حفظ العامل بنجاح.");openWorker(w.id);}
+}catch(err){setStatus("newWorkerStatus",err.message||"تعذر حفظ البيانات",true);}
+finally{btn.disabled=false;}
+}
+function openWorker(id){selectedWorker=String(id);page="detail";render();}
+function renderDetail(){
+const w=workers.find(x=>String(x.id)===String(selectedWorker));
+if(!w){$("main").innerHTML=pageHead("ملف العامل")+`<div class="empty">العامل غير موجود.</div><button class="btn" onclick="go('workers')">العودة للعمال</button>`;return;}
+const wd=days.filter(d=>String(d.worker_id)===String(w.id));
+const wp=payments.filter(p=>String(p.worker_id)===String(w.id));
+$("main").innerHTML=pageHead("ملف العامل","بيانات العمل والحسابات المسجلة")+
+`<div class="row noprint" style="margin-bottom:15px">
+<button class="btn alt" onclick="go('workers')">← قائمة العمال</button>
+<button class="btn" onclick="go('workdays');setTimeout(()=>{if($('workerSelect'))$('workerSelect').value='${w.id}'},0)">＋ إضافة يوم عمل</button>
+<button class="btn" onclick="go('payments');setTimeout(()=>{if($('payWorker')){$('payWorker').value='${w.id}';calcPayment()}},0)">＋ تسجيل دفعة</button>
+<button class="btn alt" onclick="window.print()">طباعة الكشف</button>
+</div>
+${panel("بيانات العامل",`<div class="details">
+<div class="detail"><small class="muted">الاسم</small><b>${esc(w.name)}</b></div>
+<div class="detail"><small class="muted">الموقع</small><b>${esc(w.work_location||"—")}</b></div>
+<div class="detail"><small class="muted">تاريخ التسجيل</small><b>${esc(w.work_date||"—")}</b></div>
+</div><p>${esc(w.notes||"لا توجد ملاحظات")}</p>`)}
+<div class="cards">
+${stat("إجمالي المستحق",money(workerDue(w.id)))}
+${stat("إجمالي المدفوع",money(workerPaid(w.id)))}
+${stat("المتبقي",money(balance(w.id)))}
+${stat("عدد أيام/سجلات العمل",wd.length)}
+</div>
+${panel("سجل أيام العمل",wd.length?`<div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>الموقع</th><th>الأيام</th><th>أجرة اليوم</th><th>الإضافي</th><th>المستحق</th><th>ملاحظات</th></tr></thead><tbody>${wd.map(d=>`<tr><td>${esc(d.work_date)}</td><td>${esc(d.work_location||"—")}</td><td>${esc(d.days_count)}</td><td>${money(d.daily_rate)}</td><td>${esc(d.overtime_hours||0)} × ${money(d.overtime_hourly_rate||0)}</td><td>${money(d.total_due??(num(d.days_count)*num(d.daily_rate)+num(d.overtime_hours)*num(d.overtime_hourly_rate)))}</td><td>${esc(d.notes||"—")}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">لا توجد أيام عمل مسجلة.</div>')}
+${panel("سجل المدفوعات",wp.length?`<div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>المبلغ</th><th>ملاحظات</th></tr></thead><tbody>${wp.map(p=>`<tr><td>${esc(p.payment_date)}</td><td>${money(p.amount)}</td><td>${esc(p.notes||"—")}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">لا توجد مدفوعات مسجلة.</div>')}`;
 }
 function renderWorkdays(){
-  $("workdaysTable").innerHTML=workdays.length?workdays.map(x=>`
-    <tr><td>${esc(x.work_date||"—")}</td><td>${esc(workerName(x.worker_id))}</td>
-    <td>${esc(x.work_location||"—")}</td><td>${money(x.days_count)}</td>
-    <td class="amount">${money(x.total_due)} ر.س</td><td>${esc(x.notes||"—")}</td></tr>
-  `).join(""):`<tr><td colspan="6" class="empty">لا توجد أيام عمل مسجلة.</td></tr>`;
+$("main").innerHTML=pageHead("أيام العمل","إضافة سجل جديد لعمل أحد العمال")+
+panel("تسجيل يوم عمل",`<form id="dayForm"><div class="grid">
+<div class="span2">${selectWorker("workerSelect")}</div>
+${field("تاريخ العمل","workDate","date",true,"",today())}
+${field("موقع العمل","workLocation","text",false,"الموقع أو الفرع")}
+${field("عدد الأيام","daysCount","number",true,"مثال: 1")}
+${field("أجرة اليوم","dailyRate","number",true,"المبلغ بالريال")}
+${field("ساعات إضافية","overtimeHours","number",false,"0")}
+${field("سعر الساعة الإضافية","overtimeRate","number",false,"0")}
+<div class="span2 detail"><small class="muted">إجمالي المستحق لهذا السجل</small><b id="liveTotal">0.00 ر.س</b></div>
+<div class="field span2"><label>ملاحظات</label><textarea id="workNotes"></textarea></div>
+</div><button class="btn" id="saveDay">حفظ يوم العمل</button><div id="dayStatus" class="status"></div></form>`)
++panel("سجلات العمل الأخيرة",days.length?`<div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>العامل</th><th>الأيام</th><th>المستحق</th><th>الملاحظات</th></tr></thead><tbody>${days.slice(0,30).map(d=>`<tr><td>${esc(d.work_date)}</td><td>${esc(workers.find(w=>String(w.id)===String(d.worker_id))?.name||"—")}</td><td>${esc(d.days_count)}</td><td>${money(d.total_due??num(d.days_count)*num(d.daily_rate)+num(d.overtime_hours)*num(d.overtime_hourly_rate))}</td><td>${esc(d.notes||"—")}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">لا توجد سجلات عمل.</div>');
+["daysCount","dailyRate","overtimeHours","overtimeRate"].forEach(id=>$(id).addEventListener("input",calcTotal));
+$("dayForm").addEventListener("submit",saveDay);
+}
+async function saveDay(e){
+e.preventDefault();const btn=$("saveDay");btn.disabled=true;
+setStatus("dayStatus","جارٍ الحفظ...");
+try{
+const worker_id=val("workerSelect"),work_date=val("workDate");
+if(!worker_id)throw Error("اختر العامل.");
+const d=num(val("daysCount")),r=num(val("dailyRate")),oh=num(val("overtimeHours")),orr=num(val("overtimeRate"));
+if(d<=0)throw Error("عدد الأيام يجب أن يكون أكبر من صفر.");
+if(!work_date)throw Error("اختر تاريخ العمل.");
+const {error}=await db.from("work_days").insert({
+worker_id,created_by:user.id,work_date,work_location:val("workLocation")||null,
+days_count:d,daily_rate:r,overtime_hours:oh,overtime_hourly_rate:orr,notes:val("workNotes")||null
+});
+if(error)throw error;
+alert("تم حفظ يوم العمل.");
+await loadData();go("workdays");
+}catch(err){setStatus("dayStatus",err.message||"تعذر الحفظ",true);}
+finally{btn.disabled=false;}
 }
 function renderPayments(){
-  $("paymentsTable").innerHTML=payments.length?payments.map(x=>`
-    <tr><td>${esc(x.payment_date||"—")}</td><td>${esc(workerName(x.worker_id))}</td>
-    <td class="amount">${money(x.amount)} ر.س</td><td>${esc(x.notes||"—")}</td></tr>
-  `).join(""):`<tr><td colspan="4" class="empty">لا توجد مدفوعات مسجلة.</td></tr>`;
+$("main").innerHTML=pageHead("المدفوعات","تسجيل المبالغ المدفوعة للعمال")+
+panel("تسجيل دفعة",`<form id="paymentForm"><div class="grid">
+<div class="span2">${selectWorker("payWorker")}</div>
+${field("تاريخ الدفع","payDate","date",true,"",today())}
+${field("المبلغ المدفوع","payAmount","number",true,"المبلغ بالريال")}
+<div class="span2 detail"><small class="muted">المتبقي بعد هذه الدفعة</small><b id="payBalance">—</b></div>
+<div class="field span2"><label>ملاحظات الدفع</label><textarea id="payNotes"></textarea></div>
+</div><button class="btn" id="savePayment">حفظ الدفعة</button><div id="paymentStatus" class="status"></div></form>`)
++panel("آخر المدفوعات",payments.length?`<div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>العامل</th><th>المبلغ</th><th>ملاحظات</th></tr></thead><tbody>${payments.slice(0,30).map(p=>`<tr><td>${esc(p.payment_date)}</td><td>${esc(workers.find(w=>String(w.id)===String(p.worker_id))?.name||"—")}</td><td>${money(p.amount)}</td><td>${esc(p.notes||"—")}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">لا توجد مدفوعات مسجلة.</div>');
+$("payWorker").addEventListener("change",calcPayment);
+$("payAmount").addEventListener("input",calcPayment);
+$("paymentForm").addEventListener("submit",savePayment);
 }
-
-function optionalNumber(id){
-  return val(id)===""?null:Number(val(id));
-}
-$("newWorkerForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  if(!currentUser)return;
-  const name=val("newName");
-  if(!name){showToast("اكتب اسم العامل أولاً.");return}
-
-  const days=optionalNumber("firstDays");
-  const rate=optionalNumber("firstRate");
-  const overtime=optionalNumber("firstOvertime");
-  const overtimeRate=optionalNumber("firstOvertimeRate");
-  const workDate=val("firstWorkDate");
-  const hasWork=days!==null||rate!==null||overtime!==null||overtimeRate!==null||val("firstWorkLocation")!==""||val("firstWorkNotes")!=="";
-
-  if(hasWork && (!workDate||days===null||rate===null)){
-    showToast("لإضافة يوم عمل، أدخل تاريخ العمل وعدد الأيام وسعر اليومية.");
-    return;
-  }
-  if([days,rate,overtime,overtimeRate].some(n=>n!==null&&n<0)){
-    showToast("الأرقام لا يمكن أن تكون سالبة.");return;
-  }
-  const paymentAmount=optionalNumber("firstPaymentAmount");
-  if(paymentAmount!==null&&paymentAmount<0){showToast("المبلغ لا يمكن أن يكون سالبًا.");return}
-  if(paymentAmount!==null&&paymentAmount>0&&!val("firstPaymentDate")){
-    showToast("حدد تاريخ الدفعة.");return;
-  }
-
-  disableButton("saveWorkerBtn",true,"جارٍ الحفظ...");
-  let createdWorker=null;
-  try{
-    const payload={
-      name,
-      notes:val("newNotes")||null,
-      work_location:val("newLocation")||null,
-      created_by:currentUser.id
-    };
-    const {data,error}=await db.from("workers").insert(payload).select().single();
-    if(error)throw error;
-    createdWorker=data;
-
-    if(hasWork){
-      const workPayload={
-        worker_id:createdWorker.id,
-        created_by:currentUser.id,
-        work_date:workDate,
-        work_location:val("firstWorkLocation")||val("newLocation")||null,
-        days_count:days,
-        daily_rate:rate,
-        overtime_hours:overtime||0,
-        overtime_hourly_rate:overtimeRate||0,
-        notes:val("firstWorkNotes")||null
-      };
-      const {error:workError}=await db.from("work_days").insert(workPayload);
-      if(workError)throw new Error("تم تسجيل العامل، لكن تعذر حفظ يوم العمل: "+workError.message);
-    }
-
-    if(paymentAmount!==null&&paymentAmount>0){
-      const paymentPayload={
-        worker_id:createdWorker.id,
-        created_by:currentUser.id,
-        payment_date:val("firstPaymentDate")||today(),
-        amount:paymentAmount,
-        notes:val("firstPaymentNotes")||null
-      };
-      const {error:paymentError}=await db.from("worker_payments").insert(paymentPayload);
-      if(paymentError)throw new Error("تم تسجيل العامل، لكن تعذر حفظ الدفعة: "+paymentError.message);
-    }
-
-    $("newWorkerForm").reset();
-    $("firstWorkDate").value=today();
-    $("firstPaymentDate").value=today();
-    await loadAll();
-    showToast("تم حفظ بيانات العامل بنجاح.");
-    openPage("workers");
-  }catch(err){
-    showToast(err.message||"حدث خطأ أثناء الحفظ.");
-    await loadAll();
-  }finally{
-    disableButton("saveWorkerBtn",false,"حفظ بيانات العامل");
-  }
+async function savePayment(e){
+e.preventDefault();const btn=$("savePayment");btn.disabled=true;
+setStatus("paymentStatus","جارٍ حفظ الدفعة...");
+try{
+const worker_id=val("payWorker"),amount=num(val("payAmount")),payment_date=val("payDate");
+if(!worker_id)throw Error("اختر العامل.");
+if(amount<=0)throw Error("اكتب مبلغًا أكبر من صفر.");
+const {error}=await db.from("worker_payments").insert({
+worker_id,created_by:user.id,payment_date:payment_date||today(),amount,notes:val("payNotes")||null
 });
-
-$("workdayForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  if(!currentUser)return;
-  const days=num("workDaysCount"),rate=num("workDailyRate");
-  const overtime=num("workOvertime"),overtimeRate=num("workOvertimeRate");
-  if(days<0||rate<0||overtime<0||overtimeRate<0){showToast("الأرقام لا يمكن أن تكون سالبة.");return}
-  disableButton("saveWorkBtn",true,"جارٍ الحفظ...");
-  try{
-    const payload={
-      worker_id:Number(val("workWorker")),created_by:currentUser.id,
-      work_date:val("workDate"),work_location:val("workLocation")||null,
-      days_count:days,daily_rate:rate,overtime_hours:overtime,
-      overtime_hourly_rate:overtimeRate,notes:val("workNotes")||null
-    };
-    const {error}=await db.from("work_days").insert(payload);
-    if(error)throw error;
-    $("workdayForm").reset();$("workDate").value=today();
-    await loadAll();showToast("تم حفظ يوم العمل.");
-  }catch(err){showToast("تعذر حفظ يوم العمل: "+err.message)}
-  finally{disableButton("saveWorkBtn",false,"حفظ يوم العمل")}
+if(error)throw error;
+alert("تم حفظ الدفعة بنجاح.");
+await loadData();go("payments");
+}catch(err){setStatus("paymentStatus",err.message||"تعذر الحفظ",true);}
+finally{btn.disabled=false;}
+}
+function renderReports(){
+$("main").innerHTML=pageHead("التقارير وكشوف الحساب","اختر العامل والفترة لعرض التقرير وطباعته")+
+panel("إعداد التقرير",`<div class="filters">
+<div class="field"><label>العامل</label><select id="reportWorker"><option value="">كل العمال</option>${workers.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join("")}</select></div>
+<div class="field"><label>من تاريخ</label><input id="reportFrom" type="date"></div>
+<div class="field"><label>إلى تاريخ</label><input id="reportTo" type="date"></div>
+<button class="btn" id="showReport">عرض التقرير</button>
+<button class="btn alt" onclick="window.print()">طباعة / حفظ PDF</button>
+</div>`)
++`<div id="reportResult"></div>`;
+$("showReport").addEventListener("click",showReport);
+showReport();
+}
+function showReport(){
+const wid=val("reportWorker"),from=val("reportFrom"),to=val("reportTo");
+let ds=days.filter(d=>(!wid||String(d.worker_id)===wid)&&(!from||d.work_date>=from)&&(!to||d.work_date<=to));
+let ps=payments.filter(p=>(!wid||String(p.worker_id)===wid)&&(!from||p.payment_date>=from)&&(!to||p.payment_date<=to));
+const due=ds.reduce((s,d)=>s+Number(d.total_due??num(d.days_count)*num(d.daily_rate)+num(d.overtime_hours)*num(d.overtime_hourly_rate)),0);
+const paid=ps.reduce((s,p)=>s+Number(p.amount||0),0);
+let html=`<div class="cards">${stat("مستحقات الفترة",money(due))}${stat("مدفوعات الفترة",money(paid))}${stat("الفرق",money(due-paid))}${stat("سجلات العمل",ds.length)}</div>`;
+html+=panel("تفاصيل أيام العمل",ds.length?`<div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>العامل</th><th>الموقع</th><th>الأيام</th><th>أجرة اليوم</th><th>إضافي</th><th>الإجمالي</th></tr></thead><tbody>${ds.map(d=>`<tr><td>${esc(d.work_date)}</td><td>${esc(workers.find(w=>String(w.id)===String(d.worker_id))?.name||"—")}</td><td>${esc(d.work_location||"—")}</td><td>${esc(d.days_count)}</td><td>${money(d.daily_rate)}</td><td>${esc(d.overtime_hours||0)} × ${money(d.overtime_hourly_rate||0)}</td><td>${money(d.total_due??num(d.days_count)*num(d.daily_rate)+num(d.overtime_hours)*num(d.overtime_hourly_rate))}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">لا توجد سجلات عمل في الفترة المحددة.</div>');
+html+=panel("تفاصيل المدفوعات",ps.length?`<div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>العامل</th><th>المبلغ</th><th>ملاحظات</th></tr></thead><tbody>${ps.map(p=>`<tr><td>${esc(p.payment_date)}</td><td>${esc(workers.find(w=>String(w.id)===String(p.worker_id))?.name||"—")}</td><td>${money(p.amount)}</td><td>${esc(p.notes||"—")}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">لا توجد مدفوعات في الفترة المحددة.</div>');
+$("reportResult").innerHTML=html;
+}
+function renderAbout(){
+$("main").innerHTML=pageHead("نبذة عن التطبيق","عمال يوميه — إدارة العمال والأجور")+
+panel("عن التطبيق",`<p>تطبيق لإدارة العمال اليومية وتسجيل أيام العمل والأجور الإضافية والمدفوعات ومتابعة الرصيد المتبقي.</p>
+<ul><li>إضافة العمال وبياناتهم.</li><li>تسجيل أيام العمل والأجر اليومي.</li><li>احتساب الساعات الإضافية حسب السعر المدخل.</li><li>تسجيل المدفوعات ومتابعة المتبقي.</li><li>إعداد تقارير قابلة للطباعة أو الحفظ بصيغة PDF من المتصفح.</li></ul>
+<div class="notice">يعتمد التطبيق على صلاحيات Supabase الحالية. يجب أن تكون سياسات الوصول مضبوطة لحماية بيانات كل حساب.</div>
+<p class="muted">نسخة واجهة تجريبية. اختبر الإضافة والقراءة والحسابات قبل الاعتماد عليها في العمل الفعلي.</p>`);
+}
+async function showApp(){
+const {data:{session},error}=await db.auth.getSession();
+if(error)console.error(error);
+if(!session){user=null;$("app").classList.add("hide");$("loginScreen").classList.remove("hide");return;}
+user=session.user;
+$("loginScreen").classList.add("hide");$("app").classList.remove("hide");
+$("userEmail").textContent=user.email||"";
+await loadData();
+}
+$("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const btn=$("loginBtn");btn.disabled=true;
+setStatus("loginStatus","جارٍ تسجيل الدخول...");
+try{
+const {data,error}=await db.auth.signInWithPassword({email:val("email"),password:val("password")});
+if(error)throw error;
+user=data.user;await showApp();
+}catch(err){setStatus("loginStatus",err.message||"تعذر تسجيل الدخول",true);}
+finally{btn.disabled=false;}
 });
-
-$("paymentForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  if(!currentUser)return;
-  const amount=num("paymentAmount");
-  if(amount<=0){showToast("أدخل مبلغًا أكبر من صفر.");return}
-  disableButton("savePaymentBtn",true,"جارٍ الحفظ...");
-  try{
-    const payload={
-      worker_id:Number(val("paymentWorker")),created_by:currentUser.id,
-      payment_date:val("paymentDate"),amount,notes:val("paymentNotes")||null
-    };
-    const {error}=await db.from("worker_payments").insert(payload);
-    if(error)throw error;
-    $("paymentForm").reset();$("paymentDate").value=today();
-    await loadAll();showToast("تم حفظ الدفعة بنجاح.");
-  }catch(err){showToast("تعذر حفظ الدفعة: "+err.message)}
-  finally{disableButton("savePaymentBtn",false,"حفظ الدفعة")}
+$("logout").addEventListener("click",async()=>{
+if(!confirm("هل تريد تسجيل الخروج؟"))return;
+await db.auth.signOut();user=null;workers=[];days=[];payments=[];
+$("app").classList.add("hide");$("loginScreen").classList.remove("hide");setStatus("loginStatus","");
 });
-
-async function editWorker(id){
-  const w=workers.find(x=>String(x.id)===String(id));
-  if(!w)return;
-  const name=prompt("اسم العامل:",w.name||"");
-  if(name===null)return;
-  if(!name.trim()){showToast("اسم العامل مطلوب.");return}
-  const location=prompt("مكان العمل:",w.work_location||"");
-  if(location===null)return;
-  const notes=prompt("ملاحظات العامل:",w.notes||"");
-  if(notes===null)return;
-  try{
-    const {error}=await db.from("workers").update({
-      name:name.trim(),work_location:location.trim()||null,notes:notes.trim()||null
-    }).eq("id",id).eq("created_by",currentUser.id);
-    if(error)throw error;
-    await loadAll();showToast("تم تعديل بيانات العامل.");
-  }catch(err){showToast("تعذر تعديل العامل: "+err.message)}
-}
-
-function quickReport(id){
-  openPage("report");
-  $("reportWorker").value=String(id);
-  buildReport();
-}
-function withinRange(date,from,to){
-  if(!date)return false;
-  const d=String(date).slice(0,10);
-  return (!from||d>=from)&&(!to||d<=to);
-}
-function buildReport(){
-  const id=$("reportWorker").value;
-  const worker=workers.find(w=>String(w.id)===String(id));
-  if(!worker){showToast("اختار عامل أولاً.");return}
-  const from=val("reportFrom"),to=val("reportTo");
-  if(from&&to&&from>to){showToast("تاريخ البداية لازم يكون قبل تاريخ النهاية.");return}
-  const wd=workdays.filter(x=>String(x.worker_id)===String(id)&&withinRange(x.work_date,from,to));
-  const ps=payments.filter(x=>String(x.worker_id)===String(id)&&withinRange(x.payment_date,from,to));
-  const due=wd.reduce((s,x)=>s+Number(x.total_due||0),0);
-  const paid=ps.reduce((s,x)=>s+Number(x.amount||0),0);
-  reportData={worker,from,to,wd,ps,due,paid,remain:due-paid,title:val("reportTitle")||"كشف حساب عامل"};
-  const period=from||to?`${from||"بداية السجلات"} إلى ${to||"آخر السجلات"}`:"كل الفترات";
-  $("reportContent").innerHTML=`
-    <div class="card">
-      <div style="text-align:center;margin-bottom:22px">
-        <h2 style="color:var(--gold2);margin-bottom:5px">${esc(reportData.title)}</h2>
-        <div class="sub">تطبيق عمال يوميه</div>
-      </div>
-      <div class="form-grid">
-        <div><strong>اسم العامل:</strong> ${esc(worker.name)}</div>
-        <div><strong>مكان العمل:</strong> ${esc(worker.work_location||"—")}</div>
-        <div><strong>فترة التقرير:</strong> ${esc(period)}</div>
-        <div><strong>تاريخ الإصدار:</strong> ${today()}</div>
-      </div>
-      <hr class="divider">
-      <h3>تفاصيل أيام العمل</h3>
-      <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الموقع</th><th>الأيام</th><th>سعر اليومية</th><th>ساعات إضافية</th><th>سعر الساعة الإضافية</th><th>المستحق</th></tr></thead>
-      <tbody>${wd.length?wd.map(x=>`<tr><td>${esc(x.work_date)}</td><td>${esc(x.work_location||"—")}</td><td>${money(x.days_count)}</td><td>${money(x.daily_rate)}</td><td>${money(x.overtime_hours)}</td><td>${money(x.overtime_hourly_rate)}</td><td>${money(x.total_due)}</td></tr>`).join(""):`<tr><td colspan="7" class="empty">لا توجد أيام عمل في الفترة المختارة.</td></tr>`}</tbody></table></div>
-      <h3 style="margin-top:25px">تفاصيل المدفوعات والسُلف</h3>
-      <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>المبلغ</th><th>الملاحظات</th></tr></thead>
-      <tbody>${ps.length?ps.map(x=>`<tr><td>${esc(x.payment_date)}</td><td>${money(x.amount)} ر.س</td><td>${esc(x.notes||"—")}</td></tr>`).join(""):`<tr><td colspan="3" class="empty">لا توجد مدفوعات في الفترة المختارة.</td></tr>`}</tbody></table></div>
-      <div class="mini-cards">
-        <div class="card"><div class="sub">إجمالي المستحقات</div><h2 class="amount">${money(due)} ر.س</h2></div>
-        <div class="card"><div class="sub">إجمالي المدفوع</div><h2 class="amount">${money(paid)} ر.س</h2></div>
-        <div class="card"><div class="sub">المتبقي خلال الفترة</div><h2 class="amount">${money(due-paid)} ر.س</h2></div>
-      </div>
-      <p class="form-note" style="margin-top:20px">هذا الكشف مبني على أيام العمل والمدفوعات المسجلة في التطبيق ضمن الفترة المحددة. يُرجى مراجعته مع العامل.</p>
-      <p style="text-align:center;color:var(--muted);margin-top:25px">إعداد: محمد كرم — تطبيق عمال يوميه</p>
-    </div>`;
-}
-$("reportWorker").addEventListener("change",()=>{});
-async function downloadPDF(){
-  if(!reportData)buildReport();
-  if(!reportData)return;
-  if(!window.jspdf||!window.jspdf.jsPDF){
-    showToast("مكتبة PDF لم تُحمّل. استخدم زر الطباعة ثم اختر حفظ بتنسيق PDF.");
-    window.print();return;
-  }
-  try{
-    const {jsPDF}=window.jspdf;
-    const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(18);
-    doc.text("Ommal Yawmia - Worker Statement",148,15,{align:"center"});
-    doc.setFontSize(12);
-    doc.text("Worker: "+String(reportData.worker.name||""),14,25);
-    doc.text("Period: "+String(reportData.from||"All")+" - "+String(reportData.to||"All"),14,32);
-    doc.text("Generated: "+today(),14,39);
-    doc.autoTable({
-      startY:45,
-      head:[["Date","Location","Days","Daily Rate","Overtime Hours","Overtime Rate","Total Due"]],
-      body:reportData.wd.map(x=>[
-        String(x.work_date||""),String(x.work_location||""),String(x.days_count??0),
-        String(x.daily_rate??0),String(x.overtime_hours??0),String(x.overtime_hourly_rate??0),
-        money(x.total_due)
-      ]),
-      styles:{fontSize:8,cellPadding:2}
-    });
-    let y=doc.lastAutoTable.finalY+8;
-    doc.autoTable({
-      startY:y,
-      head:[["Payment Date","Amount","Notes"]],
-      body:reportData.ps.map(x=>[String(x.payment_date||""),money(x.amount),String(x.notes||"")]),
-      styles:{fontSize:8,cellPadding:2}
-    });
-    y=doc.lastAutoTable.finalY+10;
-    doc.setFontSize(11);
-    doc.text("Total Due: "+money(reportData.due)+" SAR",14,y);
-    doc.text("Total Paid: "+money(reportData.paid)+" SAR",100,y);
-    doc.text("Remaining: "+money(reportData.remain)+" SAR",190,y);
-    doc.save("worker-statement-"+String(reportData.worker.name||"worker").replace(/[^\w\u0600-\u06FF-]+/g,"-")+".pdf");
-    showToast("تم إنشاء ملف PDF. راجع وضوح العربية في الملف قبل إرساله.");
-  }catch(err){
-    showToast("تعذر إنشاء PDF: "+err.message+" — يمكنك استخدام زر الطباعة ثم حفظ PDF.");
-  }
-}
-async function shareReport(){
-  if(!reportData)buildReport();
-  if(!reportData)return;
-  if(navigator.share){
-    const text=`كشف حساب العامل: ${reportData.worker.name}\nالفترة: ${reportData.from||"كل الفترات"} - ${reportData.to||"حتى الآن"}\nإجمالي المستحقات: ${money(reportData.due)} ريال\nإجمالي المدفوع: ${money(reportData.paid)} ريال\nالمتبقي: ${money(reportData.remain)} ريال\n\nتم إنشاء الكشف من تطبيق عمال يوميه.`;
-    try{await navigator.share({title:"كشف حساب عامل",text})}
-    catch(e){}
-  }else{
-    const text=`كشف حساب العامل: ${reportData.worker.name}\nالفترة: ${reportData.from||"كل الفترات"} - ${reportData.to||"حتى الآن"}\nإجمالي المستحقات: ${money(reportData.due)} ريال\nإجمالي المدفوع: ${money(reportData.paid)} ريال\nالمتبقي: ${money(reportData.remain)} ريال`;
-    try{
-      await navigator.clipboard.writeText(text);
-      showToast("تم نسخ ملخص كشف الحساب. احفظ PDF ثم أرفقه في واتساب.");
-    }catch(e){showToast(text)}
-  }
-}
-
-db.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_OUT"){
-    currentUser=null;
-  }
+$("switch").addEventListener("click",async()=>{
+await db.auth.signOut();user=null;
+$("app").classList.add("hide");$("loginScreen").classList.remove("hide");
+$("email").value="";$("password").value="";setStatus("loginStatus","سجل الدخول بالحساب الآخر.");
 });
-
-checkSession();
+$("refresh").addEventListener("click",loadData);
+$("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+document.querySelectorAll(".nav[data-page]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+db.auth.onAuthStateChange((_event,session)=>{
+if(!session){user=null;$("app").classList.add("hide");$("loginScreen").classList.remove("hide");}
+});
+showApp();
 </script>
 </body>
 </html>
