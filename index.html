@@ -2,883 +2,550 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111111">
-<meta name="description" content="عمال يوميه لإدارة العمال والأجور والمستحقات">
-<title>عمال يوميه</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<meta name="description" content="عمال يوميه - تطبيق لإدارة العمال ومستحقاتهم ومدفوعاتهم">
+<meta name="author" content="محمد كرم">
+<meta name="copyright" content="© 2026 محمد كرم - جميع الحقوق محفوظة">
+<title>عمال يوميه | محمد كرم</title>
 <style>
-:root{
---bg:#101010;
---card:#1b1b1b;
---card2:#242424;
---gold:#d4af50;
---gold2:#f0d47c;
---text:#ffffff;
---muted:#bcbcbc;
---border:#514323;
---green:#1c6b40;
---red:#842b2b;
-}
+:root{--bg:#101010;--card:#1b1b1b;--gold:#d6ad48;--gold2:#f4d77c;--text:#f6f6f6;--muted:#aaa;--red:#f16b6b;--green:#59d49a;--border:#353535}
 *{box-sizing:border-box}
-body{
-margin:0;
-padding:12px;
-background:var(--bg);
-color:var(--text);
-font-family:Tahoma,Arial,sans-serif;
-line-height:1.7
-}
-header{
-max-width:1000px;
-margin:auto auto 16px;
-text-align:center;
-padding:20px 10px;
-border-bottom:2px solid var(--gold)
-}
-header h1{color:var(--gold);margin:0;font-size:29px}
-header p{color:var(--muted);margin:4px 0}
-.container{max-width:1000px;margin:auto}
-.card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:14px;
-padding:16px;
-margin-bottom:15px
-}
-h2,h3{color:var(--gold)}
-h2{font-size:20px;margin:0 0 12px}
-h3{margin:0 0 8px}
-p{overflow-wrap:anywhere}
-label{display:block;margin:10px 0 5px;color:var(--gold2)}
-input,textarea,select{
-width:100%;
-padding:12px;
-border:1px solid #555;
-border-radius:9px;
-background:#101010;
-color:#fff;
-font-size:15px;
-font-family:inherit
-}
-textarea{min-height:80px;resize:vertical}
-input:focus,textarea:focus,select:focus{
-outline:1px solid var(--gold);
-border-color:var(--gold)
-}
-button{
-border:0;
-border-radius:9px;
-padding:11px 14px;
-font-size:14px;
-font-weight:bold;
-font-family:inherit;
-cursor:pointer;
-background:var(--gold);
-color:#111;
-margin-top:8px
-}
-button:hover{filter:brightness(1.08)}
-button:disabled{opacity:.6;cursor:wait}
-.secondary{
-background:#292929;
-color:var(--gold2);
-border:1px solid var(--gold)
-}
-.danger{background:var(--red);color:white}
-.primary{width:100%;font-size:16px}
-.grid{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:10px
-}
-.stats{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:10px
-}
-.stat{
-background:#111;
-border:1px solid var(--border);
-border-radius:11px;
-padding:13px;
-text-align:center;
-min-width:0
-}
-.stat span{display:block;color:var(--muted);font-size:13px}
-.stat strong{
-display:block;
-color:var(--gold2);
-font-size:20px;
-overflow-wrap:anywhere
-}
-.row{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-align-items:center
-}
-.row>*{flex:1;min-width:0}
-.worker{
-background:#151515;
-border:1px solid #4a402b;
-border-radius:11px;
-padding:14px;
-margin-top:12px
-}
-.worker h3{font-size:18px}
-.worker p{margin:5px 0}
-.worker-actions{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:8px;
-margin-top:10px
-}
-.worker-actions button{width:100%;margin:0}
-.message{
-display:none;
-padding:12px;
-margin-top:10px;
-border-radius:9px;
-overflow-wrap:anywhere
-}
-.message.ok{display:block;background:var(--green);color:#fff}
-.message.error{display:block;background:var(--red);color:#fff}
-.note{font-size:13px;color:var(--muted)}
-.empty{text-align:center;padding:22px 5px;color:var(--muted)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}
-.section-buttons{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:10px
-}
-.section-buttons button{
-min-height:55px;
-margin:0
-}
-.gold-line{
-border:0;
-border-top:1px solid var(--border);
-margin:18px 0
-}
-footer{
-max-width:1000px;
-margin:auto;
-text-align:center;
-padding:20px 5px;
-color:var(--muted);
-font-size:12px
-}
-footer strong{color:var(--gold)}
-@media(max-width:480px){
-body{padding:8px}
-.card{padding:12px}
-.grid{grid-template-columns:1fr}
-header h1{font-size:25px}
-.stat{padding:10px}
-.stat strong{font-size:17px}
-.worker-actions{grid-template-columns:1fr 1fr}
-}
-@media print{
-body{background:white;color:black}
-header,footer{color:black}
-header h1,h2,h3,.stat strong{color:#7b5a08}
-.card,.worker,.stat{background:white;color:black;border:1px solid #aaa}
-.no-print,button{display:none!important}
-input,textarea,select{display:none}
+.gold{color:var(--gold)}
+.muted{color:var(--muted)}
+header{height:66px;background:#171717;border-bottom:1px solid #393126;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:5}
+.brand{font-size:21px;font-weight:bold;color:var(--gold2)}
+.brand small{display:block;color:#bbb;font-size:10px;font-weight:normal;margin-top:5px}
+.iconbtn{background:#252525;border:1px solid #444;color:var(--gold2);border-radius:10px;padding:9px 12px;font-size:20px}
+.layout{display:flex;min-height:calc(100vh - 66px)}
+.sidebar{width:245px;flex-shrink:0;background:#171717;border-left:1px solid #333;padding:15px;display:flex;flex-direction:column;gap:7px}
+.navbtn{width:100%;text-align:right;background:transparent;color:#ddd;border:1px solid transparent;border-radius:10px;padding:13px 12px}
+.navbtn:hover,.navbtn.active{background:#2a2519;border-color:#6d592d;color:var(--gold2)}
+.navbottom{margin-top:auto;border-top:1px solid #333;padding-top:12px}
+main{flex:1;padding:22px;min-width:0;max-width:1250px;margin:auto;width:100%}
+.page-title{font-size:23px;margin:0 0 8px;color:var(--gold2)}
+.subtitle{font-size:13px;color:var(--muted);margin:0 0 22px;line-height:1.8}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:18px;margin-bottom:15px}
+.stat-label{color:#bbb;font-size:13px}
+.stat-value{font-size:25px;color:var(--gold2);font-weight:bold;margin-top:13px;overflow-wrap:anywhere}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:13px;color:#ddd}
+input,textarea,select{width:100%;background:#111;color:#fff;border:1px solid #444;border-radius:9px;padding:12px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{min-height:90px;resize:vertical}
+.btn{border:0;border-radius:9px;padding:12px 16px;font-weight:bold}
+.primary{background:var(--gold);color:#17130a}
+.secondary{background:#303030;color:#eee;border:1px solid #494949}
+.danger{background:#4b2222;color:#ffb5b5;border:1px solid #733939}
+.success{background:#18382c;color:#8ee3b8;border:1px solid #285941}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
+.toolbar{display:flex;gap:10px;margin-bottom:15px}
+.toolbar input{flex:1;min-width:0}
+.worker{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:15px;margin-bottom:12px}
+.worker-top{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.worker-name{font-size:17px;font-weight:bold;color:var(--gold2);overflow-wrap:anywhere}
+.badge{background:#332b19;color:var(--gold2);padding:5px 9px;border-radius:7px;font-size:12px;white-space:nowrap}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:13px}
+.detail{background:#141414;border-radius:8px;padding:10px;font-size:12px;color:#bbb;overflow-wrap:anywhere}
+.detail strong{display:block;color:#eee;font-size:14px;margin-top:5px}
+hr{border:0;border-top:1px solid #333;margin:20px 0}
+.notice{padding:12px;border-radius:9px;background:#272319;border:1px solid #5b4b29;color:#f3d98e;font-size:13px;line-height:1.8;margin-bottom:15px}
+.message{margin:12px 0;padding:12px;border-radius:9px;line-height:1.8;font-size:13px}
+.message.error{background:#401f1f;color:#ffb1b1}
+.message.ok{background:#193729;color:#a1e8c0}
+.empty{text-align:center;padding:35px 12px;color:#aaa}
+.authwrap{max-width:440px;margin:45px auto;padding:20px}
+.authcard{background:var(--card);border:1px solid #544522;border-radius:18px;padding:24px}
+.authcard h1{text-align:center;color:var(--gold2);margin:5px 0 8px}
+.authcard .subtitle{text-align:center;margin-bottom:22px}
+.authcard .field{margin-bottom:14px}
+.authfoot{display:flex;justify-content:center;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;color:var(--gold2);text-decoration:underline;padding:8px}
+.footer{text-align:center;color:#777;font-size:11px;margin-top:35px;line-height:1.8}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{text-align:right;padding:11px;border-bottom:1px solid #383838;font-size:13px}
+th{color:var(--gold2);background:#202020}
+@media(max-width:760px){
+ .layout{display:block}
+ .sidebar{display:none;position:fixed;top:66px;bottom:0;right:0;width:270px;z-index:10;overflow-y:auto;box-shadow:-10px 0 35px #0009}
+ .sidebar.open{display:flex}
+ main{padding:15px}
+ .grid{grid-template-columns:1fr}
+ .formgrid{grid-template-columns:1fr}
+ .stat-value{font-size:23px}
+ .authwrap{margin:20px auto;padding:12px}
 }
 </style>
 </head>
-
 <body>
 
-<header>
-<h1>عمال يوميه</h1>
-<p>إدارة العمال والأجور والمستحقات</p>
-</header>
+<section id="authScreen">
+ <header>
+  <div class="brand">عمال يوميه<small>إدارة العمال والمستحقات اليومية</small></div>
+  <button class="iconbtn" onclick="showRegister()" aria-label="إنشاء حساب جديد">＋</button>
+ </header>
+ <div class="authwrap">
+  <div class="authcard" id="loginBox">
+   <h1>عمال يوميه</h1>
+   <p class="subtitle">سجّل الدخول لإدارة العمال وحساباتهم</p>
+   <div id="loginMsg"></div>
+   <form id="loginForm">
+    <div class="field"><label for="loginId">الإيميل أو رقم الجوال</label><input id="loginId" autocomplete="username" required placeholder="أدخل الإيميل أو رقم الجوال"></div>
+    <div class="field"><label for="loginPass">كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></div>
+    <button class="btn primary" style="width:100%;margin-top:8px" type="submit">تسجيل الدخول</button>
+   </form>
+   <div class="authfoot"><span class="muted">ليس لديك حساب؟</span><button class="linkbtn" onclick="showRegister()">＋ إنشاء حساب جديد</button></div>
+   <div class="footer">© 2026 محمد كرم - جميع الحقوق محفوظة</div>
+  </div>
 
-<main class="container">
-
-<!-- تسجيل الدخول -->
-<section class="card" id="loginCard">
-<h2>تسجيل الدخول</h2>
-<p class="note">ادخل إلى حسابك لمتابعة بيانات العمال.</p>
-
-<form id="loginForm">
-<label for="email">البريد الإلكتروني</label>
-<input id="email" type="email" required autocomplete="username">
-
-<label for="password">كلمة المرور</label>
-<input id="password" type="password" required autocomplete="current-password">
-
-<button class="primary" id="loginButton" type="submit">تسجيل الدخول</button>
-<div id="loginMessage" class="message" role="status"></div>
-</form>
-
-<hr class="gold-line">
-
-<h2>تسجيل حساب جديد</h2>
-<p class="note">أنشئ حسابًا جديدًا بالبريد الإلكتروني وكلمة المرور.</p>
-
-<form id="registerForm">
-<label for="newName">الاسم</label>
-<input id="newName" type="text" maxlength="100" required autocomplete="name">
-
-<label for="newEmail">البريد الإلكتروني</label>
-<input id="newEmail" type="email" required autocomplete="email">
-
-<label for="newPassword">كلمة المرور</label>
-<input id="newPassword" type="password" minlength="6" required autocomplete="new-password">
-
-<label for="confirmPassword">تأكيد كلمة المرور</label>
-<input id="confirmPassword" type="password" minlength="6" required autocomplete="new-password">
-
-<button class="primary" id="registerButton" type="submit">إنشاء حساب جديد</button>
-<div id="registerMessage" class="message" role="status"></div>
-</form>
+  <div class="authcard hidden" id="registerBox">
+   <h1>إنشاء حساب جديد</h1>
+   <p class="subtitle">أنشئ حسابك للبدء في استخدام التطبيق</p>
+   <div id="registerMsg"></div>
+   <form id="registerForm">
+    <div class="field"><label for="regName">الاسم</label><input id="regName" required autocomplete="name" placeholder="اسم المستخدم"></div>
+    <div class="field"><label for="regId">الإيميل أو رقم الجوال</label><input id="regId" required autocomplete="username" placeholder="الإيميل أو رقم الجوال"></div>
+    <div class="field"><label for="regPass">كلمة المرور</label><input id="regPass" type="password" required minlength="6" autocomplete="new-password" placeholder="6 أحرف على الأقل"></div>
+    <button class="btn primary" style="width:100%;margin-top:8px" type="submit">إنشاء الحساب</button>
+   </form>
+   <div class="authfoot"><button class="linkbtn" onclick="showLogin()">→ العودة لتسجيل الدخول</button></div>
+  </div>
+ </div>
 </section>
 
-<!-- التطبيق -->
-<section id="appArea" class="hidden">
+<section id="appScreen" class="hidden">
+ <header>
+  <button class="iconbtn" onclick="toggleMenu()" aria-label="القائمة الجانبية">☰</button>
+  <div class="brand">عمال يوميه<small>حسابات العمال اليومية</small></div>
+  <button class="iconbtn" onclick="loadWorkers()" aria-label="تحديث البيانات">↻</button>
+ </header>
+ <div class="layout">
+  <aside class="sidebar" id="sidebar">
+   <button class="navbtn active" data-page="home" onclick="navigate('home',this)">⌂　الرئيسية</button>
+   <button class="navbtn" data-page="add" onclick="navigate('add',this)">＋　إضافة عامل جديد</button>
+   <button class="navbtn" data-page="workers" onclick="navigate('workers',this)">♙　سجل العمال</button>
+   <button class="navbtn" data-page="reports" onclick="navigate('reports',this)">▤　التقارير</button>
+   <button class="navbtn" data-page="about" onclick="navigate('about',this)">ⓘ　نبذة عن التطبيق</button>
+   <button class="navbtn" data-page="credits" onclick="navigate('credits',this)">©　المطور وحقوق النشر</button>
+   <div class="navbottom">
+    <button class="navbtn" onclick="switchAccount()">⇄　تبديل الحساب</button>
+    <button class="navbtn" onclick="logout()">↪　تسجيل الخروج</button>
+   </div>
+  </aside>
+  <main>
+   <section id="page-home">
+    <h1 class="page-title">الرئيسية</h1>
+    <p class="subtitle">برنامج يتيح لك الاستخدام اليومي لحساب العمال.</p>
+    <div class="grid">
+     <div class="card"><div class="stat-label">إجمالي المستحقات</div><div class="stat-value" id="totalDue">0.00 ر.س</div></div>
+     <div class="card"><div class="stat-label">إجمالي المدفوعات</div><div class="stat-value" id="totalPaid">0.00 ر.س</div></div>
+     <div class="card"><div class="stat-label">عدد العمال</div><div class="stat-value" id="workerCount">0</div></div>
+    </div>
+    <div class="card"><h3 class="gold">مرحبًا بك في عمال يوميه</h3><p class="muted" style="line-height:2">من هنا تقدر تتابع إجمالي المستحقات والمدفوعات وعدد العمال، وتضيف عاملًا جديدًا من القائمة الجانبية.</p><button class="btn primary" onclick="navigate('add')">＋ إضافة عامل جديد</button></div>
+    <div id="homeMsg"></div>
+   </section>
 
-<section class="card">
-<div class="row">
-<div>
-<h2 style="margin-bottom:4px">الحساب الحالي</h2>
-<div id="userInfo" class="note"></div>
-</div>
-<div>
-<button id="refreshButton" class="secondary" style="width:100%">تحديث البيانات</button>
-<button id="logoutButton" class="danger" style="width:100%">تسجيل الخروج</button>
-</div>
-</div>
-<div id="appMessage" class="message" role="status"></div>
+   <section id="page-add" class="hidden">
+    <h1 class="page-title" id="formTitle">إضافة عامل جديد</h1>
+    <p class="subtitle">أدخل بيانات العامل وسيتم حساب المستحقات تلقائيًا.</p>
+    <div class="card">
+     <div id="workerMsg"></div>
+     <form id="workerForm">
+      <input type="hidden" id="editId">
+      <div class="formgrid">
+       <div class="field"><label for="workerName">اسم العامل *</label><input id="workerName" required maxlength="150" placeholder="اسم العامل"></div>
+       <div class="field"><label for="workLocation">مكان العمل</label><input id="workLocation" maxlength="200" placeholder="موقع العمل"></div>
+       <div class="field"><label for="workDays">عدد أيام العمل</label><input id="workDays" type="number" min="0" step="0.01" value="0"></div>
+       <div class="field"><label for="dailyRate">سعر يوم العمل (ر.س)</label><input id="dailyRate" type="number" min="0" step="0.01" value="0"></div>
+       <div class="field"><label for="overtimeHours">عدد ساعات العمل الإضافية</label><input id="overtimeHours" type="number" min="0" step="0.01" value="0"></div>
+       <div class="field"><label for="overtimeRate">سعر الساعة الإضافية (ر.س)</label><input id="overtimeRate" type="number" min="0" step="0.01" value="0"></div>
+       <div class="field"><label for="amountPaid">المبلغ المدفوع (ر.س)</label><input id="amountPaid" type="number" min="0" step="0.01" value="0"></div>
+       <div class="field"><label>إجمالي المستحق (تلقائي)</label><input id="calculatedDue" readonly value="0.00 ر.س"></div>
+       <div class="field" style="grid-column:1/-1"><label for="workerNotes">ملاحظات</label><textarea id="workerNotes" maxlength="2000" placeholder="ملاحظات إضافية"></textarea></div>
+      </div>
+      <div class="notice" style="margin-top:15px;margin-bottom:0">طريقة الحساب: (أيام العمل × سعر اليوم) + (الساعات الإضافية × سعر الساعة الإضافية).</div>
+      <div class="actions"><button class="btn primary" id="saveWorkerBtn" type="submit">حفظ البيانات</button><button class="btn secondary" type="button" onclick="resetWorkerForm();navigate('workers')">إلغاء</button></div>
+     </form>
+    </div>
+   </section>
+
+   <section id="page-workers" class="hidden">
+    <h1 class="page-title">سجل العمال</h1><p class="subtitle">عرض بيانات العمال والبحث والتعديل والحذف.</p>
+    <div class="toolbar"><input id="workerSearch" placeholder="ابحث باسم العامل أو مكان العمل..."><button class="btn primary" onclick="navigate('add')">＋ إضافة</button></div>
+    <div id="workersList"></div>
+   </section>
+
+   <section id="page-reports" class="hidden">
+    <h1 class="page-title">التقارير</h1><p class="subtitle">ملخص المستحقات والمدفوعات لكل العمال.</p>
+    <div class="card"><div class="tablewrap"><table><thead><tr><th>م</th><th>اسم العامل</th><th>المستحق</th><th>المدفوع</th><th>المتبقي</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+    <div class="actions"><button class="btn primary" onclick="window.print()">طباعة / حفظ PDF</button><button class="btn secondary" onclick="exportCSV()">تصدير CSV</button></div></div>
+   </section>
+
+   <section id="page-about" class="hidden">
+    <h1 class="page-title">نبذة عن التطبيق</h1>
+    <div class="card"><h3 class="gold">عمال يوميه</h3><p style="line-height:2;color:#ddd">تطبيق لإدارة بيانات العمال اليومية، وتنظيم أيام العمل والساعات الإضافية وأجور العمال والمدفوعات والمستحقات، مع البحث والتعديل والتقارير.</p><hr><h3 class="gold">آلية الاستخدام</h3><p style="line-height:2;color:#ddd">سجّل الدخول، ثم أضف بيانات العمال. يحسب التطبيق المستحقات تلقائيًا، ويعرض إجمالي المستحقات والمدفوعات وعدد العمال، مع إمكانية مراجعة السجلات وطباعة التقارير.</p></div>
+   </section>
+
+   <section id="page-credits" class="hidden">
+    <h1 class="page-title">المطور وحقوق النشر</h1>
+    <div class="card"><h3 class="gold">حقوق الملكية الفكرية</h3><p style="line-height:2.2">مطور التطبيق: محمد كرم<br>تم الإنشاء بواسطة محمد كرم.<br>تمت البرمجة والتطوير بواسطة محمد كرم.<br>تم التعديل وتطوير البرنامج بواسطة محمد كرم.<br>الفكرة وحقوق النشر محفوظة لمحمد كرم.</p><hr><p class="gold">© 2026 محمد كرم - جميع الحقوق محفوظة.</p><p class="muted" style="line-height:1.8">لا يمنح وجود هذا الإشعار أي إذن بنقل حقوق الملكية الفكرية أو نسب العمل إلى شخص آخر. وتظل الحقوق خاضعة للقوانين والاتفاقيات السارية.</p></div>
+   </section>
+
+   <div class="footer">عمال يوميه © 2026 محمد كرم — جميع الحقوق محفوظة</div>
+  </main>
+ </div>
 </section>
 
-<section class="card">
-<h2>الرئيسية</h2>
-
-<div class="stats">
-<div class="stat">
-<span>عدد العمال</span>
-<strong id="workerCount">0</strong>
-</div>
-<div class="stat">
-<span>إجمالي المستحقات</span>
-<strong id="totalDue">0.00</strong>
-</div>
-<div class="stat">
-<span>إجمالي المدفوع</span>
-<strong id="totalPaid">0.00</strong>
-</div>
-<div class="stat">
-<span>إجمالي المتبقي</span>
-<strong id="totalRemaining">0.00</strong>
-</div>
-</div>
-
-<p class="note">جميع المبالغ بالريال السعودي.</p>
-
-<div class="section-buttons no-print">
-<button onclick="showSection('workerFormCard')">＋ تسجيل عامل جديد</button>
-<button onclick="showSection('workersCard')">♙ قائمة العمال</button>
-<button onclick="showSection('reportCard')">▤ التقارير</button>
-<button onclick="showSection('aboutCard')">ⓘ نبذة عن التطبيق</button>
-</div>
-</section>
-
-<!-- تسجيل وتعديل عامل -->
-<section class="card" id="workerFormCard">
-<h2 id="formTitle">تسجيل عامل جديد</h2>
-
-<form id="workerForm">
-
-<label for="workerName">اسم العامل *</label>
-<input id="workerName" maxlength="100" required>
-
-<div class="grid">
-<div>
-<label for="workDate">تاريخ العمل</label>
-<input id="workDate" type="date">
-</div>
-<div>
-<label for="workPlace">مكان العمل أو الفرع</label>
-<input id="workPlace" maxlength="150">
-</div>
-</div>
-
-<div class="grid">
-<div>
-<label for="workHours">عدد ساعات العمل</label>
-<input id="workHours" type="number" min="0" max="1000" step="0.25" value="8" required>
-</div>
-<div>
-<label for="hourRate">أجر الساعة بالريال</label>
-<input id="hourRate" type="number" min="0" step="0.01" value="0" required>
-</div>
-</div>
-
-<label for="workerPaid">المبلغ المدفوع بالريال</label>
-<input id="workerPaid" type="number" min="0" step="0.01" value="0" required>
-
-<label for="workerNotes">ملاحظات</label>
-<textarea id="workerNotes" maxlength="2000"></textarea>
-
-<div class="stat">
-<span>إجمالي المستحقات</span>
-<strong id="liveDue">0.00 ريال</strong>
-</div>
-
-<button id="saveButton" class="primary" type="submit">حفظ بيانات العامل</button>
-<button id="cancelEdit" class="secondary primary hidden" type="button">إلغاء التعديل</button>
-
-<div id="formMessage" class="message" role="status"></div>
-</form>
-</section>
-
-<!-- سجل العمال -->
-<section class="card" id="workersCard">
-<h2>سجل العمال</h2>
-
-<label for="searchInput">البحث بالاسم أو الرقم المسلسل أو مكان العمل</label>
-<input id="searchInput" placeholder="اكتب كلمة البحث">
-
-<div id="workerList">
-<div class="empty">جارٍ تحميل البيانات...</div>
-</div>
-</section>
-
-<!-- التقارير -->
-<section class="card" id="reportCard">
-<h2>التقارير وكشف الحساب</h2>
-
-<label for="reportSearch">اختيار عامل للتقرير</label>
-<select id="reportSearch">
-<option value="">جميع العمال</option>
-</select>
-
-<label for="reportFrom">من تاريخ</label>
-<input id="reportFrom" type="date">
-
-<label for="reportTo">إلى تاريخ</label>
-<input id="reportTo" type="date">
-
-<div class="row no-print">
-<button id="runReport">عرض التقرير</button>
-<button id="printReport" class="secondary">طباعة / حفظ PDF</button>
-</div>
-
-<div id="reportResult"></div>
-</section>
-
-<!-- نبذة عن التطبيق وحقوق الملكية -->
-<section class="card" id="aboutCard">
-<h2>نبذة عن التطبيق</h2>
-
-<p>
-تطبيق عمال يوميه هو نظام لإدارة بيانات العمال اليومية،
-وتسجيل ساعات العمل وأجر الساعة والمبالغ المدفوعة،
-مع احتساب إجمالي المستحقات والمتبقي لكل عامل.
-</p>
-
-<p>
-يتيح التطبيق البحث عن العمال، وتعديل بياناتهم،
-ومراجعة الحسابات، وإعداد التقارير وكشوف الحساب،
-بهدف تسهيل متابعة العمال وتنظيم الحسابات اليومية
-بطريقة واضحة وبسيطة.
-</p>
-
-<hr class="gold-line">
-
-<h2>التطوير وحقوق الملكية</h2>
-
-<p><strong class="gold">مطور التطبيق:</strong> محمد كرم</p>
-<p><strong class="gold">تم الإنشاء بواسطة:</strong> محمد كرم</p>
-<p><strong class="gold">تمت البرمجة بواسطة:</strong> محمد كرم</p>
-<p><strong class="gold">التعديل والتطوير:</strong> محمد كرم</p>
-<p><strong class="gold">صاحب الفكرة:</strong> محمد كرم</p>
-
-<p>
-<strong class="gold">حقوق النشر والملكية الفكرية:</strong>
-جميع الحقوق محفوظة لمحمد كرم © 2026.
-</p>
-
-<p>
-يُمنع نسخ التطبيق أو إعادة نشره أو استغلال تصميمه
-أو فكرته أو الكود الخاص به تجاريًا دون إذن من صاحب الحقوق،
-مع مراعاة الحقوق القانونية المعمول بها.
-</p>
-
-<p class="note">
-إصدار التطبيق وتطويره يخضعان للتحسين المستمر بهدف
-رفع سهولة الاستخدام ودقة الحسابات.
-</p>
-</section>
-
-</section>
-</main>
-
-<footer>
-<strong>عمال يوميه</strong><br>
-تم الإنشاء والتطوير بواسطة محمد كرم © 2026
-</footer>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(function(){
 "use strict";
 
-const SUPABASE_URL="https://qawnvmuwbcsfldcjikhb.supabase.co";
-const SUPABASE_KEY="sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7";
+/*
+==========================================================
+عمال يوميه
+© 2026 محمد كرم - جميع الحقوق محفوظة
+الفكرة والتصميم والبرمجة والتطوير: محمد كرم
+لا يجوز حذف إشعار الحقوق أو نسب المشروع إلى غير صاحبه.
+==========================================================
+*/
 
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
+// بيانات مشروع Supabase الحالي
+const SUPABASE_URL = "https://qawnvmuwbcsfldcjikhb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_nTHygssJpBnfaHocmO2ONQ_SQQutIg7";
 
-let workers=[];
-let editingId=null;
-let currentUser=null;
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
+let workers = [];
+let busy = false;
 
-const money=v=>(Number(v)||0).toLocaleString("ar-SA",{
-minimumFractionDigits:2,
-maximumFractionDigits:2
+const $ = id => document.getElementById(id);
+const money = n => (Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" ر.س";
+const num = id => Math.max(0,Number($(id).value)||0);
+const escapeHTML = value => String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function message(id,text,type="error"){
+ const el=$(id);
+ if(!el)return;
+ el.innerHTML=text?'<div class="message '+(type==="ok"?"ok":"error")+'">'+escapeHTML(text)+'</div>':"";
+}
+function showLogin(){
+ $("loginBox").classList.remove("hidden");
+ $("registerBox").classList.add("hidden");
+ message("loginMsg","");
+}
+function showRegister(){
+ $("loginBox").classList.add("hidden");
+ $("registerBox").classList.remove("hidden");
+ message("registerMsg","");
+}
+function showApp(){
+ $("authScreen").classList.add("hidden");
+ $("appScreen").classList.remove("hidden");
+}
+function showAuth(){
+ $("appScreen").classList.add("hidden");
+ $("authScreen").classList.remove("hidden");
+ $("sidebar").classList.remove("open");
+}
+function toggleMenu(){ $("sidebar").classList.toggle("open"); }
+
+function navigate(page,button){
+ document.querySelectorAll("main section[id^='page-']").forEach(el=>el.classList.add("hidden"));
+ const target=$("page-"+page);
+ if(target)target.classList.remove("hidden");
+ document.querySelectorAll(".navbtn[data-page]").forEach(el=>el.classList.toggle("active",el.dataset.page===page));
+ $("sidebar").classList.remove("open");
+ if(page==="workers")renderWorkers();
+ if(page==="reports")renderReports();
+ if(page==="add"&&!$("editId").value)resetWorkerForm();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function validLoginId(value){
+ const v=value.trim();
+ if(v.includes("@"))return {email:v};
+ return {phone:v};
+}
+function setBusy(value){
+ busy=value;
+ document.querySelectorAll("form button[type=submit]").forEach(b=>b.disabled=value);
+}
+
+// تسجيل الدخول بالإيميل أو الهاتف حسب إعدادات Supabase
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(busy)return;
+ const identifier=$("loginId").value.trim();
+ const password=$("loginPass").value;
+ if(!identifier||!password)return;
+ setBusy(true);message("loginMsg","");
+ try{
+  const {data,error}=await db.auth.signInWithPassword({...validLoginId(identifier),password});
+  if(error)throw error;
+  currentUser=data.user;
+  await openApplication();
+ }catch(err){
+  message("loginMsg",friendlyError(err));
+ }finally{setBusy(false);}
 });
 
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
-
-function message(id,text,ok){
-const e=$(id);
-e.textContent=text;
-e.className="message "+(ok?"ok":"error");
-}
-
-function hideMessage(id){
-$(id).textContent="";
-$(id).className="message";
-}
-
-function due(w){
-return (Number(w.hours)||0)*(Number(w.hourly_wage)||0);
-}
-
-function paid(w){
-return Number(w.amount_paid)||0;
-}
-
-function remaining(w){
-return due(w)-paid(w);
-}
-
-function localDate(){
-const d=new Date();
-return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-
-window.showSection=function(id){
-const el=$(id);
-if(!el)return;
-el.scrollIntoView({behavior:"smooth",block:"start"});
-};
-
-function updateLiveDue(){
-$("liveDue").textContent=money(
-(Number($("workHours").value)||0)*
-(Number($("hourRate").value)||0)
-)+" ريال";
-}
-
-function clearForm(){
-$("workerForm").reset();
-$("workHours").value="8";
-$("hourRate").value="0";
-$("workerPaid").value="0";
-editingId=null;
-$("formTitle").textContent="تسجيل عامل جديد";
-$("saveButton").textContent="حفظ بيانات العامل";
-$("cancelEdit").classList.add("hidden");
-hideMessage("formMessage");
-updateLiveDue();
-}
-
-function updateSummary(){
-$("workerCount").textContent=workers.length;
-
-const total=workers.reduce((s,w)=>s+due(w),0);
-const payments=workers.reduce((s,w)=>s+paid(w),0);
-
-$("totalDue").textContent=money(total);
-$("totalPaid").textContent=money(payments);
-$("totalRemaining").textContent=money(total-payments);
-}
-
-function renderWorkers(){
-const query=$("searchInput").value.trim().toLowerCase();
-
-const list=workers.filter(w=>[
-w.name,w.work_location,w.id,w.work_date
-].some(v=>String(v??"").toLowerCase().includes(query)));
-
-if(!list.length){
-$("workerList").innerHTML='<div class="empty">لا توجد بيانات مطابقة للبحث.</div>';
-return;
-}
-
-$("workerList").innerHTML=list.map((w,index)=>`
-<article class="worker">
-<h3>العامل: ${esc(w.name)}</h3>
-<p><b>الرقم التسلسلي:</b> ${index+1}</p>
-<p><b>تاريخ العمل:</b> ${esc(w.work_date||"غير محدد")}</p>
-<p><b>مكان العمل:</b> ${esc(w.work_location||"غير محدد")}</p>
-<p><b>عدد الساعات:</b> ${money(w.hours)}</p>
-<p><b>أجر الساعة:</b> ${money(w.hourly_wage)} ريال</p>
-<p><b>إجمالي المستحقات:</b> ${money(due(w))} ريال</p>
-<p><b>المدفوع:</b> ${money(paid(w))} ريال</p>
-<p><b>المتبقي:</b> ${money(remaining(w))} ريال</p>
-<p><b>ملاحظات:</b> ${esc(w.notes||"لا توجد")}</p>
-<div class="worker-actions no-print">
-<button type="button" data-action="edit" data-id="${esc(w.id)}">تعديل البيانات</button>
-<button type="button" class="danger" data-action="delete" data-id="${esc(w.id)}">حذف العامل</button>
-</div>
-</article>
-`).join("");
-}
-
-function renderReport(){
-const selected=$("reportSearch").value;
-const from=$("reportFrom").value;
-const to=$("reportTo").value;
-
-const list=workers.filter(w=>{
-if(selected&&String(w.id)!==selected)return false;
-if(from&&w.work_date&&w.work_date<from)return false;
-if(to&&w.work_date&&w.work_date>to)return false;
-return true;
+// إنشاء حساب جديد بالإيميل أو الهاتف
+$("registerForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(busy)return;
+ const name=$("regName").value.trim();
+ const identifier=$("regId").value.trim();
+ const password=$("regPass").value;
+ if(!name||!identifier||password.length<6){
+  message("registerMsg","أدخل البيانات كاملة، واجعل كلمة المرور 6 أحرف على الأقل.");
+  return;
+ }
+ setBusy(true);message("registerMsg","");
+ try{
+  const credentials=validLoginId(identifier);
+  const options={data:{full_name:name,display_name:name}};
+  if(credentials.email)options.email=credentials.email;
+  else options.phone=credentials.phone;
+  const {data,error}=await db.auth.signUp({...options,password,options:{data:{full_name:name,display_name:name}}});
+  if(error)throw error;
+  if(data.session){
+   currentUser=data.user;
+   await openApplication();
+  }else{
+   message("registerMsg","تم إرسال طلب إنشاء الحساب. إذا كان تأكيد الحساب مفعّلًا، أكّد التسجيل من رسالة البريد أو رمز الهاتف ثم سجّل الدخول.","ok");
+  }
+ }catch(err){
+  message("registerMsg",friendlyError(err));
+ }finally{setBusy(false);}
 });
 
-const total=list.reduce((s,w)=>s+due(w),0);
-const totalPaid=list.reduce((s,w)=>s+paid(w),0);
-
-$("reportResult").innerHTML=`
-<hr class="gold-line">
-<h3>نتيجة التقرير</h3>
-<div class="stats">
-<div class="stat"><span>عدد العمال</span><strong>${list.length}</strong></div>
-<div class="stat"><span>المستحقات</span><strong>${money(total)}</strong></div>
-<div class="stat"><span>المدفوع</span><strong>${money(totalPaid)}</strong></div>
-<div class="stat"><span>المتبقي</span><strong>${money(total-totalPaid)}</strong></div>
-</div>
-${list.map((w,index)=>`
-<article class="worker">
-<h3>${index+1}. ${esc(w.name)}</h3>
-<p>تاريخ العمل: ${esc(w.work_date||"غير محدد")}</p>
-<p>مكان العمل: ${esc(w.work_location||"غير محدد")}</p>
-<p>المستحق: ${money(due(w))} ريال</p>
-<p>المدفوع: ${money(paid(w))} ريال</p>
-<p>المتبقي: ${money(remaining(w))} ريال</p>
-</article>
-`).join("")||'<div class="empty">لا توجد بيانات في الفترة المحددة.</div>'}
-`;
+function friendlyError(err){
+ const m=String(err?.message||"حدث خطأ غير متوقع");
+ if(/Invalid login credentials/i.test(m))return "بيانات الدخول غير صحيحة. راجع الإيميل أو رقم الجوال وكلمة المرور.";
+ if(/Email not confirmed/i.test(m))return "يجب تأكيد البريد الإلكتروني قبل تسجيل الدخول.";
+ if(/phone.*disabled|phone provider is disabled/i.test(m))return "تسجيل الدخول برقم الجوال غير مفعّل في إعدادات Supabase. استخدم الإيميل أو فعّل مزوّد الهاتف.";
+ if(/User already registered/i.test(m))return "هذا الحساب مسجل بالفعل. جرّب تسجيل الدخول.";
+ if(/Failed to fetch|NetworkError/i.test(m))return "تعذر الاتصال بالخدمة. تحقق من الإنترنت وحاول مرة أخرى.";
+ return m;
 }
 
-function refreshReportOptions(){
-const selected=$("reportSearch").value;
-
-$("reportSearch").innerHTML=
-'<option value="">جميع العمال</option>'+
-workers.map(w=>`<option value="${esc(w.id)}">${esc(w.name)}</option>`).join("");
-
-if(workers.some(w=>String(w.id)===selected)){
-$("reportSearch").value=selected;
-}
+async function openApplication(){
+ showApp();
+ navigate("home");
+ await loadWorkers();
 }
 
 async function loadWorkers(){
-if(!currentUser)return;
-
-$("workerList").innerHTML='<div class="empty">جارٍ تحميل البيانات...</div>';
-
-try{
-const {data,error}=await db.from("workers")
-.select("*")
-.order("id",{ascending:false});
-
-if(error)throw error;
-
-workers=data||[];
-updateSummary();
-renderWorkers();
-refreshReportOptions();
-renderReport();
-hideMessage("appMessage");
-
-}catch(err){
-message("appMessage","تعذر تحميل البيانات: "+err.message,false);
-$("workerList").innerHTML='<div class="empty">تعذر تحميل البيانات. تحقق من صلاحيات قاعدة البيانات.</div>';
+ if(!currentUser)return;
+ message("homeMsg","");
+ try{
+  const {data,error}=await db.from("workers").select("*").order("id",{ascending:false});
+  if(error)throw error;
+  workers=data||[];
+  updateStats();
+  renderWorkers();
+  renderReports();
+ }catch(err){
+  message("homeMsg","تعذر تحميل العمال: "+friendlyError(err));
+ }
 }
+function dueOf(w){
+ // يعتمد على الحقول القديمة الموجودة في جدول workers
+ const days=Number(w.work_days)||0;
+ const dayRate=Number(w.daily_rate)||0;
+ const hours=Number(w.overtime_hours)||0;
+ const hourRate=Number(w.overtime_hourly_rate)||0;
+ // استخدم إجمالي المستحق المحفوظ إن لم تتوفر بيانات الحقول الجديدة
+ const calculated=days*dayRate+hours*hourRate;
+ if(days===0&&dayRate===0&&hours===0&&hourRate===0&&w.total_due!=null)return Number(w.total_due)||0;
+ return calculated;
 }
-
-function readForm(){
-const name=$("workerName").value.trim();
-const hours=$("workHours").value;
-const rate=$("hourRate").value;
-const amount=$("workerPaid").value;
-
-if(!name)throw Error("اكتب اسم العامل.");
-if(hours===""||rate===""||amount===""){
-throw Error("أكمل الساعات والأجر والمبلغ المدفوع.");
+function paidOf(w){return Number(w.amount_paid)||0;}
+function updateStats(){
+ $("totalDue").textContent=money(workers.reduce((s,w)=>s+dueOf(w),0));
+ $("totalPaid").textContent=money(workers.reduce((s,w)=>s+paidOf(w),0));
+ $("workerCount").textContent=workers.length;
 }
-
-if([hours,rate,amount].some(v=>!Number.isFinite(Number(v))||Number(v)<0)){
-throw Error("تأكد أن الأرقام صحيحة وغير سالبة.");
+function calculateForm(){
+ const due=num("workDays")*num("dailyRate")+num("overtimeHours")*num("overtimeRate");
+ $("calculatedDue").value=money(due);
+ return due;
 }
+["workDays","dailyRate","overtimeHours","overtimeRate"].forEach(id=>$(id).addEventListener("input",calculateForm));
 
-return {
-name,
-work_date:$("workDate").value||null,
-work_location:$("workPlace").value.trim()||null,
-hours:Number(hours),
-hourly_wage:Number(rate),
-total_due:Number(hours)*Number(rate),
-amount_paid:Number(amount),
-notes:$("workerNotes").value.trim()||null,
-updated_at:new Date().toISOString()
-};
+function resetWorkerForm(){
+ $("workerForm").reset();
+ $("editId").value="";
+ $("workDays").value=0;
+ $("dailyRate").value=0;
+ $("overtimeHours").value=0;
+ $("overtimeRate").value=0;
+ $("amountPaid").value=0;
+ $("calculatedDue").value=money(0);
+ $("formTitle").textContent="إضافة عامل جديد";
+ $("saveWorkerBtn").textContent="حفظ البيانات";
+ message("workerMsg","");
 }
+$("workerForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(busy||!currentUser)return;
+ const name=$("workerName").value.trim();
+ if(!name){message("workerMsg","اسم العامل مطلوب.");return;}
+ const due=calculateForm();
+ const paid=num("amountPaid");
+ if(paid>due){
+  if(!confirm("المبلغ المدفوع أكبر من إجمالي المستحق. هل تريد المتابعة؟"))return;
+ }
+ setBusy(true);message("workerMsg","");
+ const row={
+  name,
+  work_location:$("workLocation").value.trim(),
+  work_days:num("workDays"),
+  daily_rate:num("dailyRate"),
+  overtime_hours:num("overtimeHours"),
+  overtime_hourly_rate:num("overtimeRate"),
+  hours:num("overtimeHours"),
+  hourly_wage:num("overtimeRate"),
+  total_due:due,
+  amount_paid:paid,
+  notes:$("workerNotes").value.trim(),
+  updated_at:new Date().toISOString()
+ };
+ try{
+  const id=$("editId").value;
+  let result;
+  if(id){
+   result=await db.from("workers").update(row).eq("id",id).select();
+  }else{
+   row.created_by=currentUser.id;
+   row.created_at=new Date().toISOString();
+   result=await db.from("workers").insert(row).select();
+  }
+  if(result.error)throw result.error;
+  message("workerMsg",id?"تم تعديل بيانات العامل بنجاح.":"تم حفظ بيانات العامل بنجاح.","ok");
+  resetWorkerForm();
+  await loadWorkers();
+  setTimeout(()=>navigate("workers"),350);
+ }catch(err){
+  message("workerMsg","تعذر حفظ البيانات: "+friendlyError(err));
+ }finally{setBusy(false);}
+});
 
-async function saveWorker(e){
-e.preventDefault();
-hideMessage("formMessage");
-
-let payload;
-try{
-payload=readForm();
-}catch(err){
-message("formMessage",err.message,false);
-return;
+function renderWorkers(){
+ const query=($("workerSearch")?.value||"").trim().toLowerCase();
+ const list=workers.filter(w=>(String(w.name||"")+" "+String(w.work_location||"")).toLowerCase().includes(query));
+ if(!list.length){
+  $("workersList").innerHTML='<div class="card empty">لا توجد بيانات مطابقة.<br><br><button class="btn primary" onclick="navigate(\'add\')">إضافة عامل جديد</button></div>';
+  return;
+ }
+ // التسلسل المعروض يبدأ من 1 بلا فجوات؛ لا نغير المعرّف الأصلي بقاعدة البيانات
+ $("workersList").innerHTML=list.map(w=>{
+  const seq=workers.indexOf(w)+1;
+  const due=dueOf(w),paid=paidOf(w),remaining=due-paid;
+  return `<article class="worker">
+   <div class="worker-top"><div><div class="worker-name">${seq}. ${escapeHTML(w.name)}</div><div class="muted" style="font-size:12px;margin-top:7px">${escapeHTML(w.work_location||"لم يتم تحديد المكان")}</div></div><span class="badge">عامل ${seq}</span></div>
+   <div class="details">
+    <div class="detail">أيام العمل<strong>${Number(w.work_days)||0}</strong></div>
+    <div class="detail">سعر اليوم<strong>${money(w.daily_rate)}</strong></div>
+    <div class="detail">الساعات الإضافية<strong>${Number(w.overtime_hours)||0}</strong></div>
+    <div class="detail">سعر الساعة الإضافية<strong>${money(w.overtime_hourly_rate)}</strong></div>
+    <div class="detail">إجمالي المستحق<strong>${money(due)}</strong></div>
+    <div class="detail">المدفوع<strong>${money(paid)}</strong></div>
+    <div class="detail">المتبقي<strong style="color:${remaining<0?"#ff8888":"#f4d77c"}">${money(remaining)}</strong></div>
+    <div class="detail">ملاحظات<strong>${escapeHTML(w.notes||"—")}</strong></div>
+   </div>
+   <div class="actions"><button class="btn secondary" onclick="editWorker('${String(w.id)}')">تعديل</button><button class="btn danger" onclick="deleteWorker('${String(w.id)}')">حذف</button></div>
+  </article>`;
+ }).join("");
 }
-
-$("saveButton").disabled=true;
-
-try{
-let result;
-
-if(editingId!==null){
-result=await db.from("workers")
-.update(payload)
-.eq("id",editingId)
-.select();
-}else{
-payload.created_by=currentUser.id;
-result=await db.from("workers")
-.insert(payload)
-.select();
-}
-
-if(result.error)throw result.error;
-
-const wasEditing=editingId!==null;
-
-clearForm();
-await loadWorkers();
-
-message("appMessage",wasEditing?"تم تعديل بيانات العامل بنجاح.":"تم تسجيل العامل بنجاح.",true);
-
-}catch(err){
-message("formMessage","تعذر الحفظ: "+err.message,false);
-}finally{
-$("saveButton").disabled=false;
-}
-}
+$("workerSearch").addEventListener("input",renderWorkers);
 
 function editWorker(id){
-const w=workers.find(x=>String(x.id)===String(id));
-if(!w)return;
-
-editingId=w.id;
-
-$("workerName").value=w.name||"";
-$("workDate").value=w.work_date||"";
-$("workPlace").value=w.work_location||"";
-$("workHours").value=w.hours??0;
-$("hourRate").value=w.hourly_wage??0;
-$("workerPaid").value=w.amount_paid??0;
-$("workerNotes").value=w.notes||"";
-
-$("formTitle").textContent="تعديل بيانات العامل";
-$("saveButton").textContent="حفظ التعديلات";
-$("cancelEdit").classList.remove("hidden");
-
-updateLiveDue();
-showSection("workerFormCard");
+ const w=workers.find(x=>String(x.id)===String(id));
+ if(!w)return;
+ resetWorkerForm();
+ $("editId").value=w.id;
+ $("workerName").value=w.name||"";
+ $("workLocation").value=w.work_location||"";
+ $("workDays").value=Number(w.work_days)||0;
+ $("dailyRate").value=Number(w.daily_rate)||0;
+ $("overtimeHours").value=Number(w.overtime_hours)||0;
+ $("overtimeRate").value=Number(w.overtime_hourly_rate)||0;
+ $("amountPaid").value=paidOf(w);
+ $("workerNotes").value=w.notes||"";
+ $("formTitle").textContent="تعديل بيانات العامل";
+ $("saveWorkerBtn").textContent="حفظ التعديلات";
+ calculateForm();
+ navigate("add");
 }
-
 async function deleteWorker(id){
-const w=workers.find(x=>String(x.id)===String(id));
-if(!w)return;
-
-if(!confirm("هل تريد حذف العامل "+w.name+"؟"))return;
-
-try{
-const {error}=await db.from("workers").delete().eq("id",id);
-if(error)throw error;
-
-await loadWorkers();
-message("appMessage","تم حذف العامل.",true);
-
-}catch(err){
-message("appMessage","تعذر حذف العامل: "+err.message,false);
+ const w=workers.find(x=>String(x.id)===String(id));
+ if(!w)return;
+ if(!confirm("هل تريد حذف العامل «"+w.name+"»؟ لا يمكن التراجع عن الحذف."))return;
+ try{
+  const {error}=await db.from("workers").delete().eq("id",id);
+  if(error)throw error;
+  await loadWorkers();
+ }catch(err){alert("تعذر حذف العامل: "+friendlyError(err));}
 }
+function renderReports(){
+ const rows=workers.map((w,i)=>{
+  const due=dueOf(w),paid=paidOf(w);
+  return `<tr><td>${i+1}</td><td>${escapeHTML(w.name)}</td><td>${money(due)}</td><td>${money(paid)}</td><td>${money(due-paid)}</td></tr>`;
+ }).join("");
+ $("reportRows").innerHTML=rows||'<tr><td colspan="5">لا توجد بيانات للعرض</td></tr>';
 }
-
-async function showSession(session){
-if(!session){
-currentUser=null;
-workers=[];
-$("loginCard").classList.remove("hidden");
-$("appArea").classList.add("hidden");
-return;
+function exportCSV(){
+ const data=[["التسلسل","اسم العامل","مكان العمل","أيام العمل","سعر اليوم","الساعات الإضافية","سعر الساعة الإضافية","المستحق","المدفوع","المتبقي","ملاحظات"]];
+ workers.forEach((w,i)=>data.push([i+1,w.name,w.work_location,w.work_days,w.daily_rate,w.overtime_hours,w.overtime_hourly_rate,dueOf(w),paidOf(w),dueOf(w)-paidOf(w),w.notes]));
+ const csv="\uFEFF"+data.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");a.href=url;a.download="تقرير-عمال-يوميه.csv";a.click();
+ URL.revokeObjectURL(url);
 }
-
-currentUser=session.user;
-$("loginCard").classList.add("hidden");
-$("appArea").classList.remove("hidden");
-$("userInfo").textContent=session.user.email||"";
-
-await loadWorkers();
+async function logout(){
+ if(!confirm("هل تريد تسجيل الخروج؟"))return;
+ await db.auth.signOut();
+ currentUser=null;workers=[];showAuth();showLogin();
 }
-
-$("loginForm").addEventListener("submit",async e=>{
-e.preventDefault();
-hideMessage("loginMessage");
-$("loginButton").disabled=true;
-
-try{
-const {data,error}=await db.auth.signInWithPassword({
-email:$("email").value.trim(),
-password:$("password").value
-});
-
-if(error)throw error;
-
-await showSession(data.session);
-
-}catch(err){
-message("loginMessage","تعذر تسجيل الدخول: "+err.message,false);
-}finally{
-$("loginButton").disabled=false;
-}
-});
-
-$("registerForm").addEventListener("submit",async e=>{
-e.preventDefault();
-hideMessage("registerMessage");
-
-const name=$("newName").value.trim();
-const email=$("newEmail").value.trim();
-const password=$("newPassword").value;
-const confirmPassword=$("confirmPassword").value;
-
-if(password.length<6){
-message("registerMessage","كلمة المرور يجب ألا تقل عن 6 أحرف.",false);
-return;
+async function switchAccount(){
+ if(!confirm("سيتم تسجيل الخروج الحالي حتى تتمكن من الدخول بحساب آخر. هل تريد المتابعة؟"))return;
+ await db.auth.signOut();
+ currentUser=null;workers=[];showAuth();showLogin();
+ $("loginId").value="";$("loginPass").value="";
 }
 
-if(password!==confirmPassword){
-message("registerMessage","كلمتا المرور غير متطابقتين.",false);
-return;
-}
-
-$("registerButton").disabled=true;
-
-try{
-const {data,error}=await db.auth.signUp({
-email,
-password,
-options:{
-data:{full_name:name}
-}
-});
-
-if(error)throw error;
-
-if(data.session){
-await showSession(data.session);
-message("appMessage","تم إنشاء الحساب وتسجيل الدخول.",true);
-}else{
-message("registerMessage","تم إرسال طلب إنشاء الحساب. إذا كان تأكيد البريد الإلكتروني مطلوبًا، افتح رسالة التأكيد ثم سجّل الدخول.",true);
-}
-
-}catch(err){
-message("registerMessage","تعذر إنشاء الحساب: "+err.message,false);
-}finally{
-$("registerButton").disabled=false;
-}
-});
-
-$("logoutButton").addEventListener("click",async()=>{
-if(!confirm("هل تريد تسجيل الخروج؟"))return;
-
-const {error}=await db.auth.signOut();
-
-if(error){
-message("appMessage","تعذر تسجيل الخروج: "+error.message,false);
-return;
-}
-
-await showSession(null);
-});
-
-$("refreshButton").addEventListener("click",loadWorkers);
-$("workerForm").addEventListener("submit",saveWorker);
-$("cancelEdit").addEventListener("click",clearForm);
-$("searchInput").addEventListener("input",renderWorkers);
-
-["workHours","hourRate"].forEach(id=>{
-$(id).addEventListener("input",updateLiveDue);
-});
-
-$("workerList").addEventListener("click",e=>{
-const button=e.target.closest("button[data-action]");
-if(!button)return;
-
-if(button.dataset.action==="edit"){
-editWorker(button.dataset.id);
-}else if(button.dataset.action==="delete"){
-deleteWorker(button.dataset.id);
-}
-});
-
-$("runReport").addEventListener("click",renderReport);
-
-$("reportSearch").addEventListener("change",renderReport);
-$("reportFrom").addEventListener("change",renderReport);
-$("reportTo").addEventListener("change",renderReport);
-
-$("printReport").addEventListener("click",()=>{
-window.print();
-});
-
-db.auth.getSession().then(({data,error})=>{
-if(error){
-message("loginMessage","تعذر استعادة الجلسة: "+error.message,false);
-return;
-}
-showSession(data.session);
-});
+// استعادة جلسة الدخول عند فتح التطبيق
+(async function init(){
+ try{
+  const {data,error}=await db.auth.getSession();
+  if(error)throw error;
+  if(data.session){
+   currentUser=data.session.user;
+   await openApplication();
+  }else showAuth();
+ }catch(err){
+  showAuth();
+  message("loginMsg","تعذر التحقق من الجلسة. تحقق من الاتصال وإعدادات المشروع.");
+ }
+})();
 
 db.auth.onAuthStateChange((event,session)=>{
-if(event==="SIGNED_OUT"){
-currentUser=null;
-$("appArea").classList.add("hidden");
-$("loginCard").classList.remove("hidden");
-}
+ if(event==="SIGNED_OUT"){
+  currentUser=null;
+  workers=[];
+  showAuth();
+ }
 });
-
-updateLiveDue();
-
-})();
 </script>
 </body>
 </html>
