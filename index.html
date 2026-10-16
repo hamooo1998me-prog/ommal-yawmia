@@ -322,5 +322,13 @@ function exportBackup(){const payload={app:'Ommal Yawmia',version:'1.1.0',export
 async function importBackup(){const file=$('importFile').files[0];if(!file)return toast('اختر ملف النسخة الاحتياطية أولًا.',true);if(!confirm('سيتم إضافة العمال الموجودين في الملف دون حذف السجلات الحالية. متابعة؟'))return;try{const payload=JSON.parse(await file.text());if(!Array.isArray(payload.workers))throw new Error('صيغة الملف غير صحيحة.');let count=0;for(const w of payload.workers){const item={name:w.name,work_date:w.work_date||today(),work_location:w.work_location||'',notes:w.notes||'',work_days:num(w.work_days),daily_rate:num(w.daily_rate),overtime_hours:num(w.overtime_hours),overtime_hourly_rate:num(w.overtime_hourly_rate),created_by:session.user.id};const {error}=await db.from('workers').insert(item);if(error)throw error;count++}toast('تم استيراد '+count+' عامل. لم تُستورد أيام العمل والمدفوعات.');await refreshAll()}catch(e){toast('تعذر الاستيراد: '+e.message,true)}}
 document.addEventListener('DOMContentLoaded',async()=>{$('wDate').value=today();$('pDate').value=today();try{const {data,error}=await db.auth.getSession();if(error)throw error;session=data.session;if(session)await enterApp()}catch(e){authMessage('تعذر الاتصال بالمشروع: '+e.message)}});
 </script>
+ <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(error => console.error('Service Worker registration failed:', error));
+  });
+}
+</script>
 </body>
 </html>
